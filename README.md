@@ -57,3 +57,12 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+# Librerías Base
+### PrimeNG: npm install primeng @primeng/themes
+### TailwindCss: npm install tailwindcss @tailwindcss/postcss postcss --force
+### Firebase: npm install -g firebase-tools (Instalar en ambiente de desarrollo)
+```
+firebase login
+firebase logout
+```
