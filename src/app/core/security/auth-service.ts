@@ -1,5 +1,6 @@
-import { inject, Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "@angular/fire/auth";
+import { resolve } from "path";
 
 export interface User {
     email: string,
@@ -8,27 +9,38 @@ export interface User {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-    private _auth = inject(Auth)
+
+    constructor(private _auth: Auth, private _ngZone: NgZone) {}
 
     session() {}
 
     signup(user: User) {
-        return createUserWithEmailAndPassword(
-            this._auth,
-            user.email,
-            user.password
-        )
+        return new Promise((resolve, reject) => {
+            createUserWithEmailAndPassword(this._auth, user.email, user.password)
+              .then((userCredential) => {
+                this._ngZone.run(() => resolve(userCredential));
+              })
+              .catch((error) => reject(error));
+            });
     }
 
     login(user: User) {
-        return signInWithEmailAndPassword(
-            this._auth,
-            user.email,
-            user.password
-        )
+        return new Promise((resolve, reject) => {
+            signInWithEmailAndPassword(this._auth, user.email, user.password)
+              .then((userCredential) => {
+                this._ngZone.run(() => resolve(userCredential));
+              })
+              .catch((error) => reject(error));
+            });
     }
 
     logout() {
-        return signOut(this._auth)
+        return new Promise((resolve, reject) => {
+            signOut(this._auth)
+                .then(() => {
+                    this._ngZone.run(() => resolve(true))
+                })
+                .catch((error) => reject(error))
+        });
     }
 }

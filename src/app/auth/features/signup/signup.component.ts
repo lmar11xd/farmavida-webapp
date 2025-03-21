@@ -4,7 +4,8 @@ import { ButtonModule } from 'primeng/button';
 import { hasConfirmPasswordError, hasEmailError, hasPasswordError, isRequired, passwordsMatchValidator } from '../../utils/validators';
 import { AuthService } from '../../../core/security/auth-service';
 import { toast } from 'ngx-sonner';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { CopyrightComponent } from "../../../shared/ui/copyright.component";
 
 interface FormSignUp {
   email: FormControl<string | null>,
@@ -16,8 +17,9 @@ interface FormSignUp {
   selector: 'app-signup',
   imports: [
     ReactiveFormsModule,
-    ButtonModule
-  ],
+    ButtonModule,
+    CopyrightComponent
+],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })

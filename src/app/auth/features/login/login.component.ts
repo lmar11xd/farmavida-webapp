@@ -5,6 +5,7 @@ import { toast } from 'ngx-sonner';
 import { AuthService } from '../../../core/security/auth-service';
 import { isRequired, hasEmailError, hasPasswordError } from '../../utils/validators';
 import { Router } from '@angular/router';
+import { CopyrightComponent } from "../../../shared/ui/copyright.component";
 
 interface FormLogIn {
   email: FormControl<string | null>,
@@ -15,8 +16,9 @@ interface FormLogIn {
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
-    ButtonModule
-  ],
+    ButtonModule,
+    CopyrightComponent
+],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

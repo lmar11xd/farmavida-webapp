@@ -1,5 +1,5 @@
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -14,11 +14,12 @@ import { provideHttpClient } from '@angular/common/http';
 import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
 import { getAuth, provideAuth } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({ eventCoalescing: true }), 
-    provideRouter(routes), 
+    provideRouter(routes, withComponentInputBinding()), 
     provideClientHydration(withEventReplay()),
     MessageService,
     provideHttpClient(),
@@ -35,13 +36,7 @@ export const appConfig: ApplicationConfig = {
           tooltip: 1100   // tooltip
       }
     }), 
-    provideFirebaseApp(() => initializeApp({ 
-      projectId: "app-with-firebase-db4cb", 
-      appId: "1:719956771256:web:cfc2a7697d406e719c0f4d", 
-      storageBucket: "app-with-firebase-db4cb.firebasestorage.app", 
-      apiKey: "AIzaSyBPP17YEcHanyiIVMlFcJ_QKp6tEmzKKU8", 
-      authDomain: "app-with-firebase-db4cb.firebaseapp.com", 
-      messagingSenderId: "719956771256" })
+    provideFirebaseApp(() => initializeApp(environment.firebase)
     ), 
     provideAuth(() => getAuth()), 
     provideFirestore(() => getFirestore())
