@@ -5,7 +5,7 @@ import { hasConfirmPasswordError, hasEmailError, hasPasswordError, isRequired, p
 import { AuthService } from '../../../core/security/auth-service';
 import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
-import { CopyrightComponent } from "../../../shared/ui/copyright.component";
+import { FooterComponent } from "../../../shared/components/footer/footer.component";
 
 interface FormSignUp {
   email: FormControl<string | null>,
@@ -18,7 +18,7 @@ interface FormSignUp {
   imports: [
     ReactiveFormsModule,
     ButtonModule,
-    CopyrightComponent
+    FooterComponent
 ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'

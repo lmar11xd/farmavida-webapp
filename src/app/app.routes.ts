@@ -3,23 +3,37 @@ import { privateGuard, publicGuard } from './core/security/auth-guard';
 
 export const routes: Routes = [
     {
+        path: '',
+        loadComponent: () => import('./shared/components/layout/layout.component'),
+        children: [
+            {
+                path: 'dashboard',
+                loadComponent: () => import('./pages/dashboard/dashboard.component')
+            },
+            {
+                path: 'product',
+                loadChildren: () => import('./pages/products/product.routes'),
+                canActivate: [privateGuard()]
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('./pages/profile/profile.component'),
+                canActivate: [privateGuard()]
+            },
+            {
+                path: '',
+                redirectTo: 'dashboard',
+                pathMatch: 'full'
+            }
+        ]
+    },
+    {
         path: 'auth',
         loadChildren: () => import('./auth/features/auth-shell/auth-rounting'),
         canActivateChild: [publicGuard()]
     },
     {
-        path: 'dashboard',
-        loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
-        canActivate: [privateGuard()]
-    },
-    {
-        path: 'product',
-        loadComponent: () => import('./shared/ui/layout.component'),
-        loadChildren: () => import('./pages/products/product.routes'),
-        canActivate: [privateGuard()]
-    },
-    {
         path: '**',
-        redirectTo: 'product'
+        redirectTo: 'dashboard'
     }
 ];

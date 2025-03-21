@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button'
-import { ProductTableComponent } from "../../components/product-table/product-table.component";
 import { RouterLink } from '@angular/router';
-import { CopyrightComponent } from "../../../shared/ui/copyright.component";
 import { Product, ProductService } from '../product.service';
+import { ProductTableComponent } from '../../components/product-table/product-table.component';
 
 @Component({
   selector: 'app-product-list',
-  imports: [ButtonModule, RouterLink, ProductTableComponent, CopyrightComponent],
+  imports: [ButtonModule, RouterLink, ProductTableComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })

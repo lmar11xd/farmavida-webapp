@@ -1,2 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+
+/*.to-gray-900 {
+    --tw-gradient-to: oklch(0.89 0.21 98.61);
+    --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), oklch(0.56 0.16 129.55) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+}*/

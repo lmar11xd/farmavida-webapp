@@ -1,5 +1,4 @@
 import { Component, signal } from '@angular/core';
-import { CopyrightComponent } from "../../../shared/ui/copyright.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ProductCreate, ProductService } from '../product.service';
@@ -8,7 +7,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-create',
-  imports: [ReactiveFormsModule, ButtonModule, CopyrightComponent],
+  imports: [ReactiveFormsModule, ButtonModule],
   templateUrl: './product-create.component.html',
   styleUrl: './product-create.component.css'
 })

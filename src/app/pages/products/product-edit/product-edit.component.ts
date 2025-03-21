@@ -1,5 +1,4 @@
 import { Component, effect, input, signal } from '@angular/core';
-import { CopyrightComponent } from "../../../shared/ui/copyright.component";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product, ProductCreate, ProductService } from '../product.service';
 import { Router } from '@angular/router';
@@ -8,7 +7,7 @@ import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-product-edit',
-  imports: [ReactiveFormsModule, ButtonModule, CopyrightComponent],
+  imports: [ReactiveFormsModule, ButtonModule],
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css'
 })
