@@ -8,10 +8,6 @@
         Agregar Producto
     </a>
 
-    @if(isLoading) {
-        <p>Cargando...</p>
-    } @else {
-        <app-product-table [products]="products"></app-product-table>
-    }
+    <app-product-table [products]="products"></app-product-table>
 
 </section>

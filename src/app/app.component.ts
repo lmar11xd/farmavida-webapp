@@ -5,6 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessagesModule } from 'primeng/messages';
 import { ButtonModule } from 'primeng/button';
 import { NgxSonnerToaster } from 'ngx-sonner';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
   selector: 'app-root',
@@ -13,13 +14,16 @@ import { NgxSonnerToaster } from 'ngx-sonner';
     ToastModule,
     MessagesModule,
     ButtonModule,
-    NgxSonnerToaster
+    NgxSonnerToaster,
+    NgxSpinnerModule
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements OnInit {
   title = 'farmavida';
+  typeSelected: string = 'ball-atom';
+  textoSpinner: string = 'Cargando...';
   
   constructor(private primeng: PrimeNG) {}
 

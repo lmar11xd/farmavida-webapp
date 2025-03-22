@@ -4,6 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { ProductCreate, ProductService } from '../product.service';
 import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
+import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   selector: 'app-product-create',
@@ -15,7 +16,12 @@ export default class ProductCreateComponent {
   form: FormGroup
   isLoading = signal(false)
   
-  constructor(private _formBuilder: FormBuilder, private _productService: ProductService, private _router: Router) {
+  constructor(
+    private _formBuilder: FormBuilder, 
+    private _productService: ProductService, 
+    private _router: Router,
+    private _settings: SettingsService
+  ) {
     this.form = _formBuilder.group({
       code: this._formBuilder.control('', Validators.required),
       name: this._formBuilder.control('', Validators.required),
@@ -31,6 +37,7 @@ export default class ProductCreateComponent {
     
     try {
       this.isLoading.set(true)
+      this._settings.showSpinner()
       const { code, name, description, quantity, costPrice, salePrice } = this.form.value
 
       const product: ProductCreate = ({
@@ -49,6 +56,7 @@ export default class ProductCreateComponent {
       toast.error("Error al guardar producto")
     } finally {
       this.isLoading.set(false)
+      this._settings.hideSpinner()
     }
   }
 }

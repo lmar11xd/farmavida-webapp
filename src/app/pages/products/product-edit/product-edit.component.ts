@@ -4,6 +4,7 @@ import { Product, ProductCreate, ProductService } from '../product.service';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { toast } from 'ngx-sonner';
+import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   selector: 'app-product-edit',
@@ -16,7 +17,12 @@ export default class ProductEditComponent {
   isLoading = signal(false)
   id = input.required<string>()
 
-  constructor(private _formBuilder: FormBuilder, private _productService: ProductService, private _router: Router) {
+  constructor(
+    private _formBuilder: FormBuilder, 
+    private _productService: ProductService, 
+    private _router: Router,
+    private _settings: SettingsService
+  ) {
     this.form = _formBuilder.group({
       code: this._formBuilder.control('', Validators.required),
       name: this._formBuilder.control('', Validators.required),
@@ -35,7 +41,9 @@ export default class ProductEditComponent {
   }
 
   async getProduct(id: string) {
+    this._settings.showSpinner()
     const productSnapshot = await this._productService.getProduct(id)
+    this._settings.hideSpinner()
     if(!productSnapshot.exists()) return
     const product = productSnapshot.data() as Product
     this.form.patchValue(product)
@@ -47,6 +55,7 @@ export default class ProductEditComponent {
     try {
       const id = this.id()
       if(id) {
+        this._settings.showSpinner()
         this.isLoading.set(true)
         const { code, name, description, quantity, costPrice, salePrice } = this.form.value
   
@@ -67,6 +76,7 @@ export default class ProductEditComponent {
       toast.error("Error al actualizar producto")
     } finally {
       this.isLoading.set(false)
+      this._settings.hideSpinner()
     }
   }
 

@@ -3,6 +3,9 @@ import { ButtonModule } from 'primeng/button'
 import { RouterLink } from '@angular/router';
 import { Product, ProductService } from '../product.service';
 import { ProductTableComponent } from '../../components/product-table/product-table.component';
+import { SettingsService } from '../../../core/settings/settings.service';
+import { LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
+import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 
 @Component({
   selector: 'app-product-list',
@@ -12,25 +15,34 @@ import { ProductTableComponent } from '../../components/product-table/product-ta
 })
 export default class ProductListComponent implements OnInit {
   products: Product[] = []
-  isLoading: boolean = true;
 
-  constructor(private _productService: ProductService) {}
+  constructor(
+    private _productService: ProductService,
+    private _settings: SettingsService,
+    private _breadcrumService: BreadcrumbService
+  ) {}
 
   ngOnInit(): void {
-    //this.products = this._productService.getProducts()
+    this.initializeBreadcrumb()
+
+    this._settings.showSpinner()
     this._productService.getCollection<Product>('products')
     .subscribe({
       next: (data) => {
         this.products = data;
-        this.isLoading = false;
+        this._settings.hideSpinner();
       },
       error: (error) => {
         console.error('Error al obtener datos', error);
-        this.isLoading = false;
+        this._settings.hideSpinner();
       },
       complete: () => {
         console.log('Carga completa de productos');
       }
     });
+  }
+
+  initializeBreadcrumb() {
+    this._breadcrumService.addBreadcrumbs(LISTAR_PRODUCTO);
   }
 }
