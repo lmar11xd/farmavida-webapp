@@ -3,15 +3,15 @@ import { MenuItem } from "primeng/api";
 export let BREADCRUMB: { [key: string]: MenuItem[] } = {};
 
 export const LISTAR_PRODUCTO: MenuItem[] = [
-  {label:'Listar Productos', url: '/product/list', target: ''}
+  {label:'Productos', url: '/product/list', target: ''}
 ];
 
 export const CREAR_PRODUCTO: MenuItem[] = [
-  {label:'Crear Producto', url: '/product/create', target: ''}
+  {label:'Crear', url: '/product/create', target: ''}
 ];
 
 export const EDITAR_PRODUCTO: MenuItem[] = [
-  {label:'Editar Producto', url: '/product/edit/:id', target: ''}
+  {label:'Editar', url: '/product/edit/:id', target: ''}
 ];
 
 BREADCRUMB['/product/list'] = LISTAR_PRODUCTO;

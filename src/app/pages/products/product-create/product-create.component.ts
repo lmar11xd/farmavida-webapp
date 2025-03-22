@@ -1,10 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { ProductCreate, ProductService } from '../product.service';
 import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
 import { SettingsService } from '../../../core/settings/settings.service';
+import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
+import { CREAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-product-create',
@@ -12,17 +15,31 @@ import { SettingsService } from '../../../core/settings/settings.service';
   templateUrl: './product-create.component.html',
   styleUrl: './product-create.component.css'
 })
-export default class ProductCreateComponent {
-  form: FormGroup
+export default class ProductCreateComponent implements OnInit {
+  form: FormGroup = new FormGroup({});
   isLoading = signal(false)
   
   constructor(
     private _formBuilder: FormBuilder, 
     private _productService: ProductService, 
     private _router: Router,
-    private _settings: SettingsService
-  ) {
-    this.form = _formBuilder.group({
+    private _settings: SettingsService,
+    private _breadcrumbService: BreadcrumbService
+  ) {}
+  
+  ngOnInit(): void {
+    this.initializeBreadcrumb()
+    this.initializeForm()
+  }
+
+  initializeBreadcrumb() {
+    let BREADCRUMBS: MenuItem[] = [...LISTAR_PRODUCTO, ...CREAR_PRODUCTO];
+
+    this._breadcrumbService.addBreadcrumbs(BREADCRUMBS);
+  }
+
+  initializeForm() {
+    this.form = this._formBuilder.group({
       code: this._formBuilder.control('', Validators.required),
       name: this._formBuilder.control('', Validators.required),
       description: this._formBuilder.control('', []),

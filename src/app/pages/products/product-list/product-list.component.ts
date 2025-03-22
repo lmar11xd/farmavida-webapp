@@ -24,7 +24,14 @@ export default class ProductListComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeBreadcrumb()
+    this.initialize()
+  }
 
+  initializeBreadcrumb() {
+    this._breadcrumService.addBreadcrumbs(LISTAR_PRODUCTO);
+  }
+
+  initialize() {
     this._settings.showSpinner()
     this._productService.getCollection<Product>('products')
     .subscribe({
@@ -35,14 +42,7 @@ export default class ProductListComponent implements OnInit {
       error: (error) => {
         console.error('Error al obtener datos', error);
         this._settings.hideSpinner();
-      },
-      complete: () => {
-        console.log('Carga completa de productos');
       }
     });
-  }
-
-  initializeBreadcrumb() {
-    this._breadcrumService.addBreadcrumbs(LISTAR_PRODUCTO);
   }
 }

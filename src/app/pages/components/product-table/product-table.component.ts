@@ -10,6 +10,7 @@ import { RouterLink } from '@angular/router';
 })
 export class ProductTableComponent {
   products = input.required<Product[]>()
+  
   constructor() {
     effect(() => {
       console.log(this.products())

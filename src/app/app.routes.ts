@@ -8,17 +8,20 @@ export const routes: Routes = [
         children: [
             {
                 path: 'dashboard',
-                loadComponent: () => import('./pages/dashboard/dashboard.component')
+                loadComponent: () => import('./pages/dashboard/dashboard.component'),
+                data: { breadcrumb: 'Dashboard' }
             },
             {
                 path: 'product',
                 loadChildren: () => import('./pages/products/product.routes'),
-                canActivate: [privateGuard()]
+                canActivate: [privateGuard()],
+                data: { breadcrumb: 'Producto' }
             },
             {
                 path: 'profile',
                 loadComponent: () => import('./pages/profile/profile.component'),
-                canActivate: [privateGuard()]
+                canActivate: [privateGuard()],
+                data: { breadcrumb: 'Profile' }
             },
             {
                 path: '',

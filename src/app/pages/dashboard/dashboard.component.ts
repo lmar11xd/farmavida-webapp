@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { BreadcrumbService } from '../../shared/services/breadcrumb.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,7 +7,15 @@ import { Component } from '@angular/core';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css'
 })
-export default class DashboardComponent {
+export default class DashboardComponent implements OnInit {
 
-  
+  constructor(private _breadcrumService: BreadcrumbService) {}
+
+  ngOnInit(): void {
+    this.initializeBreadcrumb()
+  }
+
+  initializeBreadcrumb() {
+    this._breadcrumService.addBreadcrumbs([]);
+  }
 }

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { Data } from '@angular/router';
+import { ActivatedRoute, Data, NavigationEnd, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MenuItem } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { filter, Observable } from 'rxjs';
 
 import { BreadcrumbModule } from 'primeng/breadcrumb';
 import { BreadcrumbService } from '../services/breadcrumb.service';
@@ -16,7 +16,7 @@ import { BreadcrumbService } from '../services/breadcrumb.service';
 export class BreadcrumbComponent {
   breadcrumbs$: Observable<MenuItem[]>;
   dashboard: MenuItem = { label: 'Dashboard', url: '/', target: '' };
-  listaTabs: MenuItem[] = [];
+  breadcrumbs: MenuItem[] = [];
 
   pageInfo: Data = {} as Data; // Inicialización segura
 
@@ -24,6 +24,6 @@ export class BreadcrumbComponent {
     this.breadcrumbs$ = this.breadcrumbService.breadcrumbs$;
 
     // Suscribirse correctamente evitando fugas de memoria
-    this.breadcrumbs$.subscribe(val => this.listaTabs = val ?? []);
+    this.breadcrumbs$.subscribe(val => this.breadcrumbs = val ?? []);
   }
 }

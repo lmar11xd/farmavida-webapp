@@ -1,10 +1,13 @@
-import { Component, effect, input, signal } from '@angular/core';
+import { Component, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product, ProductCreate, ProductService } from '../product.service';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { toast } from 'ngx-sonner';
 import { SettingsService } from '../../../core/settings/settings.service';
+import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
+import { EDITAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
+import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-product-edit',
@@ -12,8 +15,8 @@ import { SettingsService } from '../../../core/settings/settings.service';
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css'
 })
-export default class ProductEditComponent {
-  form: FormGroup
+export default class ProductEditComponent implements OnInit {
+  form: FormGroup = new FormGroup({})
   isLoading = signal(false)
   id = input.required<string>()
 
@@ -21,9 +24,27 @@ export default class ProductEditComponent {
     private _formBuilder: FormBuilder, 
     private _productService: ProductService, 
     private _router: Router,
-    private _settings: SettingsService
-  ) {
-    this.form = _formBuilder.group({
+    private _settings: SettingsService,
+    private _breadcrumbService: BreadcrumbService
+  ) { }
+
+  ngOnInit(): void {
+    this.initializeBreadcrumb()
+    this.initializeForm()
+    this.initialize()
+  }
+
+  initializeBreadcrumb() {
+    const id = this.id()
+    EDITAR_PRODUCTO[0]?.url && (EDITAR_PRODUCTO[0].url = EDITAR_PRODUCTO[0].url.replace(':id', id));
+
+    let BREADCRUMBS: MenuItem[] = [...LISTAR_PRODUCTO, ...EDITAR_PRODUCTO];
+
+    this._breadcrumbService.addBreadcrumbs(BREADCRUMBS);
+  }
+
+  initializeForm() {
+    this.form = this._formBuilder.group({
       code: this._formBuilder.control('', Validators.required),
       name: this._formBuilder.control('', Validators.required),
       description: this._formBuilder.control('', []),
@@ -31,13 +52,13 @@ export default class ProductEditComponent {
       costPrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
       salePrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)])
     })
+  }
 
-    effect(() => {
-      const id = this.id()
-      if(id) {
-        this.getProduct(id)
-      }
-    })
+  initialize() {
+    const id = this.id()
+    if(id) {
+      this.getProduct(id)
+    }
   }
 
   async getProduct(id: string) {
