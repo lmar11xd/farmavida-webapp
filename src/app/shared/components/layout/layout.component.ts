@@ -11,5 +11,10 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './layout.component.css'
 })
 export default class LayoutComponent {
+  visible: boolean = false;
 
+  toggleSiderbar() {
+    this.visible = !this.visible
+  }
+  
 }

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button'
-import { RouterLink } from '@angular/router';
 import { Product, ProductService } from '../product.service';
 import { ProductTableComponent } from '../../components/product-table/product-table.component';
 import { SettingsService } from '../../../core/settings/settings.service';
@@ -9,7 +8,7 @@ import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 
 @Component({
   selector: 'app-product-list',
-  imports: [ButtonModule, RouterLink, ProductTableComponent],
+  imports: [ButtonModule, ProductTableComponent],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
 })

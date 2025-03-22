@@ -1,6 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
+@import "primeicons/primeicons.css";
 
 p-breadcrumb nav {
     border-radius: 10px;
+}
+.p-datatable-table-container, .p-datatable-tfoot {
+    font-size: 14px !important;
+}
+.p-datatable-thead > tr > th {
+    background-color: var(--color-yellow-200) !important;
+    /*color: var(--color-green-700) !important;*/
+}
+.p-paginator {
+    font-size: 14px !important;
 }

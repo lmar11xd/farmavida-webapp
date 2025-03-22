@@ -1,38 +1,36 @@
-<section class="mx-auto w-full max-w-screen-md px-4">
+<section class="mx-auto w-full shadow-md sm:rounded-lg p-4">
     <form class="space-y-4 md:space-y-6" (ngSubmit)="onSubmit()" [formGroup]="form">
-        <div>
-            <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">C&oacute;digo</label>
-            <input type="text" formControlName="code" name="code" id="code" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="P000000" required="">
-            <!--@if(isRequired('code')) {
-                <small class="text-red-400">Este campo es requerido</small>
-            }
-            @if(hascodeError()) {
-                <small class="text-red-400">Correo no es válido</small>
-        }-->
-        </div>
-        <div>
-            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre del Producto</label>
-            <input type="text" formControlName="name" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre del producto" required="">
-        </div>
-        <div>
-            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripci&oacute;n del Producto</label>
-            <input type="text" formControlName="description" name="description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Descripción del producto" required="">
-        </div>
-        <div class="grid grid-flow-row gap-4">
-            <div class="col-span-1">
+        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-2">
+                <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">C&oacute;digo</label>
+                <input type="text" formControlName="code" name="code" id="code" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="P000000" required="">
+            </div>
+            
+            <div class="sm:col-span-4">
+                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre del Producto</label>
+                <input type="text" formControlName="name" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombre del producto" required="">
+            </div>
+
+            <div class="sm:col-span-6">
+                <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripci&oacute;n del Producto</label>
+                <input type="text" formControlName="description" name="description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Descripción del producto" required="">
+            </div>
+
+            <div class="sm:col-span-2">
                 <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cantidad</label>
                 <input type="number" formControlName="quantity" name="quantity" id="quantity" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" required="">
             </div>
-            <div class="row-span-1">
+            <div class="sm:col-span-2">
                 <label for="costPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio de Costo</label>
                 <input type="number" formControlName="costPrice" name="costPrice" id="costPrice" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" required="">
             </div>
-            <div class="row-span-1">
+            <div class="sm:col-span-2">
                 <label for="salePrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio de Venta</label>
                 <input type="number" formControlName="salePrice" name="salePrice" id="salePrice" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0" required="">
             </div>
         </div>
-        <div class="text-center">
+
+        <div class="mt-6 flex items-center justify-end gap-x-6">
             <button
                 [disabled]="isLoading()"
                 pButton 

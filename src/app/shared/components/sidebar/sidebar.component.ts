@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStateService } from '../../services/auth.state.service';
 
@@ -11,6 +11,8 @@ import { AuthStateService } from '../../services/auth.state.service';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
+  visible = input.required<boolean>()
+  
   constructor(private _authState: AuthStateService, private _router: Router) {}
 
   async logout() {

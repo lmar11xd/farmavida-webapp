@@ -8,5 +8,4 @@ import { BreadcrumbComponent } from '../../breadcrumb/breadcrumb.component';
   styleUrl: './header.component.css'
 })
 export class HeaderComponent {
-
 }
