@@ -4,7 +4,9 @@ import { ButtonModule } from 'primeng/button';
 import { hasConfirmPasswordError, hasEmailError, hasPasswordError, isRequired, passwordsMatchValidator } from '../../utils/validators';
 import { AuthService } from '../../../core/security/auth-service';
 import { toast } from 'ngx-sonner';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
+import { FooterComponent } from "../../../shared/components/footer/footer.component";
+import { SettingsService } from '../../../core/settings/settings.service';
 
 interface FormSignUp {
   email: FormControl<string | null>,
@@ -16,8 +18,9 @@ interface FormSignUp {
   selector: 'app-signup',
   imports: [
     ReactiveFormsModule,
-    ButtonModule
-  ],
+    ButtonModule,
+    FooterComponent
+],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
@@ -27,7 +30,8 @@ export default class SignupComponent {
   constructor(
     private _formBuilder: FormBuilder, 
     private _authService: AuthService, 
-    private _router: Router
+    private _router: Router,
+    private _settings: SettingsService
   ) {
     this.form = this._formBuilder.group<FormSignUp>(
       {
@@ -61,12 +65,15 @@ export default class SignupComponent {
     try {
       const { email, password } = this.form.value
       if(!email || !password) return
-  
+      
+      this._settings.showSpinner()
       await this._authService.signup({email, password})
       toast.success("Te has registrado correctamente")
       this._router.navigateByUrl('/dashboard')
     } catch (error) {
       toast.error("Ha ocurrido un error")
+    } finally {
+      this._settings.hideSpinner()
     }
   }
 }

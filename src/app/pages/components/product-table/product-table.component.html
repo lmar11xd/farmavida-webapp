@@ -1,0 +1,73 @@
+<div class="w-full overflow-x-auto shadow-md sm:rounded-lg p-4">
+    <p-toast />
+    <p-toolbar styleClass="mb-6">
+        <ng-template #start>
+            <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" routerLink="/product/create" />
+            <p-button severity="danger" label="Eliminar" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length" />
+        </ng-template>
+
+        <ng-template #end>
+            <p-fileUpload mode="basic" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" [maxFileSize]="1000000" label="Importar" chooseLabel="Importar" auto customUpload class="mr-2 inline-block" [chooseButtonProps]="{ severity: 'secondary' }" />
+            <p-button label="Exportar" icon="pi pi-upload" severity="secondary" />
+        </ng-template>
+    </p-toolbar>
+
+    <p-table
+        #dt
+        [value]="products()"
+        [rows]="10"
+        [columns]="cols"
+        [paginator]="true"
+        [globalFilterFields]="['code', 'name', 'quantity', 'costPrice', 'salePrice']"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        [(selection)]="selectedProducts"
+        [rowHover]="true"
+        dataKey="id"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+        [showCurrentPageReport]="true"
+    >
+        <ng-template #caption>
+            <div class="flex items-center justify-between">
+                <h5 class="m-0 text-green-900 font-medium">Lista de Productos</h5>
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input 
+                        pInputText 
+                        type="text" 
+                        placeholder="Buscar..." 
+                    />
+                </p-iconfield>
+            </div>
+        </ng-template>
+        <ng-template #header>
+            <tr>
+                <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
+                <th pSortableColumn="code" style="width: 8rem">C&oacute;digo <p-sortIcon field="code" /></th>
+                <th pSortableColumn="name" style="min-width: 12rem">Nombre <p-sortIcon field="name" /></th>
+                <th pSortableColumn="quantity" style="width: 10rem">Cantidad <p-sortIcon field="quantity" /></th>
+                <th pSortableColumn="costPrice" style="width: 10rem">Precio Costo <p-sortIcon field="costPrice" /></th>
+                <th pSortableColumn="salePrice" style="width: 10rem">Precio Venta <p-sortIcon field="salePrice" /></th>
+                <th style="width: 10rem">Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-product>
+            <tr>
+                <td style="width: 3rem"><p-tableCheckbox [value]="product" /></td>
+                <td>{{ product.code }}</td>
+                <td style="min-width: 12rem" class="font-medium">{{ product.name }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.costPrice | currency: 'USD' }}</td>
+                <td>{{ product.salePrice | currency: 'USD' }}</td>
+                <td>
+                    <p-button icon="pi pi-pencil" [routerLink]="['/product/edit/' + product.id]" class="mr-2" [rounded]="true" />
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="deleteProduct(product)" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #summary>
+            <div class="flex items-center justify-between text-green-900 pt-2">Se encontraron {{ dt?.totalRecords }} productos.</div>
+        </ng-template>
+    </p-table>
+
+    <p-confirmDialog [style]="{ width: '450px' }" />
+</div>

@@ -5,6 +5,8 @@ import { toast } from 'ngx-sonner';
 import { AuthService } from '../../../core/security/auth-service';
 import { isRequired, hasEmailError, hasPasswordError } from '../../utils/validators';
 import { Router } from '@angular/router';
+import { FooterComponent } from "../../../shared/components/footer/footer.component";
+import { SettingsService } from '../../../core/settings/settings.service';
 
 interface FormLogIn {
   email: FormControl<string | null>,
@@ -15,8 +17,9 @@ interface FormLogIn {
   selector: 'app-login',
   imports: [
     ReactiveFormsModule,
-    ButtonModule
-  ],
+    ButtonModule,
+    FooterComponent
+],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -26,7 +29,8 @@ export default class LoginComponent {
   constructor(
     private _formBuilder: FormBuilder, 
     private _authService: AuthService, 
-    private _router: Router
+    private _router: Router,
+    private _settings: SettingsService
   ) {
     this.form = this._formBuilder.group<FormLogIn>(
       {
@@ -35,6 +39,7 @@ export default class LoginComponent {
       }
     )
   }
+
   isRequired(field: 'email' | 'password') {
     return isRequired(field, this.form)
   }
@@ -53,12 +58,15 @@ export default class LoginComponent {
     try {
       const { email, password } = this.form.value
       if(!email || !password) return
+      this._settings.showSpinner()
   
       await this._authService.login({email, password})
       toast.success("Bienvenido")
       this._router.navigateByUrl('/dashboard')
     } catch (error) {
       toast.error("Ha ocurrido un error")
+    } finally {
+      this._settings.hideSpinner()
     }
   }
 }

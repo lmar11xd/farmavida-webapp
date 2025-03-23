@@ -1,17 +1,38 @@
+import { CanActivateFn, Router } from "@angular/router";
+import { map } from "rxjs";
 import { inject } from "@angular/core";
-import {  Router } from "@angular/router";
-import { SessionLocalService } from "./session-local.service";
+import { AuthStateService } from "../../shared/services/auth.state.service";
 
-export const AuthGuard = () => {
-    const authService = inject(SessionLocalService);
-    const router = inject(Router);
-  
-    if (!authService.isAuthenticated()) {
-      if (router.url !== '/auth/login') {  // Evita redirecciones innecesarias
-        setTimeout(() => router.navigate(['/auth/login']), 0);
-      }
-      return false;
-    }
-    
-    return true;
-  };
+export const privateGuard = (): CanActivateFn => {
+  return () => { 
+    const router = inject(Router)
+    const authState = inject(AuthStateService)
+
+    return authState.authState$.pipe(
+      map(state => {
+        console.log(state)
+        if(!state) {
+          router.navigateByUrl('/auth/login')
+          return false
+        }
+        return true
+      })
+    )
+  }
+}
+
+export const publicGuard = (): CanActivateFn => {
+    return () => {
+      const router = inject(Router)
+      const authState = inject(AuthStateService)
+      return authState.authState$.pipe(
+        map(state => {
+          if(state) {
+            router.navigateByUrl('/dashboard')
+            return false
+          }
+          return true
+        })
+    )
+  }
+}

@@ -1,18 +1,42 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './core/security/auth-guard';
+import { privateGuard, publicGuard } from './core/security/auth-guard';
 
 export const routes: Routes = [
     {
-        path: 'auth',
-        loadChildren: () => import('./auth/features/auth-shell/auth-rounting')
+        path: '',
+        loadComponent: () => import('./shared/components/layout/layout.component'),
+        children: [
+            {
+                path: 'dashboard',
+                loadComponent: () => import('./pages/dashboard/dashboard.component'),
+                data: { breadcrumb: 'Dashboard' }
+            },
+            {
+                path: 'product',
+                loadChildren: () => import('./pages/products/product.routes'),
+                canActivate: [privateGuard()],
+                data: { breadcrumb: 'Producto' }
+            },
+            {
+                path: 'profile',
+                loadComponent: () => import('./pages/profile/profile.component'),
+                canActivate: [privateGuard()],
+                data: { breadcrumb: 'Profile' }
+            },
+            {
+                path: '',
+                redirectTo: 'dashboard',
+                pathMatch: 'full'
+            }
+        ]
     },
     {
-        path: 'dashboard',
-        loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
-        canActivate: [AuthGuard]
+        path: 'auth',
+        loadChildren: () => import('./auth/features/auth-shell/auth-rounting'),
+        canActivateChild: [publicGuard()]
     },
     {
         path: '**',
-        redirectTo: '/dashboard'
+        redirectTo: 'dashboard'
     }
 ];

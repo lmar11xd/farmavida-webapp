@@ -1,5 +1,11 @@
 export const environment = {
     production: false,
-    SUPABASE_URL: 'https://xwimyflvkbzduoflzemb.supabase.co',
-    SUPABASE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh3aW15Zmx2a2J6ZHVvZmx6ZW1iIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzMTYxOTIsImV4cCI6MjA1Nzg5MjE5Mn0.TemKWXbYmDi0W7nFpE4gDwOdpQnW_yqKjXj2fJDxpUU'
+    firebase: {
+        apiKey: "AIzaSyBPP17YEcHanyiIVMlFcJ_QKp6tEmzKKU8",
+        authDomain: "app-with-firebase-db4cb.firebaseapp.com",
+        projectId: "app-with-firebase-db4cb",
+        storageBucket: "app-with-firebase-db4cb.firebasestorage.app",
+        messagingSenderId: "719956771256",
+        appId: "1:719956771256:web:cfc2a7697d406e719c0f4d"
+    }
 };
