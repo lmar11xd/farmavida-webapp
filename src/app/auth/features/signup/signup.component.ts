@@ -7,6 +7,7 @@ import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
 import { FooterComponent } from "../../../shared/components/footer/footer.component";
 import { SettingsService } from '../../../core/settings/settings.service';
+import { LogoComponent } from "../../../shared/logo/logo.component";
 
 interface FormSignUp {
   email: FormControl<string | null>,
@@ -19,7 +20,8 @@ interface FormSignUp {
   imports: [
     ReactiveFormsModule,
     ButtonModule,
-    FooterComponent
+    FooterComponent,
+    LogoComponent
 ],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'

@@ -1,12 +1,14 @@
 import { Component, input, Input } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthStateService } from '../../services/auth.state.service';
+import { LogoComponent } from "../../logo/logo.component";
 
 @Component({
   selector: 'app-sidebar',
   imports: [
-    RouterLink, RouterLinkActive
-  ],
+    RouterLink, RouterLinkActive,
+    LogoComponent
+],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })

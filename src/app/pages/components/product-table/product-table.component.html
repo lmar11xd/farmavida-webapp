@@ -59,7 +59,7 @@
                 <td>{{ product.costPrice | currency: 'USD' }}</td>
                 <td>{{ product.salePrice | currency: 'USD' }}</td>
                 <td>
-                    <p-button icon="pi pi-pencil" [routerLink]="['/product/edit/' + product.id]" class="mr-2" [rounded]="true" />
+                    <p-button icon="pi pi-pencil" [routerLink]="['/product/edit']" [queryParams]="{ pkey: product.id}" class="mr-2" [rounded]="true" />
                     <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="deleteProduct(product)" />
                 </td>
             </tr>

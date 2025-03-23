@@ -7,6 +7,7 @@ import { isRequired, hasEmailError, hasPasswordError } from '../../utils/validat
 import { Router } from '@angular/router';
 import { FooterComponent } from "../../../shared/components/footer/footer.component";
 import { SettingsService } from '../../../core/settings/settings.service';
+import { LogoComponent } from "../../../shared/logo/logo.component";
 
 interface FormLogIn {
   email: FormControl<string | null>,
@@ -18,7 +19,8 @@ interface FormLogIn {
   imports: [
     ReactiveFormsModule,
     ButtonModule,
-    FooterComponent
+    FooterComponent,
+    LogoComponent
 ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'

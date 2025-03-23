@@ -1,7 +1,7 @@
 import { Component, input, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Product, ProductCreate, ProductService } from '../product.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { toast } from 'ngx-sonner';
 import { SettingsService } from '../../../core/settings/settings.service';
@@ -18,15 +18,21 @@ import { MenuItem } from 'primeng/api';
 export default class ProductEditComponent implements OnInit {
   form: FormGroup = new FormGroup({})
   isLoading = signal(false)
-  id = input.required<string>()
+  id: string | null = null
 
   constructor(
     private _formBuilder: FormBuilder, 
     private _productService: ProductService, 
     private _router: Router,
     private _settings: SettingsService,
-    private _breadcrumbService: BreadcrumbService
-  ) { }
+    private _breadcrumbService: BreadcrumbService,
+    private route: ActivatedRoute
+  ) { 
+    this.route.queryParamMap.subscribe(params => {
+      this.id = params.get('pkey');
+      console.log('ID recibido:', this.id);
+    });
+  }
 
   ngOnInit(): void {
     this.initializeBreadcrumb()
@@ -35,12 +41,13 @@ export default class ProductEditComponent implements OnInit {
   }
 
   initializeBreadcrumb() {
-    const id = this.id()
-    EDITAR_PRODUCTO[0]?.url && (EDITAR_PRODUCTO[0].url = EDITAR_PRODUCTO[0].url.replace(':id', id));
-
-    let BREADCRUMBS: MenuItem[] = [...LISTAR_PRODUCTO, ...EDITAR_PRODUCTO];
-
-    this._breadcrumbService.addBreadcrumbs(BREADCRUMBS);
+    if(this.id != null) {
+      EDITAR_PRODUCTO[0]?.url && (EDITAR_PRODUCTO[0].url = EDITAR_PRODUCTO[0].url.replace(':id', this.id));
+  
+      let BREADCRUMBS: MenuItem[] = [...LISTAR_PRODUCTO, ...EDITAR_PRODUCTO];
+  
+      this._breadcrumbService.addBreadcrumbs(BREADCRUMBS);
+    }
   }
 
   initializeForm() {
@@ -55,9 +62,8 @@ export default class ProductEditComponent implements OnInit {
   }
 
   initialize() {
-    const id = this.id()
-    if(id) {
-      this.getProduct(id)
+    if(this.id != null) {
+      this.getProduct(this.id)
     }
   }
 
@@ -74,8 +80,7 @@ export default class ProductEditComponent implements OnInit {
    if(this.form.invalid) return
        
     try {
-      const id = this.id()
-      if(id) {
+      if(this.id != null) {
         this._settings.showSpinner()
         this.isLoading.set(true)
         const { code, name, description, quantity, costPrice, salePrice } = this.form.value
@@ -89,7 +94,7 @@ export default class ProductEditComponent implements OnInit {
           salePrice: salePrice || 0
         })
   
-        await this._productService.update(product, id)
+        await this._productService.update(product, this.id)
         toast.success("Producto actualizado correctamente")
         this._router.navigateByUrl('/product/list')
       }

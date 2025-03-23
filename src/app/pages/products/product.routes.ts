@@ -12,7 +12,7 @@ export default [
         data: { breadcrumb: 'Crear' }
     },
     {
-        path: 'edit/:id',
+        path: 'edit',
         loadComponent: () => import('./product-edit/product-edit.component'),
         data: { breadcrumb: 'Editar' }
     },
