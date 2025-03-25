@@ -1,22 +1,21 @@
 import { Component, OnInit } from '@angular/core';
-import { ButtonModule } from 'primeng/button'
-import { Product, ProductService } from '../product.service';
-import { ProductTableComponent } from '../../components/product-table/product-table.component';
+import { UserTableComponent } from "../../components/user-table/user-table.component";
 import { SettingsService } from '../../../core/settings/settings.service';
-import { LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
+import { LISTAR_USUARIO } from '../../../shared/breadcrumb/breadcrumb';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
+import { User, UserService } from '../users.service';
 
 @Component({
-  selector: 'app-product-list',
-  imports: [ButtonModule, ProductTableComponent],
-  templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css'
+  selector: 'app-user-list',
+  imports: [UserTableComponent],
+  templateUrl: './user-list.component.html',
+  styleUrl: './user-list.component.css'
 })
-export default class ProductListComponent implements OnInit {
-  products: Product[] = []
+export default class UserListComponent implements OnInit {
+  users: User[] = []
 
   constructor(
-    private _productService: ProductService,
+    private _userService: UserService,
     private _settings: SettingsService,
     private _breadcrumService: BreadcrumbService
   ) {}
@@ -25,17 +24,17 @@ export default class ProductListComponent implements OnInit {
     this.initializeBreadcrumb()
     this.initialize()
   }
-
+  
   initializeBreadcrumb() {
-    this._breadcrumService.addBreadcrumbs(LISTAR_PRODUCTO);
+    this._breadcrumService.addBreadcrumbs(LISTAR_USUARIO);
   }
-
+  
   initialize() {
     this._settings.showSpinner()
-    this._productService.getCollection<Product>('products')
+    this._userService.getUsers()
       .subscribe({
         next: (data) => {
-          this.products = data;
+          this.users = data;
           this._settings.hideSpinner();
         },
         error: (error) => {
@@ -45,3 +44,4 @@ export default class ProductListComponent implements OnInit {
       });
   }
 }
+

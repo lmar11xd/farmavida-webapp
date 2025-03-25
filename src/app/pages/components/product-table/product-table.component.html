@@ -16,12 +16,11 @@
         #dt
         [value]="products()"
         [rows]="10"
-        [columns]="cols"
         [paginator]="true"
         [globalFilterFields]="['code', 'name', 'quantity', 'costPrice', 'salePrice']"
         [tableStyle]="{ 'min-width': '75rem' }"
-        [(selection)]="selectedProducts"
         [rowHover]="true"
+        [(selection)]="selectedProducts"
         dataKey="id"
         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
         [showCurrentPageReport]="true"
@@ -33,7 +32,8 @@
                     <p-inputicon styleClass="pi pi-search" />
                     <input 
                         pInputText 
-                        type="text" 
+                        type="text"
+                        (input)="onFilter($event)"
                         placeholder="Buscar..." 
                     />
                 </p-iconfield>

@@ -1,17 +1,18 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { ProductCreate, ProductService } from '../product.service';
 import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
+import { MenuItem } from 'primeng/api';
+import { FieldsetModule } from 'primeng/fieldset';
+import { ProductCreate, ProductService } from '../product.service';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 import { CREAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
-import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-product-create',
-  imports: [ReactiveFormsModule, ButtonModule],
+  imports: [ReactiveFormsModule, FieldsetModule, ButtonModule],
   templateUrl: './product-create.component.html',
   styleUrl: './product-create.component.css'
 })

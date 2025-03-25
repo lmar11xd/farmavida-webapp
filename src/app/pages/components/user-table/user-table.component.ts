@@ -7,15 +7,15 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
-import { FileUpload } from 'primeng/fileupload';
 import { FormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Product } from '../../products/product.service';
+import { User } from '../../users/users.service';
+import { UserRolEnum } from '../../../core/enums/user-rol.enum';
 
 @Component({
-  selector: 'app-product-table',
+  selector: 'app-user-table',
   providers: [ConfirmationService],
   imports: [
     RouterLink, 
@@ -25,24 +25,21 @@ import { Product } from '../../products/product.service';
     ToolbarModule, 
     ConfirmDialog, 
     InputTextModule,
-    CommonModule, 
-    FileUpload, 
+    CommonModule,
     InputTextModule, 
     FormsModule, 
     IconFieldModule, 
     InputIconModule
   ],
-  templateUrl: './product-table.component.html',
+  templateUrl: './user-table.component.html',
   styles: ``
 })
-export class ProductTableComponent {
+export class UserTableComponent {
   @ViewChild('dt') dt!: Table;
   
-  products = input.required<Product[]>()
+  items = input.required<User[]>()
 
-  productDialog: boolean = false;
-
-  selectedProducts!: Product[] | null;
+  itemDialog: boolean = false;
   
   constructor(
     private messageService: MessageService, 
@@ -54,36 +51,24 @@ export class ProductTableComponent {
     this.dt.filter(input.value, 'global', 'contains');
   }
 
-  deleteSelectedProducts() {
+  deleteItem(item: User) {
     this.confirmationService.confirm({
-        message: 'Are you sure you want to delete the selected products?',
+        message: 'Are you sure you want to delete ' + item.names + '?',
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.selectedProducts = null;
             this.messageService.add({
                 severity: 'success',
                 summary: 'Successful',
-                detail: 'Products Deleted',
+                detail: 'User Deleted',
                 life: 3000
             });
         }
     });
   }
 
-  deleteProduct(product: Product) {
-    this.confirmationService.confirm({
-        message: 'Are you sure you want to delete ' + product.name + '?',
-        header: 'Confirm',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-            this.messageService.add({
-                severity: 'success',
-                summary: 'Successful',
-                detail: 'Product Deleted',
-                life: 3000
-            });
-        }
-    });
+  esVendedor(rol: UserRolEnum): boolean {
+    console.log(rol)
+    return rol == UserRolEnum.VENDEDOR
   }
 }

@@ -26,3 +26,11 @@ p-breadcrumb nav {
 .p-paginator {
     font-size: 14px !important;
 }
+
+.form-farm form label {
+    color: var(--color-green-900) !important;
+}
+.p-fieldset-legend {
+    border-radius: 10px;
+    color: var(--color-green-900) !important;
+}

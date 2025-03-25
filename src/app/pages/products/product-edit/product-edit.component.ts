@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Product, ProductCreate, ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { FieldsetModule } from 'primeng/fieldset';
 import { toast } from 'ngx-sonner';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
@@ -11,7 +12,7 @@ import { MenuItem } from 'primeng/api';
 
 @Component({
   selector: 'app-product-edit',
-  imports: [ReactiveFormsModule, ButtonModule],
+  imports: [ReactiveFormsModule, FieldsetModule, ButtonModule],
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css'
 })
@@ -26,11 +27,10 @@ export default class ProductEditComponent implements OnInit {
     private _router: Router,
     private _settings: SettingsService,
     private _breadcrumbService: BreadcrumbService,
-    private route: ActivatedRoute
+    private _route: ActivatedRoute
   ) { 
-    this.route.queryParamMap.subscribe(params => {
+    this._route.queryParamMap.subscribe(params => {
       this.id = params.get('pkey');
-      console.log('ID recibido:', this.id);
     });
   }
 

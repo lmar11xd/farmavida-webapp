@@ -19,6 +19,12 @@ export const routes: Routes = [
                 data: { breadcrumb: 'Producto' }
             },
             {
+                path: 'user',
+                loadChildren: () => import('./pages/users/users.routes'),
+                canActivate: [privateGuard()],
+                data: { breadcrumb: 'Usuario' }
+            },
+            {
                 path: 'profile',
                 loadComponent: () => import('./pages/profile/profile.component'),
                 canActivate: [privateGuard()],
