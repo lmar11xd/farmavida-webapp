@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
 import { NgxSpinnerService } from 'ngx-spinner';
-import { User } from "../../pages/users/users.service";
 import { LOCAL_USER } from "../constants/constants";
-import { AuthService } from "../security/auth-service";
+import { AuthService, User } from "../security/auth-service";
 import { UserRolEnum } from "../enums/user-rol.enum";
 
 @Injectable({

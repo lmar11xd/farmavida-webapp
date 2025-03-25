@@ -1,10 +1,8 @@
 import { Component, input, Input, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { AuthStateService } from '../../services/auth.state.service';
 import { LogoComponent } from "../../logo/logo.component";
-import { AuthService } from '../../../core/security/auth-service';
 import { SettingsService } from '../../../core/settings/settings.service';
-import { User } from '../../../pages/users/users.service';
+import { User } from '../../../core/security/auth-service';
 
 @Component({
   selector: 'app-sidebar',

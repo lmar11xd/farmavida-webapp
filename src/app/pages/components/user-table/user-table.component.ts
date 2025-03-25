@@ -11,8 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { User } from '../../users/users.service';
 import { UserRolEnum } from '../../../core/enums/user-rol.enum';
+import { User } from '../../../core/security/auth-service';
 
 @Component({
   selector: 'app-user-table',

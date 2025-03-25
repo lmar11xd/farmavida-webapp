@@ -3,7 +3,8 @@ import { UserTableComponent } from "../../components/user-table/user-table.compo
 import { SettingsService } from '../../../core/settings/settings.service';
 import { LISTAR_USUARIO } from '../../../shared/breadcrumb/breadcrumb';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
-import { User, UserService } from '../users.service';
+import { UserService } from '../users.service';
+import { User } from '../../../core/security/auth-service';
 
 @Component({
   selector: 'app-user-list',

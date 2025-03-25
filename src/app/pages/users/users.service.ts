@@ -1,17 +1,7 @@
 import { Injectable, signal } from "@angular/core";
-import { UserRolEnum } from "../../core/enums/user-rol.enum";
 import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, Firestore, getDocs, query, updateDoc, where } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
-
-export interface User {
-    id?: string;
-    username: string;
-    names: string;
-    phone?: string;
-    email: string;
-    password: string;
-    role: UserRolEnum;
-}
+import { User } from "../../core/security/auth-service";
 
 export type UserCreate = Omit<User, 'id'>
 
@@ -19,7 +9,7 @@ const PATH = 'users'
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    private _collection: CollectionReference
+  private _collection: CollectionReference
 
   isLoading = signal<boolean>(true)
 

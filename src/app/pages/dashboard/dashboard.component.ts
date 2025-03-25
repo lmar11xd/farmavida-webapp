@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BreadcrumbService } from '../../shared/services/breadcrumb.service';
 import { SettingsService } from '../../core/settings/settings.service';
-import { User } from '../users/users.service';
+import { User } from '../../core/security/auth-service';
 
 @Component({
   selector: 'app-dashboard',

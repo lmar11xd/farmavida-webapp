@@ -2,9 +2,18 @@ import { Injectable, NgZone } from "@angular/core";
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "@angular/fire/auth";
 import { collection, Firestore, getDocs, query, where } from "@angular/fire/firestore";
 import * as CryptoJS from 'crypto-js';
-import { User } from "../../pages/users/users.service";
 import { AES_SECRET_KEY, LOCAL_USER, MSG_INVALID_CREDENTIALS } from "../constants/constants";
 import { UserRolEnum } from "../enums/user-rol.enum";
+
+export interface User {
+    id?: string;
+    username: string;
+    names: string;
+    phone?: string;
+    email: string;
+    password: string;
+    role: UserRolEnum;
+}
 
 export interface UserLogin {
   username: string,

@@ -31,8 +31,7 @@ export default class UserCreateComponent implements OnInit {
     private _userService: UserService, 
     private _router: Router,
     private _settings: SettingsService,
-    private _breadcrumbService: BreadcrumbService,
-    private _messageService: MessageService
+    private _breadcrumbService: BreadcrumbService
   ) {}
   
   ngOnInit(): void {
