@@ -3,9 +3,8 @@ import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signO
 import { collection, Firestore, getDocs, query, where } from "@angular/fire/firestore";
 import * as CryptoJS from 'crypto-js';
 import { User } from "../../pages/users/users.service";
-import { AES_SECRET_KEY, MSG_INVALID_CREDENTIALS } from "../constants/constants";
+import { AES_SECRET_KEY, LOCAL_USER, MSG_INVALID_CREDENTIALS } from "../constants/constants";
 import { UserRolEnum } from "../enums/user-rol.enum";
-import { resolve } from "path";
 
 export interface UserLogin {
   username: string,
@@ -20,7 +19,7 @@ export class AuthService {
 
   signup(user: UserLogin) {
     return new Promise((resolve, reject) => {
-      createUserWithEmailAndPassword(this._auth, 'user.email', user.password)
+      createUserWithEmailAndPassword(this._auth, user.email, user.password)
         .then((userCredential) => {
           this._ngZone.run(() => resolve(userCredential));
         })
@@ -38,9 +37,9 @@ export class AuthService {
 
     const userData = querySnapshot.docs[0].data() as User
     if(userData.role == UserRolEnum.ADMINISTRADOR) {
-      return this.loginAdmin(userData.email, userLogin.password)
+      return this.loginAdmin(userData, userLogin.password)
     } else {
-      return this.loginVendedor(userData)
+      return this.loginVendedor(userData, userLogin.password)
     }
   }
 
@@ -48,19 +47,29 @@ export class AuthService {
     return new Promise((resolve, reject) => {
         signOut(this._auth)
           .then(() => {
-              this._ngZone.run(() => resolve(true))
+              this._ngZone.run(() => {
+                this.removeLocalUser()
+                resolve(true)
+              })
           })
           .catch((error) => reject(error))
       }
     );
   }
 
-  loginAdmin(email: string, password: string) {
+  logoutVendedor() {
+    this.removeLocalUser()
+  }
+
+  loginAdmin(user: User, password: string) {
     console.log('Logearse como Administrador')
     return new Promise((resolve, reject) => {
-      signInWithEmailAndPassword(this._auth, email, password)
+      signInWithEmailAndPassword(this._auth, user.email, password)
         .then((userCredential) => {
-          this._ngZone.run(() => resolve(userCredential));
+          this._ngZone.run(() => {
+            this.saveLocalUser(user)
+            resolve(userCredential)
+          });
         })
         .catch((error) =>  {
           const errorFirebase = error.toString()
@@ -73,15 +82,25 @@ export class AuthService {
     );
   }
 
-  loginVendedor(user: User) {
+  loginVendedor(user: User, password: string) {
     console.log('Logearse como Vendedor')
     return new Promise((resolve, reject) => {
-      const hashedPassword = CryptoJS.AES.decrypt(user.password, AES_SECRET_KEY).toString()
-      if(hashedPassword == user.password) {
+      const decodePassword = CryptoJS.AES.decrypt(user.password, AES_SECRET_KEY).toString(CryptoJS.enc.Utf8)
+      if(decodePassword == password) {
+        user.password = ''//Password no se debe visualizar en localStorage
+        this.saveLocalUser(user)
         resolve(user)
       } else {
         reject(new Error(MSG_INVALID_CREDENTIALS))
       }
     })
+  }
+
+  saveLocalUser(user: User) {
+    localStorage.setItem(LOCAL_USER, JSON.stringify(user))
+  }
+
+  removeLocalUser() {
+    localStorage.removeItem(LOCAL_USER)
   }
 }

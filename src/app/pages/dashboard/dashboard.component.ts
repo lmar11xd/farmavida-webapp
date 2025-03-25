@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BreadcrumbService } from '../../shared/services/breadcrumb.service';
+import { SettingsService } from '../../core/settings/settings.service';
+import { User } from '../users/users.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,11 +10,13 @@ import { BreadcrumbService } from '../../shared/services/breadcrumb.service';
   styleUrl: './dashboard.component.css'
 })
 export default class DashboardComponent implements OnInit {
+  userInfo: User | null = null
 
-  constructor(private _breadcrumService: BreadcrumbService) {}
+  constructor(private _breadcrumService: BreadcrumbService, private _settings: SettingsService) {}
 
   ngOnInit(): void {
     this.initializeBreadcrumb()
+    this.userInfo =this._settings.getUserInfo()
   }
 
   initializeBreadcrumb() {
