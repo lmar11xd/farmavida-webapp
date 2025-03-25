@@ -51,7 +51,7 @@
                 <td>{{ item.role }}</td>
                 <td>
                     <p-button icon="pi pi-pencil" [routerLink]="['/user/edit']" [queryParams]="{ pkey: item.id}" class="mr-2" [rounded]="true" />
-                    @if(esVendedor(item.role)) {                        
+                    @if(item.role == rolVendedor) {                        
                         <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="deleteItem(item)" />
                     }
                 </td>

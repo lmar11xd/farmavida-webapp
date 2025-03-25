@@ -10,6 +10,7 @@ import { SettingsService } from '../../../core/settings/settings.service';
 import { LogoComponent } from "../../../shared/logo/logo.component";
 
 interface FormSignUp {
+  username: FormControl<string | null>,
   email: FormControl<string | null>,
   password: FormControl<string | null>,
   confirmPassword: FormControl<string | null>
@@ -37,6 +38,7 @@ export default class SignupComponent {
   ) {
     this.form = this._formBuilder.group<FormSignUp>(
       {
+        username: this._formBuilder.control('', [Validators.required]),
         email: this._formBuilder.control('', [Validators.required, Validators.email]),
         password: this._formBuilder.control('', [Validators.required, Validators.minLength(6)]),
         confirmPassword: this._formBuilder.control('', [Validators.required, Validators.minLength(6)])
@@ -45,7 +47,7 @@ export default class SignupComponent {
     )
   }
 
-  isRequired(field: 'email' | 'password' | 'confirmPassword') {
+  isRequired(field: 'email' | 'password' | 'confirmPassword' | 'username') {
     return isRequired(field, this.form)
   }
 
@@ -65,11 +67,11 @@ export default class SignupComponent {
     if(this.form.invalid) return
 
     try {
-      const { email, password } = this.form.value
+      const { username, email, password } = this.form.value
       if(!email || !password) return
       
       this._settings.showSpinner()
-      await this._authService.signup({email, password})
+      await this._authService.signup({username, email, password})
       toast.success("Te has registrado correctamente")
       this._router.navigateByUrl('/dashboard')
     } catch (error) {

@@ -1,6 +1,6 @@
 import { Injectable, signal } from "@angular/core";
 import { UserRolEnum } from "../../core/enums/user-rol.enum";
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, Firestore, updateDoc } from "@angular/fire/firestore";
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, Firestore, getDocs, query, updateDoc, where } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 
 export interface User {
@@ -31,7 +31,21 @@ export class UserService {
     return collectionData(this._collection, { idField: 'id' }) as Observable<User[]>;
   }
 
-  createUser(user: User) {
+  async createUser(user: User) {
+    // Consulta para verificar si username o email ya existen
+    const q = query(this._collection, where('username', '==', user.username));
+    const q2 = query(this._collection, where('email', '==', user.email));
+
+    const usernameSnapshot = await getDocs(q);
+    const emailSnapshot = await getDocs(q2);
+
+    if (!usernameSnapshot.empty) {
+      throw new Error('El nombre de usuario ya está en uso.');
+    }
+    if (!emailSnapshot.empty) {
+      throw new Error('El correo electrónico ya está en uso.');
+    }
+
     return addDoc(this._collection, user);
   }
 

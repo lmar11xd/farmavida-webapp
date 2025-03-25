@@ -10,7 +10,7 @@ import { SettingsService } from '../../../core/settings/settings.service';
 import { LogoComponent } from "../../../shared/logo/logo.component";
 
 interface FormLogIn {
-  email: FormControl<string | null>,
+  username: FormControl<string | null>,
   password: FormControl<string | null>
 }
 
@@ -36,13 +36,13 @@ export default class LoginComponent {
   ) {
     this.form = this._formBuilder.group<FormLogIn>(
       {
-        email: this._formBuilder.control('', [Validators.required, Validators.email]),
-        password: this._formBuilder.control('', [Validators.required, Validators.minLength(6)])
+        username: this._formBuilder.control('', [Validators.required]),
+        password: this._formBuilder.control('', [Validators.required])
       }
     )
   }
 
-  isRequired(field: 'email' | 'password') {
+  isRequired(field: 'email' | 'password' | 'username') {
     return isRequired(field, this.form)
   }
 
@@ -50,23 +50,19 @@ export default class LoginComponent {
     return hasEmailError(this.form)
   }
 
-  hasPasswordError() {
-    return hasPasswordError(this.form)
-  }
-
   async onSubmit() {
     if(this.form.invalid) return
 
     try {
-      const { email, password } = this.form.value
-      if(!email || !password) return
+      const { username, password } = this.form.value
+      if(!username || !password) return
       this._settings.showSpinner()
   
-      await this._authService.login({email, password})
+      await this._authService.login({username, email: '', password})
       toast.success("Bienvenido")
       this._router.navigateByUrl('/dashboard')
-    } catch (error) {
-      toast.error("Ha ocurrido un error")
+    } catch (error: any) {
+      toast.error(error.toString().replace('Error: ', ''))
     } finally {
       this._settings.hideSpinner()
     }

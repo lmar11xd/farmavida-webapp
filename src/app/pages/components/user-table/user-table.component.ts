@@ -40,6 +40,7 @@ export class UserTableComponent {
   items = input.required<User[]>()
 
   itemDialog: boolean = false;
+  rolVendedor = UserRolEnum.VENDEDOR
   
   constructor(
     private messageService: MessageService, 
@@ -65,10 +66,5 @@ export class UserTableComponent {
             });
         }
     });
-  }
-
-  esVendedor(rol: UserRolEnum): boolean {
-    console.log(rol)
-    return rol == UserRolEnum.VENDEDOR
   }
 }

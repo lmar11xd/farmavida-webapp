@@ -1,4 +1,6 @@
-import { AbstractControl, FormGroup, ValidationErrors } from "@angular/forms";
+import { collection, Firestore, getDocs, query, where } from "@angular/fire/firestore";
+import { AbstractControl, AsyncValidatorFn, FormGroup, ValidationErrors } from "@angular/forms";
+import { of } from "rxjs";
 
 export const isRequired = (field: 'email' | 'password' | 'confirmPassword' | 'username' | 'names', form: FormGroup) => {
     const control = form.get(field)
@@ -25,3 +27,16 @@ export function passwordsMatchValidator(form: AbstractControl): ValidationErrors
     const confirmPassword = form.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { mismatch: true };
 }
+
+export function usernameEmailValidator(firestore: Firestore): AsyncValidatorFn {
+    return (control: AbstractControl) => {
+      if (!control.value) return of(null);
+      
+      const usersRef = collection(firestore, 'users');
+      const q = query(usersRef, where(control.parent?.get('username') ? 'username' : 'email', '==', control.value));
+  
+      return getDocs(q).then(snapshot => {
+        return snapshot.empty ? null : { alreadyTaken: true };
+      }).catch(() => null);
+    };
+  }
