@@ -13,7 +13,7 @@ import { UserService } from '../users.service';
   selector: 'app-user-edit',
   imports: [ReactiveFormsModule, ButtonModule, FieldsetModule],
   templateUrl: './user-edit.component.html',
-  styleUrl: './user-edit.component.css'
+  styles: ``
 })
 export default class UserEditComponent implements OnInit {
   form: FormGroup = new FormGroup({});

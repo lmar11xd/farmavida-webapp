@@ -14,7 +14,7 @@ import { MenuItem } from 'primeng/api';
   selector: 'app-product-edit',
   imports: [ReactiveFormsModule, FieldsetModule, ButtonModule],
   templateUrl: './product-edit.component.html',
-  styleUrl: './product-edit.component.css'
+  styles: ``
 })
 export default class ProductEditComponent implements OnInit {
   form: FormGroup = new FormGroup({})

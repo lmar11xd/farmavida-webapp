@@ -7,7 +7,7 @@ import { User } from '../../core/security/auth-service';
   selector: 'app-dashboard',
   imports: [],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styles: ``
 })
 export default class DashboardComponent implements OnInit {
   userInfo: User | null = null

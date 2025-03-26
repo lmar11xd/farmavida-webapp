@@ -10,7 +10,7 @@ import { User } from '../../../core/security/auth-service';
   selector: 'app-user-list',
   imports: [UserTableComponent],
   templateUrl: './user-list.component.html',
-  styleUrl: './user-list.component.css'
+  styles: ``
 })
 export default class UserListComponent implements OnInit {
   users: User[] = []

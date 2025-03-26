@@ -5,7 +5,7 @@ import { BreadcrumbService } from '../../shared/services/breadcrumb.service';
   selector: 'app-profile',
   imports: [],
   templateUrl: './profile.component.html',
-  styleUrl: './profile.component.css'
+  styles: ``
 })
 export default class ProfileComponent {
   constructor(private _breadcrumService: BreadcrumbService) {}

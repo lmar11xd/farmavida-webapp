@@ -8,7 +8,7 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-layout',
   imports: [HeaderComponent, SidebarComponent, FooterComponent, RouterOutlet],
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+  styles: ``
 })
 export default class LayoutComponent {
   visible: boolean = false;

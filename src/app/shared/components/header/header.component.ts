@@ -5,7 +5,7 @@ import { BreadcrumbComponent } from '../../breadcrumb/breadcrumb.component';
   selector: 'app-header',
   imports: [BreadcrumbComponent],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styles: ``
 })
 export class HeaderComponent {
 }

@@ -14,7 +14,7 @@ import { CREAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/brea
   selector: 'app-product-create',
   imports: [ReactiveFormsModule, FieldsetModule, ButtonModule],
   templateUrl: './product-create.component.html',
-  styleUrl: './product-create.component.css'
+  styles: ``
 })
 export default class ProductCreateComponent implements OnInit {
   form: FormGroup = new FormGroup({});

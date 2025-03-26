@@ -31,6 +31,12 @@ export const routes: Routes = [
                 data: { breadcrumb: 'Profile' }
             },
             {
+                path: 'product-catalog',
+                loadComponent: () => import('./pages/product-catalog/product-catalog.component'),
+                canActivate: [vendedorGuard],
+                data: { breadcrumb: 'Catálogo de Productos' }
+            },
+            {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'

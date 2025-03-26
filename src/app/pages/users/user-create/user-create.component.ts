@@ -20,7 +20,7 @@ import { AES_SECRET_KEY } from '../../../core/constants/constants';
   selector: 'app-user-create',
   imports: [ReactiveFormsModule, ButtonModule, ToastModule, FieldsetModule, MessageModule],
   templateUrl: './user-create.component.html',
-  styleUrl: './user-create.component.css'
+  styles: ``
 })
 export default class UserCreateComponent implements OnInit {
   form: FormGroup = new FormGroup({});

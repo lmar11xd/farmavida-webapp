@@ -10,7 +10,7 @@ import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
   selector: 'app-product-list',
   imports: [ButtonModule, ProductTableComponent],
   templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css'
+  styles: ``
 })
 export default class ProductListComponent implements OnInit {
   products: Product[] = []
