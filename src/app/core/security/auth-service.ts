@@ -2,7 +2,7 @@ import { Injectable, NgZone } from "@angular/core";
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "@angular/fire/auth";
 import { collection, Firestore, getDocs, query, where } from "@angular/fire/firestore";
 import * as CryptoJS from 'crypto-js';
-import { AES_SECRET_KEY, LOCAL_USER, MSG_INVALID_CREDENTIALS } from "../constants/constants";
+import { AES_SECRET_KEY, LOCAL_ROLE_ADMIN, LOCAL_ROLE_VENDEDOR, LOCAL_USER, MSG_INVALID_CREDENTIALS } from "../constants/constants";
 import { UserRolEnum } from "../enums/user-rol.enum";
 
 export interface User {
@@ -107,9 +107,16 @@ export class AuthService {
 
   saveLocalUser(user: User) {
     localStorage.setItem(LOCAL_USER, JSON.stringify(user))
+    if(user.role == UserRolEnum.ADMINISTRADOR) {
+      localStorage.setItem(LOCAL_ROLE_ADMIN, 'ADMIN')
+    } else {
+      localStorage.setItem(LOCAL_ROLE_VENDEDOR, 'VENDEDOR')
+    }
   }
 
   removeLocalUser() {
     localStorage.removeItem(LOCAL_USER)
+    localStorage.removeItem(LOCAL_ROLE_ADMIN)
+    localStorage.removeItem(LOCAL_ROLE_VENDEDOR)
   }
 }

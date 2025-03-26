@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { privateGuard, publicGuard } from './core/security/auth-guard';
+import { adminGuard, privateGuard, publicGuard, vendedorGuard } from './core/security/auth-guard';
 
 export const routes: Routes = [
     {
@@ -15,13 +15,13 @@ export const routes: Routes = [
             {
                 path: 'product',
                 loadChildren: () => import('./pages/products/product.routes'),
-                canActivate: [privateGuard],
+                canActivate: [adminGuard],
                 data: { breadcrumb: 'Producto' }
             },
             {
                 path: 'user',
                 loadChildren: () => import('./pages/users/users.routes'),
-                canActivate: [privateGuard],
+                canActivate: [adminGuard],
                 data: { breadcrumb: 'Usuario' }
             },
             {

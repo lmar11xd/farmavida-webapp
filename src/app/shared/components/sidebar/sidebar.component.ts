@@ -3,6 +3,7 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { LogoComponent } from "../../logo/logo.component";
 import { SettingsService } from '../../../core/settings/settings.service';
 import { User } from '../../../core/security/auth-service';
+import { UserRolEnum } from '../../../core/enums/user-rol.enum';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,6 +16,7 @@ import { User } from '../../../core/security/auth-service';
 })
 export class SidebarComponent implements OnInit {
   visible = input.required<boolean>()
+  role = UserRolEnum
   userInfo: User | null = null
   
   constructor(private _settings: SettingsService, private _router: Router) {}

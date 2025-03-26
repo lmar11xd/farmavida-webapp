@@ -1,19 +1,40 @@
 import { CanActivateFn, Router } from "@angular/router";
-import { map } from "rxjs";
 import { inject } from "@angular/core";
-import { AuthStateService } from "../../shared/services/auth.state.service";
-import { LOCAL_USER } from "../constants/constants";
+import { LOCAL_ROLE_ADMIN, LOCAL_ROLE_VENDEDOR, LOCAL_USER } from "../constants/constants";
 
 export const privateGuard: CanActivateFn = () => {
   const router = inject(Router);
 
   // Verificar si estamos en el navegador
   if (typeof window !== 'undefined' && localStorage.getItem(LOCAL_USER)) {
-    return true;
-  } else {
-    router.navigateByUrl('/auth/login');
-    return false;
+    return true
   }
+
+  router.navigateByUrl('/auth/login');
+  return false;
+};
+
+export const adminGuard: CanActivateFn = () => {
+  const router = inject(Router);
+
+  // Verificar si estamos en el navegador
+  if (typeof window !== 'undefined' && localStorage.getItem(LOCAL_USER) && localStorage.getItem(LOCAL_ROLE_ADMIN)) {
+    return true
+  }
+
+  router.navigateByUrl('/auth/login');
+  return false;
+};
+
+export const vendedorGuard: CanActivateFn = () => {
+  const router = inject(Router);
+  // Verificar si estamos en el navegador
+  if (typeof window !== 'undefined' && localStorage.getItem(LOCAL_USER) && localStorage.getItem(LOCAL_ROLE_VENDEDOR)) {
+    return true
+  }
+
+  router.navigateByUrl('/auth/login');
+  return false;
 };
 
 export const publicGuard: CanActivateFn = () => {
