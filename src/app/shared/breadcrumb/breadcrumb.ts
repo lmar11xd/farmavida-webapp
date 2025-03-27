@@ -26,9 +26,14 @@ export const EDITAR_USUARIO: MenuItem[] = [
   {label:'Editar', url: '/user/edit?pkey=:id', target: ''}
 ];
 
+export const LISTAR_CATALOGO: MenuItem[] = [
+  {label:'Catálogo de Productos', url: '/product-catalog/list', target: ''}
+];
+
 BREADCRUMB['/product/list'] = LISTAR_PRODUCTO;
 BREADCRUMB['/product/create'] = CREAR_PRODUCTO;
 BREADCRUMB['/product/edit'] = EDITAR_PRODUCTO;
 BREADCRUMB['/user/list'] = LISTAR_USUARIO;
 BREADCRUMB['/user/create'] = CREAR_USUARIO;
 BREADCRUMB['/user/edit'] = EDITAR_USUARIO;
+BREADCRUMB['/product-catalog/list'] = LISTAR_CATALOGO;

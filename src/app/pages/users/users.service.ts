@@ -1,7 +1,7 @@
 import { Injectable, signal } from "@angular/core";
 import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, Firestore, getDocs, query, updateDoc, where } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
-import { User } from "../../core/security/auth-service";
+import { User } from "../../core/models/user";
 
 export type UserCreate = Omit<User, 'id'>
 

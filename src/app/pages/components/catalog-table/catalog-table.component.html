@@ -1,0 +1,65 @@
+<div class="w-full overflow-x-auto shadow-md sm:rounded-lg p-4">
+    <p-toast />
+
+    <p-table
+        #dt
+        [value]="products()"
+        [rows]="20"
+        [paginator]="true"
+        [globalFilterFields]="['code', 'name', 'quantity', 'salePrice']"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        [rowHover]="true"
+        [(selection)]="selectedProducts"
+        dataKey="id"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+        [showCurrentPageReport]="true"
+    >
+        <ng-template #caption>
+            <div class="flex items-center justify-between">
+                <h5 class="m-0 text-green-900 text-xs md:text-base font-medium">Productos</h5>
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input 
+                        pInputText 
+                        type="text"
+                        (input)="onFilter($event)"
+                        placeholder="Buscar..." 
+                    />
+                </p-iconfield>
+            </div>
+        </ng-template>
+        <ng-template #header>
+            <tr>
+                <th [width]="80"><p-tableHeaderCheckbox /></th>
+                <th pSortableColumn="code" [width]="120">C&oacute;digo <p-sortIcon field="code" /></th>
+                <th pSortableColumn="name" style="min-width: 230px">Nombre <p-sortIcon field="name" /></th>
+                <th pSortableColumn="quantity" [width]="120">Stock <p-sortIcon field="quantity" /></th>
+                <th pSortableColumn="salePrice" [width]="150">Precio Unitario <p-sortIcon field="salePrice" /></th>
+                <th [width]="90">Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-product>
+            <tr>
+                <td><p-tableCheckbox [value]="product" /></td>
+                <td>{{ product.code }}</td>
+                <td class="font-medium">{{ product.name }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.salePrice | currency: 'PEN ' }}</td>
+                <td>
+                    <p-button 
+                        label="Agregar" 
+                        variant="outlined" 
+                        icon="pi pi-cart-plus" 
+                        *ngIf="product.quantity > 0"
+                        (onClick)="addToCart(product)"
+                    />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #summary>
+            <div class="flex items-center justify-between text-green-900 pt-2">Se encontraron {{ dt?.totalRecords }} productos.</div>
+        </ng-template>
+    </p-table>
+
+    <p-confirmDialog [style]="{ width: '450px' }" />
+</div>

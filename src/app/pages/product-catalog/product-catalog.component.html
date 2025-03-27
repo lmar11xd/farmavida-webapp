@@ -1,1 +1,7 @@
-<p>product-catalog works!</p>
+<section class="mx-auto w-full px-4">
+    <div class="my-4 p-4 rounded-2xl flex justify-between items-center">
+        <h1 class="text-base md:text-lg font-winkysans font-bold text-gray-500">Catálogo de Productos</h1>
+        <app-shopping-cart />
+    </div>
+    <app-catalog-table [products]="products" />
+</section>

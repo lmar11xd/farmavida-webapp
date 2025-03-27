@@ -2,7 +2,7 @@ import { Component, input, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { LogoComponent } from "../../logo/logo.component";
 import { SettingsService } from '../../../core/settings/settings.service';
-import { User } from '../../../core/security/auth-service';
+import { User } from '../../../core/models/user';
 import { UserRolEnum } from '../../../core/enums/user-rol.enum';
 import { menuList } from '../../../core/constants/menu-list';
 import { CommonModule } from '@angular/common';

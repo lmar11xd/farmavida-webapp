@@ -3,21 +3,46 @@
 @import "primeicons/primeicons.css";
 
 @font-face {
-font-family: 'EmblemaOne';
-src: url('assets/fonts/EmblemaOne-Regular.ttf') format('truetype');
-font-weight: normal;
-font-style: normal;
+    font-family: 'EmblemaOne';
+    src: url('assets/fonts/EmblemaOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'WinkySans';
+    src: url('assets/fonts/WinkySans.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('assets/fonts/Roboto.ttf') format('truetype');
+    font-style: normal;
 }
 
 .font-emblemaone {
     font-family: 'EmblemaOne', sans-serif;
-  }
+}
+
+.font-winkysans {
+    font-family: 'WinkySans', sans-serif;
+}
+
+.font-roboto {
+    font-family: 'Roboto', sans-serif;
+}
 
 p-breadcrumb nav {
     border-radius: 10px;
 }
 .p-datatable-table-container, .p-datatable-tfoot {
     font-size: 14px !important;
+}
+.p-datatable-table {
+    min-width: auto !important;
+    font-family: 'Roboto', sans-serif;
 }
 .p-datatable-thead > tr > th {
     background-color: var(--color-yellow-200) !important;
@@ -33,4 +58,17 @@ p-breadcrumb nav {
 .p-fieldset-legend {
     border-radius: 10px;
     color: var(--color-green-900) !important;
+}
+.p-button {
+    font-size: 0.8rem !important;
+}
+.p-drawer-title {
+    font-size: 1.2rem !important;
+}
+.fixed-bottom {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1030;
 }

@@ -1,6 +1,6 @@
-import { Component, input, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Product, ProductCreate, ProductService } from '../product.service';
+import { ProductCreate, ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { FieldsetModule } from 'primeng/fieldset';
@@ -9,6 +9,7 @@ import { SettingsService } from '../../../core/settings/settings.service';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 import { EDITAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
 import { MenuItem } from 'primeng/api';
+import { Product } from '../../../core/models/product';
 
 @Component({
   selector: 'app-product-edit',

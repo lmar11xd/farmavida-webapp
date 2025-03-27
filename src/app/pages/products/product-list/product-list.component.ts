@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button'
-import { Product, ProductService } from '../product.service';
+import { ProductService } from '../product.service';
 import { ProductTableComponent } from '../../components/product-table/product-table.component';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
+import { Product } from '../../../core/models/product';
 
 @Component({
   selector: 'app-product-list',

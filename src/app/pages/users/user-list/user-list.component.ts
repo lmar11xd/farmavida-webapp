@@ -4,7 +4,7 @@ import { SettingsService } from '../../../core/settings/settings.service';
 import { LISTAR_USUARIO } from '../../../shared/breadcrumb/breadcrumb';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 import { UserService } from '../users.service';
-import { User } from '../../../core/security/auth-service';
+import { User } from '../../../core/models/user';
 
 @Component({
   selector: 'app-user-list',

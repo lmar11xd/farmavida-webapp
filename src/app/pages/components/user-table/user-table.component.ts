@@ -12,7 +12,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { UserRolEnum } from '../../../core/enums/user-rol.enum';
-import { User } from '../../../core/security/auth-service';
+import { User } from '../../../core/models/user';
 
 @Component({
   selector: 'app-user-table',

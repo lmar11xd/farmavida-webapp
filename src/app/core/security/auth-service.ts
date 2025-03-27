@@ -4,16 +4,7 @@ import { collection, Firestore, getDocs, query, where } from "@angular/fire/fire
 import * as CryptoJS from 'crypto-js';
 import { AES_SECRET_KEY, LOCAL_ROLE_ADMIN, LOCAL_ROLE_VENDEDOR, LOCAL_USER, MSG_INVALID_CREDENTIALS } from "../constants/constants";
 import { UserRolEnum } from "../enums/user-rol.enum";
-
-export interface User {
-    id?: string;
-    username: string;
-    names: string;
-    phone?: string;
-    email: string;
-    password: string;
-    role: UserRolEnum;
-}
+import { User } from "../models/user";
 
 export interface UserLogin {
   username: string,

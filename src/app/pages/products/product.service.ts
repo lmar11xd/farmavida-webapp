@@ -1,16 +1,7 @@
 import { Injectable, signal } from '@angular/core';
-import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where } from '@angular/fire/firestore';
+import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
-
-export interface Product {
-    id: string,
-    code: string,
-    name: string,
-    description: string,
-    quantity: string,
-    costPrice: number,
-    salePrice: number
-}
+import { Product } from '../../core/models/product';
 
 export type ProductCreate = Omit<Product, 'id'>
 
@@ -55,4 +46,26 @@ export class ProductService {
     const doRef = doc(this._collection, id)
     return updateDoc(doRef, product)
   }
+
+  async updateStock(productId: string, quantitySold: number) {
+    const productRef = doc(this._firestore, `${PATH}/${productId}`);
+
+    // Verificar stock antes de restar
+    const productSnap = await getDoc(productRef);
+    if (productSnap.exists()) {
+      const currentStock = (productSnap.data() as Product).quantity;
+      
+      if (currentStock >= quantitySold) {
+        // Restar cantidad vendida usando increment()
+        await updateDoc(productRef, {
+          quantity: increment(-quantitySold)
+        });
+      } else {
+        throw new Error('Stock insuficiente.');
+      }
+    } else {
+      throw new Error('Producto no encontrado.');
+    }
+  }
+
 }
