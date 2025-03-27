@@ -53,15 +53,11 @@ export class ShoppingCartComponent implements OnInit {
     try {
       if (this.produtcs.length > 0) {
         this._productCatalogService.registerSale(this.produtcs).then(() => {
-          this.produtcs.forEach(product => {
-            this._productService.updateStock(product.id!, product.quantity)
-              .then(() => console.log(`Stock del producto: ${product.id} actualizado`))
-              .catch(error =>  {
-                  throw error
-                }
-              )
+          this.produtcs.forEach(async (product) => {
+            await this._productService.updateStock(product.id!, product.quantity)
           });
           this._shoppingCartService.clean();
+          this.dismiss()
           alert('Compra realizada con éxito');
         });
       }

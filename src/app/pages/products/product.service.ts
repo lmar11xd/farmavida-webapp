@@ -48,13 +48,15 @@ export class ProductService {
   }
 
   async updateStock(productId: string, quantitySold: number) {
+    console.log("Actualizar stock del producto: " + productId + " cantidad vendida: " + quantitySold)
     const productRef = doc(this._firestore, `${PATH}/${productId}`);
-
+    
     // Verificar stock antes de restar
     const productSnap = await getDoc(productRef);
     if (productSnap.exists()) {
       const currentStock = (productSnap.data() as Product).quantity;
-      
+      console.log("Stock actual: " + currentStock)
+
       if (currentStock >= quantitySold) {
         // Restar cantidad vendida usando increment()
         await updateDoc(productRef, {
