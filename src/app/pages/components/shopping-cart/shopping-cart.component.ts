@@ -49,20 +49,25 @@ export class ShoppingCartComponent implements OnInit {
     this._shoppingCartService.clean()
   }
 
-  finalizePurchase() {
+  async finalizePurchase() {
+    if (this.produtcs.length === 0) return;
+
     try {
-      if (this.produtcs.length > 0) {
-        this._productCatalogService.registerSale(this.produtcs).then(() => {
-          this.produtcs.forEach(async (product) => {
-            await this._productService.updateStock(product.id!, product.quantity)
-          });
-          this._shoppingCartService.clean();
-          this.dismiss()
-          alert('Compra realizada con éxito');
-        });
+      // Registrar la venta
+      await this._productCatalogService.registerSale(this.produtcs);
+
+      // Actualizar stock de cada producto en secuencia
+      for (const product of this.produtcs) {
+        await this._productService.updateStock(product.id!, product.quantity);
       }
+
+      // Limpiar carrito y cerrar modal
+      this._shoppingCartService.clean();
+      this.dismiss();
+      alert('Compra realizada con éxito');
     } catch (error) {
-      console.log(error)
+      console.error('Error en la compra:', error);
+      alert('Ocurrió un error al procesar la compra. Intente nuevamente.');
     } 
   }
 }

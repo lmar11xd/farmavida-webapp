@@ -1,26 +1,14 @@
 <div class="w-full overflow-x-auto shadow-md sm:rounded-lg p-4">
     <p-toast />
-    <p-toolbar styleClass="mb-6">
-        <ng-template #start>
-            <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" routerLink="/product/create" />
-            <p-button severity="danger" label="Eliminar" icon="pi pi-trash" outlined (onClick)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length" />
-        </ng-template>
-
-        <ng-template #end>
-            <p-fileUpload mode="basic" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" [maxFileSize]="1000000" label="Importar" chooseLabel="Importar" auto customUpload class="mr-2 inline-block" [chooseButtonProps]="{ severity: 'secondary' }" />
-            <p-button label="Exportar" icon="pi pi-upload" severity="secondary" />
-        </ng-template>
-    </p-toolbar>
 
     <p-table
         #dt
         [value]="products()"
         [rows]="10"
         [paginator]="true"
-        [globalFilterFields]="['code', 'name', 'quantity', 'costPrice', 'salePrice']"
+        [globalFilterFields]="['code', 'name', 'expirationDate', 'quantity', 'costPrice', 'salePrice']"
         [tableStyle]="{ 'min-width': '75rem' }"
         [rowHover]="true"
-        [(selection)]="selectedProducts"
         dataKey="id"
         currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
         [showCurrentPageReport]="true"
@@ -41,23 +29,23 @@
         </ng-template>
         <ng-template #header>
             <tr>
-                <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
-                <th pSortableColumn="code" style="width: 8rem">C&oacute;digo <p-sortIcon field="code" /></th>
-                <th pSortableColumn="name" style="min-width: 12rem">Nombre <p-sortIcon field="name" /></th>
-                <th pSortableColumn="quantity" style="width: 10rem">Cantidad <p-sortIcon field="quantity" /></th>
-                <th pSortableColumn="costPrice" style="width: 10rem">Precio Costo <p-sortIcon field="costPrice" /></th>
-                <th pSortableColumn="salePrice" style="width: 10rem">Precio Venta <p-sortIcon field="salePrice" /></th>
-                <th style="width: 10rem">Acciones</th>
+                <th pSortableColumn="code" [width]="120">C&oacute;digo <p-sortIcon field="code" /></th>
+                <th pSortableColumn="name" style="min-width: 230px">Nombre <p-sortIcon field="name" /></th>
+                <th pSortableColumn="expirationDate" [width]="150">Fecha Venc. <p-sortIcon field="expirationDate" /></th>
+                <th pSortableColumn="quantity" [width]="120">Cantidad <p-sortIcon field="quantity" /></th>
+                <th pSortableColumn="costPrice" [width]="150">Precio Costo <p-sortIcon field="costPrice" /></th>
+                <th pSortableColumn="salePrice" [width]="150">Precio Venta <p-sortIcon field="salePrice" /></th>
+                <th [width]="120">Acciones</th>
             </tr>
         </ng-template>
         <ng-template #body let-product>
             <tr>
-                <td style="width: 3rem"><p-tableCheckbox [value]="product" /></td>
                 <td>{{ product.code }}</td>
-                <td style="min-width: 12rem" class="font-medium">{{ product.name }}</td>
+                <td class="font-medium">{{ product.name }}</td>
+                <td>{{ product.expirationDate | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ product.quantity }}</td>
-                <td>{{ product.costPrice | currency: 'USD' }}</td>
-                <td>{{ product.salePrice | currency: 'USD' }}</td>
+                <td>S/ {{ product.costPrice | number: '1.2-2' }}</td>
+                <td>S/ {{ product.salePrice | number: '1.2-2' }}</td>
                 <td>
                     <p-button icon="pi pi-pencil" [routerLink]="['/product/edit']" [queryParams]="{ pkey: product.id}" class="mr-2" [rounded]="true" />
                     <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="deleteProduct(product)" />

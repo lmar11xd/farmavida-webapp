@@ -1,11 +1,5 @@
 <div class="w-full overflow-x-auto shadow-md sm:rounded-lg p-4">
     <p-toast />
-    <p-toolbar styleClass="mb-6">
-        <ng-template #start>
-            <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" routerLink="/user/create" />
-        </ng-template>
-    </p-toolbar>
-
     <p-table
         #dt
         [value]="items()"

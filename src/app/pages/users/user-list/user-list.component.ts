@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
 import { UserTableComponent } from "../../components/user-table/user-table.component";
 import { SettingsService } from '../../../core/settings/settings.service';
 import { LISTAR_USUARIO } from '../../../shared/breadcrumb/breadcrumb';
@@ -8,7 +9,7 @@ import { User } from '../../../core/models/user';
 
 @Component({
   selector: 'app-user-list',
-  imports: [UserTableComponent],
+  imports: [UserTableComponent, ButtonModule],
   templateUrl: './user-list.component.html',
   styles: ``
 })

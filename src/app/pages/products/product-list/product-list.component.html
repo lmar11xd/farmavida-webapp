@@ -1,3 +1,23 @@
 <section class="mx-auto w-full px-4">
+    <div class="my-4 p-4 rounded-2xl flex justify-between items-center">
+        <h1 class="text-base md:text-lg font-winkysans font-bold text-gray-500">Productos</h1>
+        <div>
+            <p-button label="Nuevo" icon="pi pi-plus" class="mr-2" routerLink="/product/create" />
+            <p-fileUpload 
+                mode="basic" 
+                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
+                [maxFileSize]="1000000" 
+                label="Cargar" 
+                chooseLabel="Cargar" 
+                auto 
+                customUpload 
+                class="mr-2 inline-block"
+                (onSelect)="readExcelProducts($event)"
+                [chooseButtonProps]="{ severity: 'secondary' }" 
+            />
+            <p-button label="Exportar" icon="pi pi-download" severity="secondary" />
+        </div>
+    </div>
+
     <app-product-table [products]="products"></app-product-table>
 </section>

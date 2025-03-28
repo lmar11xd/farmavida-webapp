@@ -13,7 +13,7 @@ import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 import { UserCreate, UserService } from '../users.service';
 import { UserRolEnum } from '../../../core/enums/user-rol.enum';
 import { hasConfirmPasswordError, hasEmailError, hasPasswordError, isRequired } from '../../../auth/utils/validators';
-import * as CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js';
 import { AES_SECRET_KEY } from '../../../core/constants/constants';
 
 @Component({

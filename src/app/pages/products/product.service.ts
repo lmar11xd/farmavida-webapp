@@ -1,7 +1,8 @@
 import { Injectable, signal } from '@angular/core';
-import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp } from '@angular/fire/firestore';
+import { map, Observable } from 'rxjs';
 import { Product } from '../../core/models/product';
+import { INITIAL_PRODUCT_CODE } from '../../core/constants/constants';
 
 export type ProductCreate = Omit<Product, 'id'>
 
@@ -33,13 +34,26 @@ export class ProductService {
     return collectionData(_query, { idField: 'id' }) as Observable<Product[]>; 
   }
 
+  getProducts(): Observable<Product[]> {
+    return collectionData(this._collection, { idField: 'id' }).pipe(
+      map(products => 
+        products.map(product => ({
+          ...product,
+          expirationDate: product['expirationDate'] ? (product['expirationDate'] as Timestamp).toDate() : null
+        }) as Product)
+      )
+    ) as Observable<Product[]>;
+  }
+
   getProduct(id: string) {
     const doRef = doc(this._collection, id)
     return getDoc(doRef)
   }
 
-  create(product: ProductCreate) {
-    return addDoc(this._collection, product)
+  async create(product: ProductCreate) {
+    const code = await this.generateProductCode();
+    const newProduct = { ...product, code }
+    return addDoc(this._collection, newProduct)
   }
 
   update(product: ProductCreate, id: string) {
@@ -68,6 +82,26 @@ export class ProductService {
     } else {
       throw new Error('Producto no encontrado.');
     }
+  }
+
+  async generateProductCode(): Promise<string> {
+    const secuenciaRef = doc(this._firestore, 'config/product');
+
+    return await runTransaction(this._firestore, async (transaction) => {
+      const secuenciaDoc = await transaction.get(secuenciaRef);
+
+      let newCode = INITIAL_PRODUCT_CODE; // Valor inicial si el documento no existe
+
+      if (secuenciaDoc.exists()) {
+        const data = secuenciaDoc.data();
+        newCode = (data['code'] || INITIAL_PRODUCT_CODE) + 1;
+      }
+
+      // Actualizar el código en Firestore
+      transaction.set(secuenciaRef, { code: newCode });
+
+      return newCode.toString();
+    });
   }
 
 }

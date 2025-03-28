@@ -1,19 +1,23 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DatePickerModule } from 'primeng/datepicker';
+import { FieldsetModule } from 'primeng/fieldset';
 import { ProductCreate, ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ButtonModule } from 'primeng/button';
-import { FieldsetModule } from 'primeng/fieldset';
 import { toast } from 'ngx-sonner';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 import { EDITAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
 import { MenuItem } from 'primeng/api';
 import { Product } from '../../../core/models/product';
+import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-product-edit',
-  imports: [ReactiveFormsModule, FieldsetModule, ButtonModule],
+  imports: [ReactiveFormsModule, FieldsetModule, InputTextModule, InputNumberModule, ButtonModule, DatePickerModule],
   templateUrl: './product-edit.component.html',
   styles: ``
 })
@@ -53,9 +57,10 @@ export default class ProductEditComponent implements OnInit {
 
   initializeForm() {
     this.form = this._formBuilder.group({
-      code: this._formBuilder.control('', Validators.required),
+      code: this._formBuilder.control({ value: '', disabled: true }, Validators.required),
       name: this._formBuilder.control('', Validators.required),
       description: this._formBuilder.control('', []),
+      expirationDate: this._formBuilder.control(null, []),
       quantity: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
       costPrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
       salePrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)])
@@ -74,6 +79,7 @@ export default class ProductEditComponent implements OnInit {
     this._settings.hideSpinner()
     if(!productSnapshot.exists()) return
     const product = productSnapshot.data() as Product
+    product.expirationDate = product.expirationDate ? (product.expirationDate as Timestamp).toDate() : null
     this.form.patchValue(product)
   }
 
@@ -84,12 +90,13 @@ export default class ProductEditComponent implements OnInit {
       if(this.id != null) {
         this._settings.showSpinner()
         this.isLoading.set(true)
-        const { code, name, description, quantity, costPrice, salePrice } = this.form.value
-  
+        const { code, name, description, expirationDate, quantity, costPrice, salePrice } = this.form.getRawValue()
+        
         const product: ProductCreate = ({
           code: code || '',
           name: name || '',
           description: description || '',
+          expirationDate: Timestamp.fromDate(expirationDate) || null,
           quantity: quantity || 0,
           costPrice: costPrice || 0,
           salePrice: salePrice || 0
