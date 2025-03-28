@@ -1,9 +1,9 @@
 <section class="mx-auto w-full px-4">
     <p-confirmdialog />
-    
+
     <div class="my-4 p-4 rounded-2xl flex justify-between items-center">
         <h1 class="text-base md:text-lg font-winkysans font-bold text-gray-500">Ingreso de Productos</h1>
-        <div>
+        <div class="flex items-center">
             <p-fileUpload 
                 mode="basic" 
                 accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
@@ -14,9 +14,9 @@
                 customUpload 
                 class="mr-2 inline-block"
                 (onSelect)="readExcelProducts($event)"
-                [chooseButtonProps]="{ severity: 'secondary' }" 
+                [chooseButtonProps]="{ severity: 'success' }" 
             />
-            <p-button label="Exportar" icon="pi pi-download" severity="secondary" />
+            <p-button label="Exportar" icon="pi pi-download" severity="info" />
         </div>
     </div>
 

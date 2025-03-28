@@ -17,7 +17,7 @@
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search" />
                     <input 
-                        pInputText 
+                        pInputText
                         type="text"
                         (input)="onFilter($event)"
                         placeholder="Buscar..." 
@@ -43,9 +43,11 @@
                 <td>{{ item.processingDate | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ item.username }}</td>
                 <td>
-                    <p-button icon="pi pi-sync" severity="info" [rounded]="true" class="mr-2" (click)="processEntry(item)" />
-                    <p-button icon="pi pi-eye" severity="success" [rounded]="true" class="mr-2" (click)="viewEntry(item)" />
-                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="deleteEntry(item)" />
+                    <p-button icon="pi pi-eye" title="Ver Detalles" severity="success" [rounded]="true" class="mr-2" (click)="viewEntry(item)" />
+                    @if(item.status !== status.PROCESSED) {
+                        <p-button icon="pi pi-sync" title="Procesar" severity="info" [rounded]="true" class="mr-2" (click)="processEntry(item)" />
+                        <p-button icon="pi pi-trash" title="Eliminar" severity="danger" [rounded]="true" (click)="deleteEntry(item)" />
+                    }
                 </td>
             </tr>
         </ng-template>
@@ -54,5 +56,74 @@
         </ng-template>
     </p-table>
 
+    <!--View Dialog-->
+    <p-dialog [header]="selectedEntry?.fileName" [modal]="true" [(visible)]="visibleView" [style]="{ width: '50rem' }" (onHide)="dismissView($event)">
+        <p class="mb-8"></p>
+        <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-3">
+                <div class="flex items-center gap-4 mb-4">
+                    <label for="username" class="font-semibold w-32">Fecha de Carga:</label>
+                    <label for="username">{{getFormatDate(selectedEntry?.entryDate)}}</label>
+                </div>
+                <div class="flex items-center gap-4 mb-4">
+                    <label for="username" class="font-semibold w-32">Estado:</label>
+                    <p-tag [value]="selectedEntry?.status" [severity]="getSeverityStatus(selectedEntry?.status)" />
+                </div>
+            </div>
+            <div class="sm:col-span-3">
+                <div class="flex items-center gap-4 mb-4">
+                    <label for="username" class="font-semibold w-32">Usuario:</label>
+                    <label for="username">{{selectedEntry?.username}}</label>
+                </div>
+                <div class="flex items-center gap-4 mb-4">
+                    <label for="username" class="font-semibold w-32">Fecha de Proc.:</label>
+                    <label for="username">{{getFormatDate(selectedEntry?.processingDate)}}</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-4">
+            <p class="text-gray-500 font-bold">Productos</p>
+            @if(selectedEntry?.status !== status.PROCESSED) {
+                <button pButton label="Procesar" icon="pi pi-sync" severity="info"></button>
+            }
+        </div>
+        
+        <div>
+            <p-table [value]="selectedEntry?.products ?? []" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template #header>
+                    <tr>
+                        <th>N°</th>
+                        <th>Nombre</th>
+                        <th>Principio Activo</th>
+                        <th>Laboratorio</th>
+                        <th>Precio Costo</th>
+                        <th>Unidad Medida</th>
+                        <th>Fecha Venc.</th>
+                        <th>Lote</th>
+                        <th>Reg. Sanitario</th>
+                        <th>Cantidad</th>
+                        <th>Precio Venta</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-product let-index="rowIndex">
+                    <tr>
+                        <td>{{ index + 1 }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.description }}</td>
+                        <td>{{ product.laboratory }}</td>
+                        <td>{{ product.costPrice }}</td>
+                        <td>{{ product.um }}</td>
+                        <td>{{ product.expirationDate | date: 'MM/yyyy' }}</td>
+                        <td>{{ product.lot }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.quantity }}</td>
+                        <td>{{ product.salePrice }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </p-dialog>
+    <!--End View Dialog-->
     <p-confirmDialog [style]="{ width: '450px' }" />
 </div>

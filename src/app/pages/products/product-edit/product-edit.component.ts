@@ -99,8 +99,9 @@ export default class ProductEditComponent implements OnInit {
        
     try {
       if(this.id != null) {
-        this._settings.showSpinner()
         this.isLoading.set(true)
+        this._settings.showSpinner()
+        
         const { code, name, description, expirationDate, quantity, costPrice, salePrice } = this.form.getRawValue()
         
         const product: ProductCreate = ({

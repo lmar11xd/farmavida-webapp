@@ -59,8 +59,11 @@ p-breadcrumb nav {
     border-radius: 10px;
     color: var(--color-green-900) !important;
 }
-.p-button {
+.p-button .p-button-label {
     font-size: 0.8rem !important;
+}
+.p-fileupload-choose-button {
+    padding: 10px 14px !important;
 }
 .p-drawer-title {
     font-size: 1.2rem !important;

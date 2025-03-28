@@ -1,5 +1,5 @@
 <div class="form-farm w-full mx-auto">
-    <p-fieldset class="p-4 bg-yellow-50">
+    <p-fieldset class="p-4">
         <ng-template #header>
             <div class="flex items-center gap-2 px-2">
                 <span class="font-bold font-emblemaone">Editar Usuario</span>
@@ -11,30 +11,21 @@
             <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-2">
                     <label for="username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Usuario</label>
-                    <input type="text" formControlName="username" names="username" id="username" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Usuario" required="">
+                    <input pInputText formControlName="username" type="text" variant="filled" name="code" id="code" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="Usuario">
                 </div>
                 
                 <div class="sm:col-span-6">
                     <label for="names" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombres</label>
-                    <input type="text" formControlName="names" name="names" id="names" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Nombres" required="">
+                    <input pInputText formControlName="names" type="text" variant="filled" name="code" id="code" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="Nombres">
                 </div>
     
                 <div class="sm:col-span-4">
                     <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo</label>
-                    <input type="email" formControlName="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="usuario@example.com" required="">
-                </div>
-    
-                <div class="sm:col-span-3">
-                    <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Contraseña</label>
-                    <input type="password" formControlName="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="******" required="">
-                </div>
-                <div class="sm:col-span-3">
-                    <label for="repeatPassword" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Repetir Contraseña</label>
-                    <input type="password" formControlName="repeatPassword" name="repeatPassword" id="repeatPassword" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="******" required="">
+                    <input pInputText formControlName="email" type="email" variant="filled" name="code" id="code" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="usuario@gmail.com">
                 </div>
                 <div class="sm:col-span-2">
                     <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tel&eacute;fono/Celular</label>
-                    <input type="text" formControlName="phone" name="phone" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="999999999" required="">
+                    <input pInputText formControlName="phone" type="text" variant="filled" name="code" id="code" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="999999999">
                 </div>
             </div>
     

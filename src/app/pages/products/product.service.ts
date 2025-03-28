@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
 import { Product } from '../../core/models/product';
@@ -13,8 +13,6 @@ const PATH = 'products'
 })
 export class ProductService {
   private _collection: CollectionReference
-
-  isLoading = signal<boolean>(true)
 
   constructor(private _firestore: Firestore) {
     this._collection = collection(this._firestore, PATH)

@@ -1,5 +1,5 @@
-import { Injectable, signal } from "@angular/core";
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, Firestore, getDocs, query, updateDoc, where } from "@angular/fire/firestore";
+import { Injectable } from "@angular/core";
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, Firestore, getDoc, getDocs, query, updateDoc, where } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 import { User } from "../../core/models/user";
 
@@ -11,14 +11,17 @@ const PATH = 'users'
 export class UserService {
   private _collection: CollectionReference
 
-  isLoading = signal<boolean>(true)
-
   constructor(private _firestore: Firestore) {
     this._collection = collection(this._firestore, PATH)
   }
 
   getUsers(): Observable<User[]> {
     return collectionData(this._collection, { idField: 'id' }) as Observable<User[]>;
+  }
+
+  getUser(id: string) {
+    const doRef = doc(this._collection, id)
+    return getDoc(doRef)
   }
 
   async createUser(user: User) {
@@ -42,6 +45,21 @@ export class UserService {
   updateUser(id: string, user: User) {
     const userRef = doc(this._collection, id);
     return updateDoc(userRef, { ...user });
+  }
+
+  async updatePartial(userId: string, names: string, phone: string) {
+    const userRef = doc(this._firestore, `${PATH}/${userId}`);
+    
+    // Verificar stock antes de restar
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      await updateDoc(userRef, {
+        names: names,
+        phone: phone
+      })
+    } else {
+      throw new Error('Usuario no encontrado.');
+    }
   }
 
   deleteUser(id: string) {

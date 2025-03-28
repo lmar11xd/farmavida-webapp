@@ -67,6 +67,7 @@ export default class ProductCreateComponent implements OnInit {
     try {
       this.isLoading.set(true)
       this._settings.showSpinner()
+      
       const { code, name, description, expirationDate, quantity, costPrice, salePrice } = this.form.value
 
       const product: ProductCreate = ({

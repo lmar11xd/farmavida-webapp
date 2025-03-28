@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { FieldsetModule } from 'primeng/fieldset';
 import { SettingsService } from '../../../core/settings/settings.service';
@@ -17,7 +18,7 @@ import { AES_SECRET_KEY } from '../../../core/constants/constants';
 
 @Component({
   selector: 'app-user-create',
-  imports: [ReactiveFormsModule, ButtonModule, ToastModule, FieldsetModule, MessageModule],
+  imports: [ReactiveFormsModule, ButtonModule, InputTextModule, ToastModule, FieldsetModule, MessageModule],
   templateUrl: './user-create.component.html',
   styles: ``
 })
