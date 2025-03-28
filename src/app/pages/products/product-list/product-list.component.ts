@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button'
 import { RouterLink } from '@angular/router';
-import { FileUpload } from 'primeng/fileupload';
 import { ProductService } from '../product.service';
 import { ProductTableComponent } from '../../components/product-table/product-table.component';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 import { Product } from '../../../core/models/product';
-import { ExcelService } from '../../../shared/services/excel.service';
 
 @Component({
   selector: 'app-product-list',
-  imports: [ButtonModule, FileUpload, RouterLink, ProductTableComponent],
+  imports: [ButtonModule, RouterLink, ProductTableComponent],
   templateUrl: './product-list.component.html',
   styles: ``
 })
@@ -22,8 +20,7 @@ export default class ProductListComponent implements OnInit {
   constructor(
     private _productService: ProductService,
     private _settings: SettingsService,
-    private _breadcrumService: BreadcrumbService,
-    private _excelService: ExcelService
+    private _breadcrumService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
@@ -48,12 +45,5 @@ export default class ProductListComponent implements OnInit {
           this._settings.hideSpinner();
         }
       });
-  }
-
-  readExcelProducts(event: any) {
-    console.log(event)
-    this._excelService.readExcel(event).then((data) => {
-      console.log(data)
-    })
   }
 }

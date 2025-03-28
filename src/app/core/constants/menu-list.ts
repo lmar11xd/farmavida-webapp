@@ -14,6 +14,12 @@ export const menuList = [
         role: UserRolEnum.ADMINISTRADOR
     },
     {
+        title: 'Ingreso Productos',
+        url: '/product-entry',
+        icon: 'pi pi-list-check',
+        role: UserRolEnum.ADMINISTRADOR
+    },
+    {
         title: 'Usuarios',
         url: '/user',
         icon: 'pi pi-users',

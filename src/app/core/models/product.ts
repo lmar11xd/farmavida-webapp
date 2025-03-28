@@ -1,12 +1,16 @@
 import { Timestamp } from "@angular/fire/firestore";
 
 export interface Product {
-    id: string,
+    id?: string,
     code: string,
     name: string,
-    description: string,
+    description?: string,
     expirationDate?: Date | Timestamp | null,
     quantity: number,
     costPrice: number,
-    salePrice: number
+    salePrice: number,
+    um?: string,
+    laboratory?: string,
+    lot?: string,
+    sanitaryReg?: string
 }

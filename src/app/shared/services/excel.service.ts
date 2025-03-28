@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import * as XLSX from 'xlsx';
+import { Product } from "../../core/models/product";
+import { convertExcelDate, convertExcelDateToEndOfMonth } from "../../core/core-util";
 
 const PRODUCTCOLUMNS = [
     'CODIGO',
@@ -19,7 +21,7 @@ const PRODUCTCOLUMNS = [
 export class ExcelService {
     constructor() {}
 
-    readExcel(fileList: any): Promise<any[]> {
+    readExcelProducts(fileList: any): Promise<Product[]> {
         return new Promise((resolve, reject) => {
             /*const target: DataTransfer = <DataTransfer>event.target;
             if (target.files.length !== 1) {
@@ -43,7 +45,7 @@ export class ExcelService {
               const sheet: XLSX.WorkSheet = workbook.Sheets[sheetName];
         
               // Lee la hoja como un array de arrays, donde la primera fila son los encabezados
-              const sheetData: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+              const sheetData: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: true });
         
               if (sheetData.length === 0) {
                 reject('El archivo está vacío o no tiene datos.');
@@ -59,18 +61,43 @@ export class ExcelService {
                 reject(`Faltan las siguientes columnas en el Excel: ${missingColumns.join(', ')}`);
                 return;
               }
+
+              const products: Product[] = []
+              sheetData.slice(1).forEach(row => {
+                if(row[1] !== undefined && row[1] !== null
+                  && row[4] !== undefined && row[4] !== null
+                  && row[9] !== undefined && row[9] !== null
+                  && row[10] !== undefined && row[10] !== null
+                ) {
+                  var expDate = null
+
+                  if(row[6] !== undefined || row[6] !== null) {
+                    expDate = convertExcelDateToEndOfMonth(row[6])
+                  }
+
+                  if(row[6] !== undefined || row[6] !== null) {
+                    expDate = convertExcelDateToEndOfMonth(row[6])
+                  }
+
+                  const product: Product = {
+                    code: '00000000',
+                    name: row[1],
+                    description: row[2] || null,
+                    laboratory: row[3],
+                    costPrice: row[4],
+                    um: row[5] || null,
+                    expirationDate: expDate,
+                    lot: row[7] || null,
+                    sanitaryReg: row[8] || null,
+                    quantity: row[9],
+                    salePrice: row[10]
+                  }
+
+                  products.push(product)
+                }
+              })
         
-              // Convertir las filas siguientes en objetos, tomando como clave cada encabezado
-              const dataRows = sheetData.slice(1).map(row => {
-                const obj: any = {};
-                headers.forEach((header: string, index: number) => {
-                  obj[header] = row[index] !== undefined ? row[index] : null;
-                });
-                return obj;
-              });
-        
-              // dataRows contiene un arreglo de objetos con las columnas correctas
-              resolve(dataRows);
+              resolve(products);
             };
         
             reader.onerror = (error) => reject(error);

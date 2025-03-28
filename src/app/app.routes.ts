@@ -19,6 +19,12 @@ export const routes: Routes = [
                 data: { breadcrumb: 'Producto' }
             },
             {
+                path: 'product-entry',
+                loadComponent: () => import('./pages/product-entry/product-entry.component'),
+                canActivate: [adminGuard],
+                data: { breadcrumb: 'Ingreso Producto' }
+            },
+            {
                 path: 'user',
                 loadChildren: () => import('./pages/users/users.routes'),
                 canActivate: [adminGuard],

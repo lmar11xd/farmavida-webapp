@@ -1,0 +1,58 @@
+<div class="w-full overflow-x-auto shadow-md sm:rounded-lg p-4">
+    <p-table
+        #dt
+        [value]="entries()"
+        [rows]="10"
+        [paginator]="true"
+        [globalFilterFields]="['fileName', 'entryDate', 'status', 'processingDate', 'username']"
+        [tableStyle]="{ 'min-width': '75rem' }"
+        [rowHover]="true"
+        dataKey="id"
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
+        [showCurrentPageReport]="true"
+    >
+        <ng-template #caption>
+            <div class="flex items-center justify-between">
+                <h5 class="m-0 text-green-900 font-medium">Lista de Productos</h5>
+                <p-iconfield>
+                    <p-inputicon styleClass="pi pi-search" />
+                    <input 
+                        pInputText 
+                        type="text"
+                        (input)="onFilter($event)"
+                        placeholder="Buscar..." 
+                    />
+                </p-iconfield>
+            </div>
+        </ng-template>
+        <ng-template #header>
+            <tr>
+                <th pSortableColumn="fileName" style="min-width: 230px">Nombre Archivo<p-sortIcon field="fileName" /></th>
+                <th pSortableColumn="entryDate" [width]="150">Fecha Carga <p-sortIcon field="entryDate" /></th>
+                <th pSortableColumn="status" [width]="150">Estado <p-sortIcon field="status" /></th>
+                <th pSortableColumn="processingDate" [width]="150">Fecha Proc. <p-sortIcon field="processingDate" /></th>
+                <th pSortableColumn="username" [width]="150">Usuario <p-sortIcon field="username" /></th>
+                <th [width]="180">Acciones</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-item>
+            <tr>
+                <td class="font-medium">{{ item.fileName }}</td>
+                <td>{{ item.entryDate | date: 'dd/MM/yyyy' }}</td>
+                <td><p-tag [value]="item.status" [severity]="getSeverityStatus(item.status)" /></td>
+                <td>{{ item.processingDate | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ item.username }}</td>
+                <td>
+                    <p-button icon="pi pi-sync" severity="info" [rounded]="true" class="mr-2" (click)="processEntry(item)" />
+                    <p-button icon="pi pi-eye" severity="success" [rounded]="true" class="mr-2" (click)="viewEntry(item)" />
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="deleteEntry(item)" />
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #summary>
+            <div class="flex items-center justify-between text-green-900 pt-2">Se encontraron {{ dt?.totalRecords }} productos.</div>
+        </ng-template>
+    </p-table>
+
+    <p-confirmDialog [style]="{ width: '450px' }" />
+</div>

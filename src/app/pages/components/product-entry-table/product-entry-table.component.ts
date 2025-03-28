@@ -1,21 +1,21 @@
 import { Component, input, ViewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { Product } from '../../../core/models/product';
+import { ProductEntry } from '../../../core/models/product-entry';
+import { StatusEntryEnum } from '../../../core/enums/status-entry.enum';
 
 @Component({
-  selector: 'app-product-table',
+  selector: 'app-product-entry-table',
   providers: [ConfirmationService],
   imports: [
-    RouterLink, 
     TableModule, 
     ButtonModule,
     ConfirmDialog, 
@@ -23,18 +23,16 @@ import { Product } from '../../../core/models/product';
     CommonModule,
     FormsModule, 
     IconFieldModule, 
-    InputIconModule
+    InputIconModule,
+    TagModule
   ],
-  templateUrl: './product-table.component.html',
+  templateUrl: './product-entry-table.component.html',
   styles: ``
 })
-export class ProductTableComponent {
+export class ProductEntryTableComponent {
   @ViewChild('dt') dt!: Table;
-  
-  products = input.required<Product[]>()
+  entries = input.required<ProductEntry[]>()
 
-  productDialog: boolean = false;
-  
   constructor(
     private messageService: MessageService, 
     private confirmationService: ConfirmationService
@@ -45,19 +43,24 @@ export class ProductTableComponent {
     this.dt.filter(input.value, 'global', 'contains');
   }
 
-  deleteProduct(product: Product) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete ' + product.name + '?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Product Deleted',
-          life: 3000
-        });
-      }
-    });
+  getSeverityStatus(status: StatusEntryEnum) {
+    switch (status) {
+      case StatusEntryEnum.PROCESSED:
+        return 'success'
+      default: 
+        return 'secondary'
+    }
+}
+
+  processEntry(entry: ProductEntry) {
+
+  }
+
+  viewEntry(entry: ProductEntry) {
+
+  }
+
+  deleteEntry(entry: ProductEntry) {
+    
   }
 }
