@@ -1,23 +1,33 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FieldsetModule } from 'primeng/fieldset';
+import { FormsModule } from '@angular/forms';
 import { ProductCreate, ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { toast } from 'ngx-sonner';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 import { EDITAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { Product } from '../../../core/models/product';
 import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-product-edit',
-  imports: [ReactiveFormsModule, FieldsetModule, InputTextModule, InputNumberModule, ButtonModule, DatePickerModule],
+  imports: [
+    ReactiveFormsModule,
+    FormsModule,
+    CommonModule,
+    FieldsetModule, 
+    InputTextModule, 
+    InputNumberModule, 
+    ButtonModule, 
+    DatePickerModule
+  ],
   templateUrl: './product-edit.component.html',
   styles: ``
 })
@@ -32,7 +42,8 @@ export default class ProductEditComponent implements OnInit {
     private _router: Router,
     private _settings: SettingsService,
     private _breadcrumbService: BreadcrumbService,
-    private _route: ActivatedRoute
+    private _route: ActivatedRoute,
+    private _messageService: MessageService,
   ) { 
     this._route.queryParamMap.subscribe(params => {
       this.id = params.get('pkey');
@@ -103,11 +114,21 @@ export default class ProductEditComponent implements OnInit {
         })
   
         await this._productService.update(product, this.id)
-        toast.success("Producto actualizado correctamente")
+        this._messageService.add({
+          severity: 'success',
+          summary: 'Guardar',
+          detail: 'Producto actualizado correctamente',
+          life: 3000
+        });
         this._router.navigateByUrl('/product/list')
       }
     } catch (error) {
-      toast.error("Error al actualizar producto")
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error al actualizar producto',
+        life: 3000
+      });
     } finally {
       this.isLoading.set(false)
       this._settings.hideSpinner()

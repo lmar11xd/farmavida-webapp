@@ -4,19 +4,25 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { Timestamp } from '@angular/fire/firestore';
 import { FieldsetModule } from 'primeng/fieldset';
-import { toast } from 'ngx-sonner';
 import { Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
 import { ProductCreate, ProductService } from '../product.service';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 import { CREAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
-import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-product-create',
-  imports: [ReactiveFormsModule, FieldsetModule, InputTextModule, InputNumberModule, ButtonModule, DatePickerModule],
+  imports: [
+    ReactiveFormsModule, 
+    FieldsetModule, 
+    InputTextModule, 
+    InputNumberModule, 
+    ButtonModule, 
+    DatePickerModule
+  ],
   templateUrl: './product-create.component.html',
   styles: ``
 })
@@ -29,7 +35,8 @@ export default class ProductCreateComponent implements OnInit {
     private _productService: ProductService, 
     private _router: Router,
     private _settings: SettingsService,
-    private _breadcrumbService: BreadcrumbService
+    private _breadcrumbService: BreadcrumbService,
+    private _messageService: MessageService,
   ) {}
   
   ngOnInit(): void {
@@ -73,10 +80,20 @@ export default class ProductCreateComponent implements OnInit {
       })
 
       await this._productService.create(product)
-      toast.success("Producto creado correctamente")
+      this._messageService.add({
+        severity: 'success',
+        summary: 'Guardar',
+        detail: 'Producto creado correctamente',
+        life: 3000
+      });
       this._router.navigateByUrl('/product/list')
     } catch (error) {
-      toast.error("Error al guardar producto")
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error al crear producto',
+        life: 3000
+      });
     } finally {
       this.isLoading.set(false)
       this._settings.hideSpinner()

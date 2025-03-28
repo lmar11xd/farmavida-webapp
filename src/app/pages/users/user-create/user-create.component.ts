@@ -6,7 +6,6 @@ import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { FieldsetModule } from 'primeng/fieldset';
-import { toast } from 'ngx-sonner';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { LISTAR_USUARIO, CREAR_USUARIO } from '../../../shared/breadcrumb/breadcrumb';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
@@ -31,7 +30,8 @@ export default class UserCreateComponent implements OnInit {
     private _userService: UserService, 
     private _router: Router,
     private _settings: SettingsService,
-    private _breadcrumbService: BreadcrumbService
+    private _breadcrumbService: BreadcrumbService,
+    private _messageService: MessageService
   ) {}
   
   ngOnInit(): void {
@@ -94,10 +94,20 @@ export default class UserCreateComponent implements OnInit {
       })
 
       await this._userService.createUser(user)
-      toast.success("Usuario creado correctamente")
+      this._messageService.add({
+        severity: 'success',
+        summary: 'Guardar',
+        detail: 'Usuario creado correctamente',
+        life: 3000
+      });
       this._router.navigateByUrl('/user/list')
     } catch (error) {
-      toast.error("Hubo un error al crear al usuario")
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error al crear usuario',
+        life: 3000
+      });
     } finally {
       this.isLoading.set(false)
       this._settings.hideSpinner()

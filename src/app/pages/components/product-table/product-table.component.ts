@@ -2,7 +2,6 @@ import { Component, input, ViewChild } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
@@ -18,8 +17,7 @@ import { Product } from '../../../core/models/product';
   imports: [
     RouterLink, 
     TableModule, 
-    ButtonModule, 
-    ToastModule, 
+    ButtonModule,
     ConfirmDialog, 
     InputTextModule,
     CommonModule,

@@ -1,10 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormControl, Validators, FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { MessageService } from 'primeng/api';
 import { hasConfirmPasswordError, hasEmailError, hasPasswordError, isRequired, passwordsMatchValidator } from '../../utils/validators';
 import { AuthService } from '../../../core/security/auth-service';
-import { toast } from 'ngx-sonner';
-import { Router } from '@angular/router';
 import { FooterComponent } from "../../../shared/components/footer/footer.component";
 import { SettingsService } from '../../../core/settings/settings.service';
 import { LogoComponent } from "../../../shared/logo/logo.component";
@@ -34,7 +34,8 @@ export default class SignupComponent {
     private _formBuilder: FormBuilder, 
     private _authService: AuthService, 
     private _router: Router,
-    private _settings: SettingsService
+    private _settings: SettingsService,
+    private _messageService: MessageService
   ) {
     this.form = this._formBuilder.group<FormSignUp>(
       {
@@ -72,10 +73,20 @@ export default class SignupComponent {
       
       this._settings.showSpinner()
       await this._authService.signup({username, email, password})
-      toast.success("Te has registrado correctamente")
+      this._messageService.add({
+        severity: 'info',
+        summary: 'Farmavida',
+        detail: 'Bienvenido a Farmavida',
+        life: 3000
+      });
       this._router.navigateByUrl('/dashboard')
     } catch (error) {
-      toast.error("Ha ocurrido un error")
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error al registrar usuario',
+        life: 3000
+      });
     } finally {
       this._settings.hideSpinner()
     }

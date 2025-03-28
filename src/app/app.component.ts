@@ -4,7 +4,6 @@ import { PrimeNG } from 'primeng/config';
 import { ToastModule } from 'primeng/toast';
 import { MessagesModule } from 'primeng/messages';
 import { ButtonModule } from 'primeng/button';
-import { NgxSonnerToaster } from 'ngx-sonner';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 @Component({
@@ -14,7 +13,6 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     ToastModule,
     MessagesModule,
     ButtonModule,
-    NgxSonnerToaster,
     NgxSpinnerModule
   ],
   templateUrl: './app.component.html',
