@@ -1,4 +1,4 @@
-<div class="w-full overflow-x-auto shadow-md sm:rounded-lg p-4">
+<div class="w-full bg-white overflow-x-auto shadow-md sm:rounded-lg p-4">
     <p-table
         #dt
         [value]="products()"
@@ -16,11 +16,11 @@
                 <h5 class="m-0 text-green-900 font-medium">Lista de Productos</h5>
                 <p-iconfield>
                     <p-inputicon styleClass="pi pi-search" />
-                    <input 
-                        pInputText 
+                    <input
+                        pInputText
                         type="text"
                         (input)="onFilter($event)"
-                        placeholder="Buscar..." 
+                        placeholder="Buscar..."
                     />
                 </p-iconfield>
             </div>

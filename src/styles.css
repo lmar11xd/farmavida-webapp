@@ -75,3 +75,6 @@ p-breadcrumb nav {
     left: 0;
     z-index: 1030;
 }
+.view-table table {
+  font-size: 12px !important;
+}
