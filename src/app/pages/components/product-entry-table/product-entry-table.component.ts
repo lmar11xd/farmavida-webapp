@@ -14,18 +14,20 @@ import { ProductEntry } from '../../../core/models/product-entry';
 import { StatusEntryEnum } from '../../../core/enums/status-entry.enum';
 import { Timestamp } from '@angular/fire/firestore';
 import { convertDateToFormat } from '../../../core/core-util';
+import { ProductEntryService } from '../../product-entry/product-entry.service';
+import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   selector: 'app-product-entry-table',
   providers: [ConfirmationService],
   imports: [
-    TableModule, 
+    TableModule,
     ButtonModule,
-    ConfirmDialog, 
+    ConfirmDialog,
     InputTextModule,
     CommonModule,
-    FormsModule, 
-    IconFieldModule, 
+    FormsModule,
+    IconFieldModule,
     InputIconModule,
     TagModule,
     Dialog
@@ -41,8 +43,10 @@ export class ProductEntryTableComponent {
   selectedEntry: ProductEntry | null = null
 
   constructor(
-    private messageService: MessageService, 
-    private confirmationService: ConfirmationService
+    private _messageService: MessageService,
+    private _confirmationService: ConfirmationService,
+    private _settings: SettingsService,
+    private _entryService: ProductEntryService
   ) {}
 
   onFilter(event: Event) {
@@ -54,38 +58,36 @@ export class ProductEntryTableComponent {
     switch (status) {
       case StatusEntryEnum.PROCESSED:
         return 'success'
-      default: 
+      default:
         return 'secondary'
     }
   }
 
   getFormatDate(date: Timestamp | Date | null | undefined) {
-    if(date instanceof Timestamp) {
-      date = (date as Timestamp).toDate()
-    }
     return convertDateToFormat(date, 'dd/MM/yyyy')
   }
 
-  processEntry(entry: ProductEntry) {
+  processEntry(id: string) {
 
   }
 
-  viewEntry(entry: ProductEntry) {
-    this.visibleView = true
-    entry.products.map(p => {
-      p.expirationDate = p.expirationDate ? (p.expirationDate as Timestamp).toDate() : null
-    })
-    this.selectedEntry = entry
-    //this.selectedEntry.products = products
+  async viewEntry(id: string) {
+    this._settings.showSpinner()
+    const entry = await this._entryService.getEntry(id)
+    this._settings.hideSpinner()
+    if(entry.exists()) {
+      this.selectedEntry = entry.data() as ProductEntry
+      this.selectedEntry.id = id
+      this.visibleView = true
+    }
   }
 
-  
   dismissView(event: any) {
     this.visibleView = false
     this.selectedEntry = null
   }
 
   deleteEntry(entry: ProductEntry) {
-    
+
   }
 }

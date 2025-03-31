@@ -78,3 +78,6 @@ p-breadcrumb nav {
 .view-table table {
   font-size: 12px !important;
 }
+p-datepicker .p-datepicker {
+  width: 100%;
+}

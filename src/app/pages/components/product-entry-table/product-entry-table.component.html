@@ -32,7 +32,7 @@
                 <th pSortableColumn="status" [width]="150">Estado <p-sortIcon field="status" /></th>
                 <th pSortableColumn="processingDate" [width]="150">Fecha Proc. <p-sortIcon field="processingDate" /></th>
                 <th pSortableColumn="username" [width]="150">Usuario <p-sortIcon field="username" /></th>
-                <th [width]="180">Acciones</th>
+                <th [width]="160">Acciones</th>
             </tr>
         </ng-template>
         <ng-template #body let-item>
@@ -42,10 +42,10 @@
                 <td><p-tag [value]="item.status" [severity]="getSeverityStatus(item.status)" /></td>
                 <td>{{ item.processingDate | date: 'dd/MM/yyyy' }}</td>
                 <td>{{ item.username }}</td>
-                <td>
-                    <p-button icon="pi pi-eye" title="Ver Detalles" severity="success" [rounded]="true" class="mr-2" (click)="viewEntry(item)" />
+                <td style="display: flex;justify-content: space-between;gap:8px;">
+                    <p-button icon="pi pi-eye" title="Ver Detalles" severity="success" [rounded]="true" class="mr-2" (click)="viewEntry(item.id)" />
                     @if(item.status !== status.PROCESSED) {
-                        <p-button icon="pi pi-sync" title="Procesar" severity="info" [rounded]="true" class="mr-2" (click)="processEntry(item)" />
+                        <p-button icon="pi pi-sync" title="Procesar" severity="info" [rounded]="true" class="mr-2" (click)="processEntry(item.id)" />
                         <p-button icon="pi pi-trash" title="Eliminar" severity="danger" [rounded]="true" (click)="deleteEntry(item)" />
                     }
                 </td>
@@ -70,8 +70,8 @@
         <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div class="sm:col-span-3">
                 <div class="flex items-center gap-4 mb-4">
-                    <label for="username" class="font-semibold w-32">Fecha de Carga:</label>
-                    <label for="username">{{getFormatDate(selectedEntry?.entryDate)}}</label>
+                    <label class="font-semibold w-32">Fecha de Carga:</label>
+                    <label>{{getFormatDate(selectedEntry?.entryDate)}}</label>
                 </div>
                 <div class="flex items-center gap-4 mb-4">
                     <label for="username" class="font-semibold w-32">Estado:</label>
@@ -80,12 +80,12 @@
             </div>
             <div class="sm:col-span-3">
                 <div class="flex items-center gap-4 mb-4">
-                    <label for="username" class="font-semibold w-32">Usuario:</label>
-                    <label for="username">{{selectedEntry?.username}}</label>
+                    <label class="font-semibold w-32">Usuario:</label>
+                    <label>{{selectedEntry?.id}}</label>
                 </div>
                 <div class="flex items-center gap-4 mb-4">
-                    <label for="username" class="font-semibold w-32">Fecha de Proc.:</label>
-                    <label for="username">{{getFormatDate(selectedEntry?.processingDate)}}</label>
+                    <label class="font-semibold w-32">Fecha de Proc.:</label>
+                    <label>{{getFormatDate(selectedEntry?.processingDate)}}</label>
                 </div>
             </div>
         </div>
@@ -128,7 +128,7 @@
                         <td>{{ product.laboratory }}</td>
                         <td>{{ product.costPrice }}</td>
                         <td>{{ product.um }}</td>
-                        <td>{{ product.expirationDate | date: 'MM/yyyy' }}</td>
+                        <td>{{ getFormatDate(product.expirationDate) }}</td>
                         <td>{{ product.lot }}</td>
                         <td>{{ product.quantity }}</td>
                         <td>{{ product.quantity }}</td>

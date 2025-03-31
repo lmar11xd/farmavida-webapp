@@ -7,14 +7,14 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FormsModule } from '@angular/forms';
+import { MenuItem, MessageService } from 'primeng/api';
+import { Timestamp } from '@angular/fire/firestore';
 import { ProductCreate, ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
 import { EDITAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/breadcrumb';
-import { MenuItem, MessageService } from 'primeng/api';
 import { Product } from '../../../core/models/product';
-import { Timestamp } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-product-edit',
@@ -22,10 +22,10 @@ import { Timestamp } from '@angular/fire/firestore';
     ReactiveFormsModule,
     FormsModule,
     CommonModule,
-    FieldsetModule, 
-    InputTextModule, 
-    InputNumberModule, 
-    ButtonModule, 
+    FieldsetModule,
+    InputTextModule,
+    InputNumberModule,
+    ButtonModule,
     DatePickerModule
   ],
   templateUrl: './product-edit.component.html',
@@ -37,14 +37,14 @@ export default class ProductEditComponent implements OnInit {
   id: string | null = null
 
   constructor(
-    private _formBuilder: FormBuilder, 
-    private _productService: ProductService, 
+    private _formBuilder: FormBuilder,
+    private _productService: ProductService,
     private _router: Router,
     private _settings: SettingsService,
     private _breadcrumbService: BreadcrumbService,
     private _route: ActivatedRoute,
     private _messageService: MessageService,
-  ) { 
+  ) {
     this._route.queryParamMap.subscribe(params => {
       this.id = params.get('pkey');
     });
@@ -59,9 +59,9 @@ export default class ProductEditComponent implements OnInit {
   initializeBreadcrumb() {
     if(this.id != null) {
       EDITAR_PRODUCTO[0]?.url && (EDITAR_PRODUCTO[0].url = EDITAR_PRODUCTO[0].url.replace(':id', this.id));
-  
+
       let BREADCRUMBS: MenuItem[] = [...LISTAR_PRODUCTO, ...EDITAR_PRODUCTO];
-  
+
       this._breadcrumbService.addBreadcrumbs(BREADCRUMBS);
     }
   }
@@ -74,7 +74,11 @@ export default class ProductEditComponent implements OnInit {
       expirationDate: this._formBuilder.control(null, []),
       quantity: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
       costPrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
-      salePrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)])
+      salePrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
+      um: this._formBuilder.control('', []),
+      lot: this._formBuilder.control('', []),
+      laboratory: this._formBuilder.control('', []),
+      sanitaryReg: this._formBuilder.control('', []),
     })
   }
 
@@ -96,14 +100,14 @@ export default class ProductEditComponent implements OnInit {
 
   async onSubmit() {
    if(this.form.invalid) return
-       
+
     try {
       if(this.id != null) {
         this.isLoading.set(true)
         this._settings.showSpinner()
-        
-        const { code, name, description, expirationDate, quantity, costPrice, salePrice } = this.form.getRawValue()
-        
+
+        const { code, name, description, expirationDate, quantity, costPrice, salePrice, um, lot, laboratory, sanitaryReg } = this.form.getRawValue()
+
         const product: ProductCreate = ({
           code: code || '',
           name: name || '',
@@ -111,9 +115,13 @@ export default class ProductEditComponent implements OnInit {
           expirationDate: Timestamp.fromDate(expirationDate) || null,
           quantity: quantity || 0,
           costPrice: costPrice || 0,
-          salePrice: salePrice || 0
+          salePrice: salePrice || 0,
+          um: um || '',
+          lot: lot || '',
+          laboratory: laboratory || '',
+          sanitaryReg: sanitaryReg || ''
         })
-  
+
         await this._productService.update(product, this.id)
         this._messageService.add({
           severity: 'success',

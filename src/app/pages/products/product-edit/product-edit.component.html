@@ -5,49 +5,189 @@
                 <span class="font-bold font-emblemaone">Editar Producto</span>
             </div>
         </ng-template>
-        
+
         <!--Formulario-->
         <form class="space-y-4 md:space-y-6" (ngSubmit)="onSubmit()" [formGroup]="form">
-            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-2">
-                    <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">C&oacute;digo</label>
-                    <input pInputText formControlName="code" type="text" variant="filled" name="code" id="code" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="10000000">
-                </div>
-                <div class="sm:col-span-4">
-                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre del Producto</label>
-                    <input pInputText type="text" variant="filled" formControlName="name" name="name" id="name" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="Nombre del producto" required="">
-                </div>
-                <div class="sm:col-span-6">
-                    <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripci&oacute;n del Producto</label>
-                    <input pInputText type="text" variant="filled" formControlName="description" name="description" id="description" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 " placeholder="Descripción del producto" required="">
-                </div>
-                <div class="sm:col-span-6">
-                    <label for="expirationDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de Vencimiento</label>
-                    <p-datepicker formControlName="expirationDate" dateFormat="dd/mm/yy" class="w-full" variant="filled" [iconDisplay]="'input'" [showIcon]="true" inputId="icondisplay" />
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Cantidad</label>
-                    <p-inputnumber formControlName="quantity" variant="filled" inputId="integeronly" locale="en-US" [min]="1" class="w-full" />
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="costPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio de Costo</label>
-                    <p-inputnumber formControlName="costPrice" mode="decimal" locale="en-US" [minFractionDigits]="2" variant="filled"  class="w-full" />
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="salePrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Precio de Venta</label>
-                    <p-inputnumber formControlName="salePrice" mode="decimal" locale="en-US" [minFractionDigits]="2" variant="filled" class="w-full" />
-                </div>
+          <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <div class="sm:col-span-2">
+                <label for="code" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    C&oacute;digo
+                </label>
+                <input
+                    pInputText
+                    type="text"
+                    variant="filled"
+                    [disabled]="true"
+                    name="code"
+                    id="code"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="AUTOGENERADO">
             </div>
-            <div class="mt-6 flex items-center justify-end gap-x-6">
-                <button
-                    [disabled]="isLoading()"
-                    pButton 
-                    type="submit" 
-                    class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                >
-                    {{ isLoading() ? 'Actualizando...': 'Actualizar'}}
-                </button>
+
+            <div class="sm:col-span-4">
+                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Nombre Producto
+                </label>
+                <input
+                    pInputText
+                    type="text"
+                    variant="filled"
+                    formControlName="name"
+                    name="name"
+                    id="name"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="Nombre del producto"
+                    required>
             </div>
+
+            <div class="sm:col-span-6">
+                <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Principio Activo
+                </label>
+                <input
+                    pInputText
+                    type="text"
+                    variant="filled"
+                    formControlName="description"
+                    name="description"
+                    id="description"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="Principio Activo"
+                    required>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Cantidad
+                </label>
+                <p-inputnumber
+                    formControlName="quantity"
+                    variant="filled"
+                    inputId="integeronly"
+                    locale="en-US"
+                    [min]="1"
+                    class="w-full">
+                </p-inputnumber>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="costPrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Precio de Costo
+                </label>
+                <p-inputnumber
+                    formControlName="costPrice"
+                    mode="decimal"
+                    locale="en-US"
+                    [minFractionDigits]="2"
+                    variant="filled"
+                    class="w-full">
+                </p-inputnumber>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="salePrice" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Precio de Venta
+                </label>
+                <p-inputnumber
+                    formControlName="salePrice"
+                    mode="decimal"
+                    locale="en-US"
+                    [minFractionDigits]="2"
+                    variant="filled"
+                    class="w-full">
+                </p-inputnumber>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="expirationDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Fecha Vencimiento
+              </label>
+              <p-datepicker
+                  formControlName="expirationDate"
+                  dateFormat="dd/mm/yy"
+                  variant="filled"
+                  [iconDisplay]="'input'"
+                  [showIcon]="true"
+                  placeholder="dd/mm/yyyy"
+                  inputId="icondisplay">
+              </p-datepicker>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="um" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Unidad Medida
+                </label>
+                <input
+                  pInputText
+                  type="text"
+                  variant="filled"
+                  formControlName="um"
+                  name="um"
+                  id="um"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  placeholder="Unidad de Medida"
+                  required>
+            </div>
+
+            <div class="sm:col-span-2">
+                <label for="lot" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Lote
+                </label>
+                <input
+                    pInputText
+                    type="text"
+                    variant="filled"
+                    formControlName="lot"
+                    name="lot"
+                    id="lot"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                    placeholder="Lote"
+                    required>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="laboratory" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Laboratorio
+              </label>
+              <input
+                  pInputText
+                  type="text"
+                  variant="filled"
+                  formControlName="laboratory"
+                  name="laboratory"
+                  id="laboratory"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  placeholder="Laboratorio"
+                  required>
+            </div>
+
+            <div class="sm:col-span-2">
+              <label for="sanitaryReg" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Registro Sanitario
+              </label>
+              <input
+                  pInputText
+                  type="text"
+                  variant="filled"
+                  formControlName="sanitaryReg"
+                  name="sanitaryReg"
+                  id="sanitaryReg"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                  placeholder="Registro Sanitario"
+                  required>
+            </div>
+          </div>
+
+          <div class="mt-6 flex items-center justify-end gap-x-6">
+              <button
+                  [disabled]="isLoading()"
+                  pButton
+                  type="submit"
+                  class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+              >
+                  {{ isLoading() ? 'Actualizando...': 'Actualizar'}}
+              </button>
+          </div>
         </form>
     </p-fieldset>
 </div>

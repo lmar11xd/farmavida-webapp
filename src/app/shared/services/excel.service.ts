@@ -28,10 +28,10 @@ export class ExcelService {
               reject('Solo se permite un archivo a la vez.');
               return;
             }*/
-        
+
             const file = fileList.files[0];
             const reader: FileReader = new FileReader();
-        
+
             reader.onload = (e: any) => {
               // El resultado es un ArrayBuffer
               const arrayBuffer: ArrayBuffer = e.target.result;
@@ -39,22 +39,22 @@ export class ExcelService {
               const data = new Uint8Array(arrayBuffer);
               // Cargamos el workbook usando XLSX
               const workbook: XLSX.WorkBook = XLSX.read(data, { type: 'array' });
-        
+
               // Se asume que la información está en la primera hoja
               const sheetName: string = workbook.SheetNames[0];
               const sheet: XLSX.WorkSheet = workbook.Sheets[sheetName];
-        
+
               // Lee la hoja como un array de arrays, donde la primera fila son los encabezados
               const sheetData: any[][] = XLSX.utils.sheet_to_json(sheet, { header: 1, raw: true });
-        
+
               if (sheetData.length === 0) {
                 reject('El archivo está vacío o no tiene datos.');
                 return;
               }
-        
+
               // Primera fila = encabezados
               const headers = sheetData[0];
-        
+
               // Validar encabezados requeridos
               const missingColumns = PRODUCTCOLUMNS.filter(col => !headers.includes(col));
               if (missingColumns.length > 0) {
@@ -81,7 +81,7 @@ export class ExcelService {
 
                   const product: Product = {
                     code: '00000000',
-                    name: row[1],
+                    name: row[1].toString().trim(),
                     description: row[2] || null,
                     laboratory: row[3],
                     costPrice: row[4],
@@ -96,10 +96,10 @@ export class ExcelService {
                   products.push(product)
                 }
               })
-        
+
               resolve(products);
             };
-        
+
             reader.onerror = (error) => reject(error);
             // Usamos readAsArrayBuffer en lugar de readAsBinaryString
             reader.readAsArrayBuffer(file);

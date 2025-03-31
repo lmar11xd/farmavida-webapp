@@ -16,11 +16,11 @@ import { CREAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/brea
 @Component({
   selector: 'app-product-create',
   imports: [
-    ReactiveFormsModule, 
-    FieldsetModule, 
-    InputTextModule, 
-    InputNumberModule, 
-    ButtonModule, 
+    ReactiveFormsModule,
+    FieldsetModule,
+    InputTextModule,
+    InputNumberModule,
+    ButtonModule,
     DatePickerModule
   ],
   templateUrl: './product-create.component.html',
@@ -29,16 +29,16 @@ import { CREAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/brea
 export default class ProductCreateComponent implements OnInit {
   form: FormGroup = new FormGroup({});
   isLoading = signal(false)
-  
+
   constructor(
-    private _formBuilder: FormBuilder, 
-    private _productService: ProductService, 
+    private _formBuilder: FormBuilder,
+    private _productService: ProductService,
     private _router: Router,
     private _settings: SettingsService,
     private _breadcrumbService: BreadcrumbService,
     private _messageService: MessageService,
   ) {}
-  
+
   ngOnInit(): void {
     this.initializeBreadcrumb()
     this.initializeForm()
@@ -57,18 +57,22 @@ export default class ProductCreateComponent implements OnInit {
       expirationDate: this._formBuilder.control(null, []),
       quantity: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
       costPrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
-      salePrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)])
+      salePrice: this._formBuilder.control(0, [Validators.required, Validators.min(1)]),
+      um: this._formBuilder.control('', []),
+      lot: this._formBuilder.control('', []),
+      laboratory: this._formBuilder.control('', []),
+      sanitaryReg: this._formBuilder.control('', []),
     })
   }
 
   async onSubmit() {
     if(this.form.invalid) return
-    
+
     try {
       this.isLoading.set(true)
       this._settings.showSpinner()
-      
-      const { code, name, description, expirationDate, quantity, costPrice, salePrice } = this.form.value
+
+      const { code, name, description, expirationDate, quantity, costPrice, salePrice, um, lot, laboratory, sanitaryReg } = this.form.value
 
       const product: ProductCreate = ({
         code: code || '',
@@ -77,7 +81,11 @@ export default class ProductCreateComponent implements OnInit {
         expirationDate: Timestamp.fromDate(expirationDate) || null,
         quantity: quantity || 0,
         costPrice: costPrice || 0,
-        salePrice: salePrice || 0
+        salePrice: salePrice || 0,
+        um: um || '',
+        lot: lot || '',
+        laboratory: laboratory || '',
+        sanitaryReg: sanitaryReg || ''
       })
 
       await this._productService.create(product)

@@ -40,12 +40,12 @@
             <tr>
                 <td>{{ product.code }}</td>
                 <td class="font-medium">{{ product.name }}</td>
-                <td>{{ product.expirationDate | date: 'dd/MM/yyyy' }}</td>
+                <td><p-tag [value]="getExpirationFormat(product.expirationDate)" [severity]="getSeverityExpiration(product.expirationDate)" /></td>
                 <td>{{ product.quantity }}</td>
                 <td>S/ {{ product.costPrice | number: '1.2-2' }}</td>
                 <td>S/ {{ product.salePrice | number: '1.2-2' }}</td>
-                <td>
-                    <p-button icon="pi pi-pencil" [routerLink]="['/product/edit']" [queryParams]="{ pkey: product.id}" class="mr-2" [rounded]="true" />
+                <td style="display: flex;justify-content: space-between;gap:8px;">
+                    <p-button icon="pi pi-pencil" [routerLink]="['/product/edit']" [queryParams]="{ pkey: product.id}" [rounded]="true" />
                     <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="deleteProduct(product)" />
                 </td>
             </tr>
