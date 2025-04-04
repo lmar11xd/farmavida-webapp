@@ -16,6 +16,8 @@ import { Timestamp } from '@angular/fire/firestore';
 import { convertDateToFormat } from '../../../core/core-util';
 import { ProductEntryService } from '../../product-entry/product-entry.service';
 import { SettingsService } from '../../../core/settings/settings.service';
+import { ProductCreate, ProductService } from '../../products/product.service';
+import { Product } from '../../../core/models/product';
 
 @Component({
   selector: 'app-product-entry-table',
@@ -46,7 +48,8 @@ export class ProductEntryTableComponent {
     private _messageService: MessageService,
     private _confirmationService: ConfirmationService,
     private _settings: SettingsService,
-    private _entryService: ProductEntryService
+    private _entryService: ProductEntryService,
+    private _productService: ProductService
   ) {}
 
   onFilter(event: Event) {
@@ -67,11 +70,11 @@ export class ProductEntryTableComponent {
     return convertDateToFormat(date, 'dd/MM/yyyy')
   }
 
-  processEntry(id: string) {
-
+  onProcessEntry(id: string) {
+    this.showDialogSaveProducts(id)
   }
 
-  async viewEntry(id: string) {
+  async onViewEntry(id: string) {
     this._settings.showSpinner()
     const entry = await this._entryService.getEntry(id)
     this._settings.hideSpinner()
@@ -82,12 +85,138 @@ export class ProductEntryTableComponent {
     }
   }
 
+  onDeleteEntry(entry: ProductEntry) {
+
+  }
+
   dismissView(event: any) {
     this.visibleView = false
     this.selectedEntry = null
   }
 
-  deleteEntry(entry: ProductEntry) {
+  showDialogSaveProducts(idEntry: string) {
+    this._confirmationService.confirm({
+      message: '¿Deseas procesar el documento?',
+      header: 'Procesar Ingreso',
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+          label: 'Procesar',
+      },
+      accept: () => {
+        this.processEntry(idEntry)
+      },
+      reject: () => {
+        console.log("Cancelar procesar ingreso de productos")
+      }
+    });
+  }
 
+  async processEntry(id: string) {
+    console.log('Procesar ingreso de productos', id)
+    try {
+      this._settings.showSpinner()
+
+      const entrySnapshot = await this._entryService.getEntry(id)
+
+      if (!entrySnapshot.exists()) {
+        this._messageService.add({
+          severity: 'warn',
+          summary: 'Advertencia',
+          detail: 'El ingreso de productos no existe',
+          life: 3000
+        });
+        return;
+      }
+
+      const entry = entrySnapshot.data() as ProductEntry;
+      if (!entry?.products || entry.products.length === 0) {
+        this._messageService.add({
+          severity: 'warn',
+          summary: 'Advertencia',
+          detail: 'No hay productos para procesar',
+          life: 3000
+        });
+        return;
+      }
+
+      const currentDate = new Date();
+      const username = this._settings.getUserInfo()?.username || 'admin';
+
+      // Procesar cada producto del ingreso
+      for (const product of entry.products) {
+        const productName = product.name.trim().toLowerCase();
+        const existingProductSnapshot = await this._productService.getProductByName(productName);
+
+        if (existingProductSnapshot?.exists()) {
+          // Si el producto ya existe, actualizamos el stock
+          const existingProduct = existingProductSnapshot.data() as Product;;
+          const updatedStock = (existingProduct?.quantity || 0) + product.quantity;
+
+          await this._productService.update(existingProductSnapshot.id, {
+            costPrice: product.costPrice,
+            salePrice: product.salePrice,
+            quantity: updatedStock,
+            updatedAt: currentDate,
+            updatedBy: this._settings.getUserInfo()?.username || 'admin'
+          });
+
+          console.log(`Stock actualizado para ${product.name}: ${updatedStock}`);
+
+        } else {
+          // Si el producto no existe, lo creamos con el stock inicial
+          const newProduct: ProductCreate = {
+            code: '',
+            name: product.name,
+            quantity: product.quantity,
+            description: product.description || '',
+            expirationDate: product.expirationDate,
+            costPrice: product.costPrice,
+            salePrice: product.salePrice,
+            um: product.um || '',
+            lot: product.lot || '',
+            laboratory: product.laboratory || '',
+            sanitaryReg: product.sanitaryReg || '',
+            processingStatus: StatusEntryEnum.PROCESSED,
+            processingDate: currentDate,
+            createdAt: currentDate,
+            createdBy: username
+          };
+
+          await this._productService.create(newProduct);
+          console.log(`Nuevo producto creado: ${product.name}`);
+        }
+      }
+
+      const productEntry: ProductEntry = {
+        ...entry,
+        processingDate: currentDate,
+        status: StatusEntryEnum.PROCESSED,
+        username: username
+      };
+
+      await this._entryService.update(id, productEntry);
+
+      this._messageService.add({
+        severity: 'success',
+        summary: 'Guardar',
+        detail: 'Ingreso de productos procesado correctamente',
+        life: 3000
+      });
+    } catch (error) {
+      console.error('Error al procesar ingreso de productos:', error);
+      this._messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Ocurrió un error al procesar el ingreso de productos',
+        life: 3000
+      });
+    } finally {
+      this._settings.hideSpinner()
+    }
   }
 }

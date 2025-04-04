@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { ProductEntry } from "../../core/models/product-entry";
-import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDoc, Timestamp } from "@angular/fire/firestore";
+import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDoc, getDocs, query, Timestamp, updateDoc, where } from "@angular/fire/firestore";
 import { map, Observable } from "rxjs";
+import { MSG_ENTRY_EXISTS } from '../../core/constants/constants';
 
 export type ProductEntryCreate = Omit<ProductEntry, 'id'>
 
@@ -9,30 +10,49 @@ const PATH = 'product-entries'
 
 @Injectable({providedIn: 'root'})
 export class ProductEntryService {
-    private _collection: CollectionReference
+  private _collection: CollectionReference
 
-    constructor(private _firestore: Firestore) {
-        this._collection = collection(this._firestore, PATH)
-    }
+  constructor(private _firestore: Firestore) {
+      this._collection = collection(this._firestore, PATH)
+  }
 
-    getEntries(): Observable<ProductEntry[]> {
-      return collectionData(this._collection, { idField: 'id' }).pipe(
-        map(entries =>
-            entries.map(({ products, ...entry }) => ({
-                ...entry,
-                entryDate: entry['entryDate'] ? (entry['entryDate'] as Timestamp).toDate() : null,
-                processingDate: entry['processingDate'] ? (entry['processingDate'] as Timestamp).toDate() : null
-            }) as ProductEntry)
-        )
-      ) as Observable<ProductEntry[]>;
-    }
+  getEntries(): Observable<ProductEntry[]> {
+    return collectionData(this._collection, { idField: 'id' }).pipe(
+      map(entries =>
+          entries.map(({ products, ...entry }) => ({
+              ...entry
+          }) as ProductEntry)
+      )
+    ) as Observable<ProductEntry[]>;
+  }
 
-    getEntry(id: string) {
-      const doRef = doc(this._collection, id)
-      return getDoc(doRef)
-    }
+  getEntry(id: string) {
+    const doRef = doc(this._collection, id)
+    return getDoc(doRef)
+  }
 
-    async create(productEntry: ProductEntryCreate) {
-        return addDoc(this._collection, productEntry)
-    }
+  async create(productEntry: ProductEntryCreate) {
+     const q = query(this._collection, where('fileName', '==', productEntry.fileName));
+
+     const fileNameSnapshot = await getDocs(q);
+
+     if (!fileNameSnapshot.empty) {
+       throw new Error(MSG_ENTRY_EXISTS);
+     }
+
+    return addDoc(this._collection, productEntry)
+  }
+
+  update(id: string, productEntry: Partial<ProductEntry>) {
+    const entryRef = doc(this._collection, id);
+    return updateDoc(entryRef, { ...productEntry });
+  }
+
+  async getEntryByName(name: string) {
+    const q = query(this._collection, where('fileName', '==', name));
+
+    const entrySnapshot = await getDocs(q);
+
+    return entrySnapshot;
+  }
 }

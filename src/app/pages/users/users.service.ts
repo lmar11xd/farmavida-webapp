@@ -35,6 +35,7 @@ export class UserService {
     if (!usernameSnapshot.empty) {
       throw new Error('El nombre de usuario ya está en uso.');
     }
+
     if (!emailSnapshot.empty) {
       throw new Error('El correo electrónico ya está en uso.');
     }
@@ -42,14 +43,14 @@ export class UserService {
     return addDoc(this._collection, user);
   }
 
-  updateUser(id: string, user: User) {
+  updateUser(id: string, user: Partial<User>) {
     const userRef = doc(this._collection, id);
     return updateDoc(userRef, { ...user });
   }
 
   async updatePartial(userId: string, names: string, phone: string) {
     const userRef = doc(this._firestore, `${PATH}/${userId}`);
-    
+
     // Verificar stock antes de restar
     const userSnap = await getDoc(userRef);
     if (userSnap.exists()) {
@@ -66,5 +67,5 @@ export class UserService {
     const userRef = doc(this._collection, id);
     return deleteDoc(userRef);
   }
-  
-}  
+
+}

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import * as XLSX from 'xlsx';
 import { Product } from "../../core/models/product";
 import { convertExcelDate, convertExcelDateToEndOfMonth } from "../../core/core-util";
+import { StatusEntryEnum } from '../../core/enums/status-entry.enum';
 
 const PRODUCTCOLUMNS = [
     'CODIGO',
@@ -21,7 +22,7 @@ const PRODUCTCOLUMNS = [
 export class ExcelService {
     constructor() {}
 
-    readExcelProducts(fileList: any): Promise<Product[]> {
+    readExcelProducts(file: any): Promise<Product[]> {
         return new Promise((resolve, reject) => {
             /*const target: DataTransfer = <DataTransfer>event.target;
             if (target.files.length !== 1) {
@@ -29,7 +30,7 @@ export class ExcelService {
               return;
             }*/
 
-            const file = fileList.files[0];
+            //const file = fileList.files[0];
             const reader: FileReader = new FileReader();
 
             reader.onload = (e: any) => {
@@ -90,7 +91,8 @@ export class ExcelService {
                     lot: row[7] || null,
                     sanitaryReg: row[8] || null,
                     quantity: row[9],
-                    salePrice: row[10]
+                    salePrice: row[10],
+                    processingStatus: StatusEntryEnum.UNPROCESSED
                   }
 
                   products.push(product)

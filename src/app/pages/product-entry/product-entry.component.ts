@@ -12,6 +12,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Product } from '../../core/models/product';
 import { StatusEntryEnum } from '../../core/enums/status-entry.enum';
+import { MSG_ENTRY_EXISTS } from '../../core/constants/constants';
 
 @Component({
   selector: 'app-product-entry',
@@ -60,9 +61,30 @@ export default class ProductEntryComponent {
     try {
       this._settings.showSpinner()
       const file = event.files[0];
-      const products = await this._excelService.readExcelProducts(event)
-      if(products != null && products.length > 0) {
-        this.showDialogSaveProducts(file.name, products)
+
+      if(file == null) {
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se ha seleccionado ningun archivo',
+          life: 3000
+        });
+        return;
+      }
+
+      const entrySnapshot = await this._productEntryService.getEntryByName(file.name)
+      if(entrySnapshot.empty){
+        const products = await this._excelService.readExcelProducts(file)
+        if(products != null && products.length > 0) {
+          this.showDialogSaveProducts(file.name, products)
+        }
+      } else {
+        this._messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: MSG_ENTRY_EXISTS,
+          life: 3000
+        });
       }
     } catch (error) {
       this._messageService.add({
@@ -97,7 +119,7 @@ export default class ProductEntryComponent {
           status: StatusEntryEnum.UNPROCESSED,
           username: this._settings.getUserInfo()?.username || 'admin'
         }
-        console.log(productEntry)
+
         this._productEntryService.create(productEntry)
           .then(() => {
             this._messageService.add({

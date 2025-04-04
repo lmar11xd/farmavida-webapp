@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp } from '@angular/fire/firestore';
+import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp, getDocs } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
 import { Product } from '../../core/models/product';
 import { INITIAL_PRODUCT_CODE } from '../../core/constants/constants';
@@ -29,12 +29,12 @@ export class ProductService {
       where('code', '==', "")
     )
 
-    return collectionData(_query, { idField: 'id' }) as Observable<Product[]>; 
+    return collectionData(_query, { idField: 'id' }) as Observable<Product[]>;
   }
 
   getProducts(): Observable<Product[]> {
     return collectionData(this._collection, { idField: 'id' }).pipe(
-      map(products => 
+      map(products =>
         products.map(product => ({
           ...product,
           expirationDate: product['expirationDate'] ? (product['expirationDate'] as Timestamp).toDate() : null
@@ -54,7 +54,7 @@ export class ProductService {
     return addDoc(this._collection, newProduct)
   }
 
-  update(product: ProductCreate, id: string) {
+  update(id: string, product: Partial<ProductCreate>) {
     const doRef = doc(this._collection, id)
     return updateDoc(doRef, product)
   }
@@ -62,7 +62,7 @@ export class ProductService {
   async updateStock(productId: string, quantitySold: number) {
     console.log("Actualizar stock del producto: " + productId + " cantidad vendida: " + quantitySold)
     const productRef = doc(this._firestore, `${PATH}/${productId}`);
-    
+
     // Verificar stock antes de restar
     const productSnap = await getDoc(productRef);
     if (productSnap.exists()) {
@@ -100,6 +100,18 @@ export class ProductService {
 
       return newCode.toString();
     });
+  }
+
+  async getProductByName(name: string) {
+    const q = query(this._collection, where('name', '==', name));
+
+    const dataSnapshot = await getDocs(q);
+
+    if(dataSnapshot.empty) {
+      return null; // Retornar null si no existe el producto
+    }
+
+    return dataSnapshot.docs[0]; // Retornar el primer documento encontrado
   }
 
 }

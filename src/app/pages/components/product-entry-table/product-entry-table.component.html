@@ -38,15 +38,15 @@
         <ng-template #body let-item>
             <tr>
                 <td class="font-medium">{{ item.fileName }}</td>
-                <td>{{ item.entryDate | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ getFormatDate(item.entryDate) }}</td>
                 <td><p-tag [value]="item.status" [severity]="getSeverityStatus(item.status)" /></td>
-                <td>{{ item.processingDate | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ getFormatDate(item.processingDate) }}</td>
                 <td>{{ item.username }}</td>
                 <td style="display: flex;justify-content: space-between;gap:8px;">
-                    <p-button icon="pi pi-eye" title="Ver Detalles" severity="success" [rounded]="true" class="mr-2" (click)="viewEntry(item.id)" />
+                    <p-button icon="pi pi-eye" title="Ver Detalles" severity="success" [rounded]="true" class="mr-2" (click)="onViewEntry(item.id)" />
                     @if(item.status !== status.PROCESSED) {
-                        <p-button icon="pi pi-sync" title="Procesar" severity="info" [rounded]="true" class="mr-2" (click)="processEntry(item.id)" />
-                        <p-button icon="pi pi-trash" title="Eliminar" severity="danger" [rounded]="true" (click)="deleteEntry(item)" />
+                        <p-button icon="pi pi-sync" title="Procesar" severity="info" [rounded]="true" class="mr-2" (click)="onProcessEntry(item.id)" />
+                        <p-button icon="pi pi-trash" title="Eliminar" severity="danger" [rounded]="true" (click)="onDeleteEntry(item)" />
                     }
                 </td>
             </tr>
@@ -81,7 +81,7 @@
             <div class="sm:col-span-3">
                 <div class="flex items-center gap-4 mb-4">
                     <label class="font-semibold w-32">Usuario:</label>
-                    <label>{{selectedEntry?.id}}</label>
+                    <label>{{selectedEntry?.username}}</label>
                 </div>
                 <div class="flex items-center gap-4 mb-4">
                     <label class="font-semibold w-32">Fecha de Proc.:</label>

@@ -119,10 +119,12 @@ export default class ProductEditComponent implements OnInit {
           um: um || '',
           lot: lot || '',
           laboratory: laboratory || '',
-          sanitaryReg: sanitaryReg || ''
+          sanitaryReg: sanitaryReg || '',
+          updatedAt: new Date(),
+          updatedBy: this._settings.getUserInfo()?.username || 'admin',
         })
 
-        await this._productService.update(product, this.id)
+        await this._productService.update(this.id, product)
         this._messageService.add({
           severity: 'success',
           summary: 'Guardar',

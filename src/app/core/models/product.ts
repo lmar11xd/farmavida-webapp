@@ -1,4 +1,5 @@
 import { Timestamp } from "@angular/fire/firestore";
+import { StatusEntryEnum } from '../enums/status-entry.enum';
 
 export interface Product {
     id?: string,
@@ -12,5 +13,11 @@ export interface Product {
     um?: string,
     laboratory?: string,
     lot?: string,
-    sanitaryReg?: string
+    sanitaryReg?: string,
+    processingStatus?: StatusEntryEnum,
+    processingDate?: Date | Timestamp | null,
+    createdAt?: Date | Timestamp | null,
+    updatedAt?: Date | Timestamp | null,
+    createdBy?: string,
+    updatedBy?: string
 }

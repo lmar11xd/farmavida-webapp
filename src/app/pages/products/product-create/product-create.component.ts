@@ -85,7 +85,9 @@ export default class ProductCreateComponent implements OnInit {
         um: um || '',
         lot: lot || '',
         laboratory: laboratory || '',
-        sanitaryReg: sanitaryReg || ''
+        sanitaryReg: sanitaryReg || '',
+        createdAt: new Date(),
+        createdBy: this._settings.getUserInfo()?.username || 'admin',
       })
 
       await this._productService.create(product)
