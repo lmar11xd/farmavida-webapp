@@ -2,6 +2,7 @@ export const AES_SECRET_KEY = '#FarmaVidaSecret#'
 export const LOCAL_USER = 'local_user'
 export const LOCAL_ROLE_ADMIN = 'local_role_admin'
 export const LOCAL_ROLE_VENDEDOR = 'local_role_vendedor'
+export const POINT_SALE_ID = 'point_sale_id'
 
 export const INITIAL_PRODUCT_CODE = 10000000;
 

@@ -22,6 +22,7 @@
     "@angular/platform-server": "^19.2.0",
     "@angular/router": "^19.2.0",
     "@angular/ssr": "^19.2.3",
+    "@fingerprintjs/fingerprintjs": "^4.6.1",
     "@primeng/themes": "^19.0.10",
     "@tailwindcss/postcss": "^4.0.14",
     "crypto-js": "^4.2.0",

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { adminGuard, privateGuard, publicGuard, vendedorGuard } from './core/security/auth-guard';
+import { adminGuard, privateGuard, publicGuard, puntoVentaGuard, vendedorGuard } from './core/security/auth-guard';
 
 export const routes: Routes = [
     {
@@ -39,7 +39,7 @@ export const routes: Routes = [
             {
                 path: 'product-catalog',
                 loadComponent: () => import('./pages/product-catalog/product-catalog.component'),
-                canActivate: [vendedorGuard],
+                canActivate: [vendedorGuard, puntoVentaGuard],
                 data: { breadcrumb: 'Catálogo de Productos' }
             },
             {

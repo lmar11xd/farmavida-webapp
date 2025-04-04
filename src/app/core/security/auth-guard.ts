@@ -1,6 +1,8 @@
 import { CanActivateFn, Router } from "@angular/router";
 import { inject } from "@angular/core";
-import { LOCAL_ROLE_ADMIN, LOCAL_ROLE_VENDEDOR, LOCAL_USER } from "../constants/constants";
+import { Firestore, doc, getDoc } from '@angular/fire/firestore';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import { LOCAL_ROLE_ADMIN, LOCAL_ROLE_VENDEDOR, LOCAL_USER, POINT_SALE_ID } from "../constants/constants";
 
 export const privateGuard: CanActivateFn = () => {
   const router = inject(Router);
@@ -49,10 +51,38 @@ export const publicGuard: CanActivateFn = () => {
   }
 };
 
+export const puntoVentaGuard: CanActivateFn = async (route, state) => {
+  const firestore = inject(Firestore);
+  const router = inject(Router);
+
+  // Obtener identificador único del dispositivo
+  const fp = await FingerprintJS.load();
+  const result = await fp.get();
+  const deviceId = result.visitorId; // ID único del navegador
+
+  console.log('ID del dispositivo:', deviceId);
+
+  // Guardar el ID en localStorage
+  localStorage.setItem(POINT_SALE_ID, deviceId);
+
+  // Buscar en Firestore si el dispositivo está registrado
+  const docRef = doc(firestore, 'points-sale', deviceId);
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    console.log('El dispositivo está registrado:', docSnap.data());
+    return true; // Permitir acceso
+  } else {
+    console.log('El dispositivo no está registrado');
+    router.navigate(['/dashboard']);
+    return false;
+  }
+}
+
 
 /*
 export const privateGuard = (): CanActivateFn => {
-  return () => { 
+  return () => {
     const router = inject(Router)
     const authState = inject(AuthStateService)
 
