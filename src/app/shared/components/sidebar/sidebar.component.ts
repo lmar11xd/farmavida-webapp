@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-sidebar',
   imports: [
     CommonModule,
-    RouterLink, 
+    RouterLink,
     RouterLinkActive,
     LogoComponent
 ],
@@ -24,7 +24,6 @@ export class SidebarComponent implements OnInit {
   role = UserRolEnum
   userInfo: User | null = null
 
-  
   constructor(private _settings: SettingsService, private _router: Router) {}
 
   ngOnInit(): void {

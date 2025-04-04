@@ -2,6 +2,7 @@
   "name": "farmavida",
   "version": "1.0.0",
   "scripts": {
+    "prebuild": "node set-version.js",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
