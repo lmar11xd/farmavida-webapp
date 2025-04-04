@@ -7,7 +7,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { Timestamp } from '@angular/fire/firestore';
 import { FieldsetModule } from 'primeng/fieldset';
 import { Router } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { ProductCreate, ProductService } from '../product.service';
 import { SettingsService } from '../../../core/settings/settings.service';
 import { BreadcrumbService } from '../../../shared/services/breadcrumb.service';
@@ -35,8 +35,7 @@ export default class ProductCreateComponent implements OnInit {
     private _productService: ProductService,
     private _router: Router,
     private _settings: SettingsService,
-    private _breadcrumbService: BreadcrumbService,
-    private _messageService: MessageService,
+    private _breadcrumbService: BreadcrumbService
   ) {}
 
   ngOnInit(): void {
@@ -91,20 +90,11 @@ export default class ProductCreateComponent implements OnInit {
       })
 
       await this._productService.create(product)
-      this._messageService.add({
-        severity: 'success',
-        summary: 'Guardar',
-        detail: 'Producto creado correctamente',
-        life: 3000
-      });
+      this._settings.showMessage('success', 'Guardar', 'Producto creado correctamente');
       this._router.navigateByUrl('/product/list')
     } catch (error) {
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Error al crear producto',
-        life: 3000
-      });
+      console.error(error)
+      this._settings.showMessage('error', 'Error', 'Error al crear producto');
     } finally {
       this.isLoading.set(false)
       this._settings.hideSpinner()

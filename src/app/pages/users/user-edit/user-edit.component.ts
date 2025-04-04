@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { FieldsetModule } from 'primeng/fieldset';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -21,21 +21,20 @@ export default class UserEditComponent implements OnInit {
   form: FormGroup = new FormGroup({});
   isLoading = signal(false)
   id: string | null = null
-  
+
   constructor(
-    private _formBuilder: FormBuilder, 
-    private _userService: UserService, 
+    private _formBuilder: FormBuilder,
+    private _userService: UserService,
     private _router: Router,
     private _settings: SettingsService,
     private _breadcrumbService: BreadcrumbService,
-    private _route: ActivatedRoute,
-    private _messageService: MessageService
+    private _route: ActivatedRoute
   ) {
     this._route.queryParamMap.subscribe(params => {
       this.id = params.get('pkey');
     });
   }
-  
+
   ngOnInit(): void {
     this.initializeBreadcrumb()
     this.initializeForm()
@@ -45,9 +44,9 @@ export default class UserEditComponent implements OnInit {
   initializeBreadcrumb() {
     if(this.id != null) {
       EDITAR_USUARIO[0]?.url && (EDITAR_USUARIO[0].url = EDITAR_USUARIO[0].url.replace(':id', this.id));
-  
+
       let BREADCRUMBS: MenuItem[] = [...LISTAR_USUARIO, ...EDITAR_USUARIO];
-  
+
       this._breadcrumbService.addBreadcrumbs(BREADCRUMBS);
     }
   }
@@ -82,26 +81,17 @@ export default class UserEditComponent implements OnInit {
     try {
       if(this.id != null) {
         const { names, phone } = this.form.getRawValue()
-        
+
         this.isLoading.set(true)
         this._settings.showSpinner()
-  
+
         await this._userService.updatePartial(this.id, names, phone)
-        this._messageService.add({
-          severity: 'success',
-          summary: 'Guardar',
-          detail: 'Usuario actualizado correctamente',
-          life: 3000
-        });
+        this._settings.showMessage('success', 'Guardar', 'Usuario actualizado correctamente');
         this._router.navigateByUrl('/user/list')
       }
     } catch (error) {
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Error al actualizar usuario',
-        life: 3000
-      });
+      console.error(error)
+      this._settings.showMessage('error', 'Error', 'Error al actualizar usuario');
     } finally {
       this.isLoading.set(false)
       this._settings.hideSpinner()

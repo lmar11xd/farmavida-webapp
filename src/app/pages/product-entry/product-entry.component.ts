@@ -8,7 +8,7 @@ import { ProductEntry } from '../../core/models/product-entry';
 import { ProductEntryTableComponent } from '../components/product-entry-table/product-entry-table.component';
 import { ProductEntryService } from './product-entry.service';
 import { LISTAR_INGRESO_PRODUCTO } from '../../shared/breadcrumb/breadcrumb';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { Product } from '../../core/models/product';
 import { StatusEntryEnum } from '../../core/enums/status-entry.enum';
@@ -26,7 +26,6 @@ export default class ProductEntryComponent {
 
   constructor(
     private _settings: SettingsService,
-    private _messageService: MessageService,
     private _confirmationService: ConfirmationService,
     private _breadcrumService: BreadcrumbService,
     private _productEntryService: ProductEntryService,
@@ -63,12 +62,7 @@ export default class ProductEntryComponent {
       const file = event.files[0];
 
       if(file == null) {
-        this._messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'No se ha seleccionado ningun archivo',
-          life: 3000
-        });
+        this._settings.showMessage('warn', 'Alerta', 'No se ha seleccionado ningun archivo')
         return;
       }
 
@@ -79,20 +73,11 @@ export default class ProductEntryComponent {
           this.showDialogSaveProducts(file.name, products)
         }
       } else {
-        this._messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: MSG_ENTRY_EXISTS,
-          life: 3000
-        });
+        this._settings.showMessage('warn', 'Alerta', MSG_ENTRY_EXISTS)
       }
     } catch (error) {
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: '' + error,
-        life: 3000
-      });
+      console.log(error)
+      this._settings.showMessage('error', 'Error', 'Error al leer el archivo ' + error)
     } finally {
       this._settings.hideSpinner()
     }
@@ -122,21 +107,11 @@ export default class ProductEntryComponent {
 
         this._productEntryService.create(productEntry)
           .then(() => {
-            this._messageService.add({
-              severity: 'success',
-              summary: 'Guardar',
-              detail: 'Ingreso de productos guardado correctamente',
-              life: 3000
-            });
+            this._settings.showMessage('success', 'Guardar', 'Ingreso de productos guardado correctamente')
           })
           .catch(error => {
             console.log(error)
-            this._messageService.add({
-              severity: 'error',
-              summary: 'Error',
-              detail: 'Error al guardar ingreso de productos',
-              life: 3000
-            });
+            this._settings.showMessage('error', 'Error', 'Error al guardar ingreso de productos')
           })
       },
       reject: () => {

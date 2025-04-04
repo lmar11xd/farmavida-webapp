@@ -7,7 +7,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FormsModule } from '@angular/forms';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { Timestamp } from '@angular/fire/firestore';
 import { ProductCreate, ProductService } from '../product.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -43,7 +43,6 @@ export default class ProductEditComponent implements OnInit {
     private _settings: SettingsService,
     private _breadcrumbService: BreadcrumbService,
     private _route: ActivatedRoute,
-    private _messageService: MessageService,
   ) {
     this._route.queryParamMap.subscribe(params => {
       this.id = params.get('pkey');
@@ -125,21 +124,11 @@ export default class ProductEditComponent implements OnInit {
         })
 
         await this._productService.update(this.id, product)
-        this._messageService.add({
-          severity: 'success',
-          summary: 'Guardar',
-          detail: 'Producto actualizado correctamente',
-          life: 3000
-        });
+        this._settings.showMessage('success', 'Guardar', 'Producto actualizado correctamente')
         this._router.navigateByUrl('/product/list')
       }
     } catch (error) {
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Error al actualizar producto',
-        life: 3000
-      });
+      this._settings.showMessage('error', 'Error', 'Error al actualizar producto')
     } finally {
       this.isLoading.set(false)
       this._settings.hideSpinner()

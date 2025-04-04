@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { Dialog } from 'primeng/dialog';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { ProductEntry } from '../../../core/models/product-entry';
 import { StatusEntryEnum } from '../../../core/enums/status-entry.enum';
 import { Timestamp } from '@angular/fire/firestore';
@@ -45,7 +45,6 @@ export class ProductEntryTableComponent {
   selectedEntry: ProductEntry | null = null
 
   constructor(
-    private _messageService: MessageService,
     private _confirmationService: ConfirmationService,
     private _settings: SettingsService,
     private _entryService: ProductEntryService,
@@ -124,23 +123,14 @@ export class ProductEntryTableComponent {
       const entrySnapshot = await this._entryService.getEntry(id)
 
       if (!entrySnapshot.exists()) {
-        this._messageService.add({
-          severity: 'warn',
-          summary: 'Advertencia',
-          detail: 'El ingreso de productos no existe',
-          life: 3000
-        });
+        this._settings.showMessage('warn', 'Advertencia', 'El ingreso de productos no existe');
         return;
       }
 
       const entry = entrySnapshot.data() as ProductEntry;
       if (!entry?.products || entry.products.length === 0) {
-        this._messageService.add({
-          severity: 'warn',
-          summary: 'Advertencia',
-          detail: 'No hay productos para procesar',
-          life: 3000
-        });
+        console.log('No hay productos para procesar');
+        this._settings.showMessage('warn', 'Advertencia', 'No hay productos para procesar');
         return;
       }
 
@@ -201,20 +191,11 @@ export class ProductEntryTableComponent {
 
       await this._entryService.update(id, productEntry);
 
-      this._messageService.add({
-        severity: 'success',
-        summary: 'Guardar',
-        detail: 'Ingreso de productos procesado correctamente',
-        life: 3000
-      });
+      console.log('Ingreso de productos procesado correctamente', id);
+      this._settings.showMessage('success', 'Éxito', 'Ingreso de productos procesado correctamente');
     } catch (error) {
       console.error('Error al procesar ingreso de productos:', error);
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Ocurrió un error al procesar el ingreso de productos',
-        life: 3000
-      });
+      this._settings.showMessage('error', 'Error', 'Ocurrió un error al procesar el ingreso de productos');
     } finally {
       this._settings.hideSpinner()
     }

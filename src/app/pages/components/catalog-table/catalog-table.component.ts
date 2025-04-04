@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { Product } from '../../../core/models/product';
 import { ShoppingCartService } from '../shopping-cart/shopping-cart.setvice';
 
@@ -17,16 +17,16 @@ import { ShoppingCartService } from '../shopping-cart/shopping-cart.setvice';
   selector: 'app-catalog-table',
   providers: [ConfirmationService],
   imports: [
-    TableModule, 
-    ButtonModule, 
-    ToastModule, 
-    ToolbarModule, 
-    ConfirmDialog, 
+    TableModule,
+    ButtonModule,
+    ToastModule,
+    ToolbarModule,
+    ConfirmDialog,
     InputTextModule,
-    CommonModule, 
-    InputTextModule, 
-    FormsModule, 
-    IconFieldModule, 
+    CommonModule,
+    InputTextModule,
+    FormsModule,
+    IconFieldModule,
     InputIconModule
   ],
   templateUrl: './catalog-table.component.html',
@@ -35,15 +35,14 @@ import { ShoppingCartService } from '../shopping-cart/shopping-cart.setvice';
 export class CatalogTableComponent {
 
   @ViewChild('dt') dt!: Table;
-  
+
   products = input.required<Product[]>()
 
   productDialog: boolean = false;
 
   selectedProducts!: Product[] | null;
-  
+
   constructor(
-    private messageService: MessageService, 
     private confirmationService: ConfirmationService,
     private _shoppingCartService: ShoppingCartService
   ) {}

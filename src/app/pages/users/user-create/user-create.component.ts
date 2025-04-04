@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MenuItem } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -25,16 +25,15 @@ import { AES_SECRET_KEY } from '../../../core/constants/constants';
 export default class UserCreateComponent implements OnInit {
   form: FormGroup = new FormGroup({});
   isLoading = signal(false)
-  
+
   constructor(
-    private _formBuilder: FormBuilder, 
-    private _userService: UserService, 
+    private _formBuilder: FormBuilder,
+    private _userService: UserService,
     private _router: Router,
     private _settings: SettingsService,
-    private _breadcrumbService: BreadcrumbService,
-    private _messageService: MessageService
+    private _breadcrumbService: BreadcrumbService
   ) {}
-  
+
   ngOnInit(): void {
     this.initializeBreadcrumb()
     this.initializeForm()
@@ -60,7 +59,7 @@ export default class UserCreateComponent implements OnInit {
   isRequired(field: 'email' | 'password' | 'confirmPassword' | 'username' | 'names') {
     return isRequired(field, this.form)
   }
-  
+
   hasEmailError() {
     return hasEmailError(this.form)
   }
@@ -95,20 +94,11 @@ export default class UserCreateComponent implements OnInit {
       })
 
       await this._userService.createUser(user)
-      this._messageService.add({
-        severity: 'success',
-        summary: 'Guardar',
-        detail: 'Usuario creado correctamente',
-        life: 3000
-      });
+      this._settings.showMessage('success', 'Guardar', 'El usuario se ha creado correctamente')
       this._router.navigateByUrl('/user/list')
     } catch (error) {
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Error al crear usuario',
-        life: 3000
-      });
+      console.error(error)
+      this._settings.showMessage('error', 'Error', 'Error al crear usuario')
     } finally {
       this.isLoading.set(false)
       this._settings.hideSpinner()

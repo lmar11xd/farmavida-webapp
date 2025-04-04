@@ -7,7 +7,6 @@ import { isRequired, hasEmailError } from '../../utils/validators';
 import { FooterComponent } from "../../../shared/components/footer/footer.component";
 import { SettingsService } from '../../../core/settings/settings.service';
 import { LogoComponent } from "../../../shared/logo/logo.component";
-import { MessageService } from 'primeng/api';
 
 interface FormLogIn {
   username: FormControl<string | null>,
@@ -29,11 +28,10 @@ export default class LoginComponent {
   form: FormGroup
 
   constructor(
-    private _formBuilder: FormBuilder, 
-    private _authService: AuthService, 
+    private _formBuilder: FormBuilder,
+    private _authService: AuthService,
     private _router: Router,
-    private _settings: SettingsService,
-    private _messageService: MessageService
+    private _settings: SettingsService
   ) {
     this.form = this._formBuilder.group<FormLogIn>(
       {
@@ -58,22 +56,13 @@ export default class LoginComponent {
       const { username, password } = this.form.value
       if(!username || !password) return
       this._settings.showSpinner()
-  
+
       await this._authService.login({username, email: '', password})
-      this._messageService.add({
-        severity: 'info',
-        summary: 'Farmavida',
-        detail: 'Bienvenido a Farmavida',
-        life: 3000
-      });
+      this._settings.showMessage('success', 'Ingresar', 'Bienvenido a Farmavida')
       this._router.navigateByUrl('/dashboard')
     } catch (error: any) {
-      this._messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: error.toString().replace('Error: ', ''),
-        life: 3000
-      });
+      console.error(error)
+      this._settings.showMessage('error', 'Error', error.toString().replace('Error: ', ''))
     } finally {
       this._settings.hideSpinner()
     }
