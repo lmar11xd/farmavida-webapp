@@ -139,8 +139,7 @@ export class ProductEntryTableComponent {
 
       // Procesar cada producto del ingreso
       for (const product of entry.products) {
-        const productName = product.name.trim().toLowerCase();
-        const existingProductSnapshot = await this._productService.getProductByName(productName);
+        const existingProductSnapshot = await this._productService.getProductByName(product.name);
 
         if (existingProductSnapshot?.exists()) {
           // Si el producto ya existe, actualizamos el stock

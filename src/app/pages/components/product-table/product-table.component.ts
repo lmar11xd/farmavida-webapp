@@ -49,7 +49,7 @@ export class ProductTableComponent {
     this.dt.filter(input.value, 'global', 'contains');
   }
 
-  getExpirationFormat(expirationDate: Date) {
+  getExpirationFormat(expirationDate: Timestamp | Date | null | undefined) {
     return convertDateToFormat(expirationDate, 'dd/MM/yyyy')
   }
 

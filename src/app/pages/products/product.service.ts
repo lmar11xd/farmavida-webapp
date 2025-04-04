@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp, getDocs } from '@angular/fire/firestore';
+import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp, getDocs, orderBy } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
 import { Product } from '../../core/models/product';
 import { INITIAL_PRODUCT_CODE } from '../../core/constants/constants';
@@ -33,14 +33,9 @@ export class ProductService {
   }
 
   getProducts(): Observable<Product[]> {
-    return collectionData(this._collection, { idField: 'id' }).pipe(
-      map(products =>
-        products.map(product => ({
-          ...product,
-          expirationDate: product['expirationDate'] ? (product['expirationDate'] as Timestamp).toDate() : null
-        }) as Product)
-      )
-    ) as Observable<Product[]>;
+    const orderedQuery = query(this._collection, orderBy('name', 'asc'));
+
+    return collectionData(orderedQuery, { idField: 'id' }) as Observable<Product[]>;
   }
 
   getProduct(id: string) {

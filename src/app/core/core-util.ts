@@ -47,7 +47,13 @@ export function convertDateToFormat(date: Timestamp | Date | null | undefined, f
         .replace('yyyy', year);
 }
 
-export function getSeverityExpiration(expirationDate: Date): "success" | "secondary" | "info" | "warn" | "danger" | "contrast" | undefined {
+export function getSeverityExpiration(expirationDate: Timestamp | Date | null | undefined): "success" | "secondary" | "info" | "warn" | "danger" | "contrast" | undefined {
+  if(expirationDate == undefined || expirationDate == null) return undefined;
+
+  if(expirationDate instanceof Timestamp) {
+    expirationDate = (expirationDate as Timestamp).toDate()
+  }
+
   const currentDate = new Date();
   const timeDifference = expirationDate.getTime() - currentDate.getTime();
   const daysDifference = timeDifference / (1000 * 3600 * 24); // Convertir la diferencia de tiempo en días

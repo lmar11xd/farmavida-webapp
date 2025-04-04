@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ProductEntry } from "../../core/models/product-entry";
-import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDoc, getDocs, query, Timestamp, updateDoc, where } from "@angular/fire/firestore";
+import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDoc, getDocs, orderBy, query, Timestamp, updateDoc, where } from "@angular/fire/firestore";
 import { map, Observable } from "rxjs";
 import { MSG_ENTRY_EXISTS } from '../../core/constants/constants';
 
@@ -17,13 +17,13 @@ export class ProductEntryService {
   }
 
   getEntries(): Observable<ProductEntry[]> {
-    return collectionData(this._collection, { idField: 'id' }).pipe(
-      map(entries =>
-          entries.map(({ products, ...entry }) => ({
-              ...entry
-          }) as ProductEntry)
-      )
-    ) as Observable<ProductEntry[]>;
+    const orderedQuery = query(
+      this._collection,
+      orderBy('entryDate', 'desc'),    // primero por fecha descendente
+      orderBy('fileName', 'asc')      // luego por nombre ascendente
+    )
+
+    return collectionData(orderedQuery, { idField: 'id' }) as Observable<ProductEntry[]>;
   }
 
   getEntry(id: string) {

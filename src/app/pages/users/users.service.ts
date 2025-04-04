@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, Firestore, getDoc, getDocs, query, updateDoc, where } from "@angular/fire/firestore";
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, Firestore, getDoc, getDocs, orderBy, query, updateDoc, where } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 import { User } from "../../core/models/user";
 
@@ -16,7 +16,8 @@ export class UserService {
   }
 
   getUsers(): Observable<User[]> {
-    return collectionData(this._collection, { idField: 'id' }) as Observable<User[]>;
+    const orderedQuery = query(this._collection, orderBy('names', 'asc'));
+    return collectionData(orderedQuery, { idField: 'id' }) as Observable<User[]>;
   }
 
   getUser(id: string) {
