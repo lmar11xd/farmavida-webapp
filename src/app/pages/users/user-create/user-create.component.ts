@@ -90,7 +90,8 @@ export default class UserCreateComponent implements OnInit {
         email: email || '',
         password: hashedPassword || '',
         phone: phone || '',
-        role: UserRolEnum.VENDEDOR
+        role: UserRolEnum.VENDEDOR,
+        authentication: false
       })
 
       await this._userService.createUser(user)

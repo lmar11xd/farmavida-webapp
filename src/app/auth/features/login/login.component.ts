@@ -61,7 +61,6 @@ export default class LoginComponent {
       this._settings.showMessage('success', 'Ingresar', 'Bienvenido a Farmavida')
       this._router.navigateByUrl('/dashboard')
     } catch (error: any) {
-      console.error(error)
       this._settings.showMessage('error', 'Error', error.toString().replace('Error: ', ''))
     } finally {
       this._settings.hideSpinner()

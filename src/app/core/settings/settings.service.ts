@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { NgxSpinnerService } from 'ngx-spinner';
 import { LOCAL_USER } from "../constants/constants";
 import { AuthService } from "../security/auth-service";
-import { UserRolEnum } from "../enums/user-rol.enum";
 import { User } from "../models/user";
 import { MessageService } from 'primeng/api';
 
@@ -42,12 +41,7 @@ export class SettingsService {
   }
 
   async logout() {
-    const user = this.getUserInfo()
-    if(user != null && user.role == UserRolEnum.ADMINISTRADOR) {
-        await this.authService.logout()
-    } else {
-        this.authService.logoutVendedor()
-    }
+    await this.authService.logout();
   }
 
 }

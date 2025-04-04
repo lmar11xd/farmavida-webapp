@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from "@angular/core";
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "@angular/fire/auth";
-import { collection, Firestore, getDocs, query, where } from "@angular/fire/firestore";
+import { collection, doc, Firestore, getDocs, query, setDoc, where } from "@angular/fire/firestore";
 import * as CryptoJS from 'crypto-js';
 import { AES_SECRET_KEY, LOCAL_ROLE_ADMIN, LOCAL_ROLE_VENDEDOR, LOCAL_USER, MSG_INVALID_CREDENTIALS } from "../constants/constants";
 import { UserRolEnum } from "../enums/user-rol.enum";
@@ -17,83 +17,100 @@ export class AuthService {
 
   constructor(private _auth: Auth, private _fireStore: Firestore, private _ngZone: NgZone) {}
 
-  signup(user: UserLogin) {
-    return new Promise((resolve, reject) => {
-      createUserWithEmailAndPassword(this._auth, user.email, user.password)
-        .then((userCredential) => {
-          this._ngZone.run(() => resolve(userCredential));
-        })
-        .catch((error) => reject(error));
-      });
+  async signup(user: UserLogin) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        this._auth,
+        user.email,
+        user.password
+      );
+      return this._runInNgZone(() => userCredential);
+    } catch (error) {
+      throw error;
+    }
   }
 
   async login(userLogin: UserLogin) {
-    const q = query(collection(this._fireStore, 'users'), where('username', '==', userLogin.username))
-    const querySnapshot = await getDocs(q)
-
-    if(querySnapshot.empty) {
-      throw new Error(MSG_INVALID_CREDENTIALS);
-    }
-
-    const userData = querySnapshot.docs[0].data() as User
-    if(userData.role == UserRolEnum.ADMINISTRADOR) {
-      return this.loginAdmin(userData, userLogin.password)
-    } else {
-      return this.loginVendedor(userData, userLogin.password)
-    }
-  }
-
-  logout() {
-    return new Promise((resolve, reject) => {
-        signOut(this._auth)
-          .then(() => {
-              this._ngZone.run(() => {
-                this.removeLocalUser()
-                resolve(true)
-              })
-          })
-          .catch((error) => reject(error))
-      }
+    const q = query(
+      collection(this._fireStore, "users"),
+      where("username", "==", userLogin.username)
     );
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) throw new Error(MSG_INVALID_CREDENTIALS);
+
+    const userDoc = querySnapshot.docs[0];
+    const user = userDoc.data() as User;
+    const userId = userDoc.id;
+
+    return user.authentication
+      ? this.loginDefault(user, userLogin.password)
+      : this.loginAndRegister(user, userLogin.password, userId);
   }
 
-  logoutVendedor() {
-    this.removeLocalUser()
+  async logout() {
+    try {
+      await signOut(this._auth);
+      this._runInNgZone(() => this.removeLocalUser());
+      return true;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  loginAdmin(user: User, password: string) {
-    console.log('Logearse como Administrador')
-    return new Promise((resolve, reject) => {
-      signInWithEmailAndPassword(this._auth, user.email, password)
-        .then((userCredential) => {
-          this._ngZone.run(() => {
-            this.saveLocalUser(user)
-            resolve(userCredential)
-          });
-        })
-        .catch((error) =>  {
-          const errorFirebase = error.toString()
-          if(errorFirebase.includes('wrong-password') || errorFirebase.includes('user-not-found')) {
-            reject(new Error(MSG_INVALID_CREDENTIALS))
-          }
-          reject(error)
-        });
+  private async loginDefault(user: User, password: string) {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        this._auth,
+        user.email,
+        password
+      );
+
+      user.password = "";
+      this._runInNgZone(() => this.saveLocalUser(user));
+
+      return userCredential;
+    } catch (error: any) {
+      const message = error.toString();
+      if (
+        message.includes("wrong-password") ||
+        message.includes("user-not-found")
+      ) {
+        throw new Error(MSG_INVALID_CREDENTIALS);
       }
-    );
+      throw error;
+    }
   }
 
-  loginVendedor(user: User, password: string) {
-    console.log('Logearse como Vendedor')
-    return new Promise((resolve, reject) => {
-      const decodePassword = CryptoJS.AES.decrypt(user.password, AES_SECRET_KEY).toString(CryptoJS.enc.Utf8)
-      if(decodePassword == password) {
-        user.password = ''//Password no se debe visualizar en localStorage
-        this.saveLocalUser(user)
-        resolve(user)
-      } else {
-        reject(new Error(MSG_INVALID_CREDENTIALS))
-      }
-    })
+  private async loginAndRegister(user: User, password: string, userId: string) {
+    try {
+      const decryptedPassword = CryptoJS.AES.decrypt(
+        user.password,
+        AES_SECRET_KEY
+      ).toString(CryptoJS.enc.Utf8);
+
+      if (decryptedPassword !== password) throw new Error(MSG_INVALID_CREDENTIALS);
+
+      console.log("Usuario no tiene cuenta registrada, se procede a crearla");
+
+      const userCredential = await createUserWithEmailAndPassword(
+        this._auth,
+        user.email,
+        decryptedPassword
+      );
+
+      const userRef = doc(this._fireStore, `users/${userId}`);
+      const updatedUser = { ...user, authentication: true };
+
+      await setDoc(userRef, updatedUser, { merge: true });
+
+      user.password = "";
+      this._runInNgZone(() => this.saveLocalUser(user));
+
+      return userCredential;
+    } catch (error) {
+      throw error;
+    }
   }
 
   saveLocalUser(user: User) {
@@ -109,5 +126,13 @@ export class AuthService {
     localStorage.removeItem(LOCAL_USER)
     localStorage.removeItem(LOCAL_ROLE_ADMIN)
     localStorage.removeItem(LOCAL_ROLE_VENDEDOR)
+  }
+
+  private _runInNgZone<T>(fn: () => T): T {
+    let result: T;
+    this._ngZone.run(() => {
+      result = fn();
+    });
+    return result!;
   }
 }
