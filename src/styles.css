@@ -81,3 +81,6 @@ p-breadcrumb nav {
 p-datepicker .p-datepicker {
   width: 100%;
 }
+.text-xxs {
+  font-size: 0.6rem !important;
+}

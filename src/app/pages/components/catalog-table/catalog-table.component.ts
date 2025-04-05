@@ -54,6 +54,7 @@ export class CatalogTableComponent {
 
   addToCart(product: Product) {
     if (product.quantity > 0) {
+      product.quantity -= 1;
       this._shoppingCartService.add(product);
     } else {
       alert('Stock insuficiente');

@@ -5,29 +5,29 @@
     <p-divider />
     <p-dataview #dv [value]="produtcs" emptyMessage="Sin productos">
         <ng-template #list let-items>
-            <div class="border-b border-b-gray-200 col-span-12 pt-2 pb-4 px-2 grid grid-cols-4" *ngFor="let item of items; let first = first">
-                <div class="col-span-3 text-left">
-                    <span class="block text-base font-medium text-surface-900 text-gray-500 overflow-hidden">{{ item.name }}</span>
-                    <span class="text-secondary text-xs text-gray-700">CANTIDAD: {{ item.quantity }}</span>
+            <div class="border-b border-b-gray-200 col-span-12 pt-2 pb-4 px-2 grid grid-cols-6" *ngFor="let item of items; let first = first">
+                <div class="col-span-4 text-left">
+                    <span class="block text-sm font-medium text-surface-900 text-gray-500 overflow-hidden">{{ item.name }}</span>
+                    <span class="text-secondary text-xxs text-gray-700">CANTIDAD: {{ item.quantity }}</span>
                 </div>
-                <div class="col-span-1 text-right">
-                    <span class="text-xl font-semibold text-gray-500">S/ {{ item.salePrice | number: '1.2-2' }}</span>
+                <div class="col-span-2 text-right">
+                    <span class="w-full block text-xxs font-semibold text-gray-500">S/ {{ item.salePrice | number: '1.2-2' }}</span>
+                    <span class="w-full text-base font-semibold text-gray-500">S/ {{ item.salePrice * item.quantity | number: '1.2-2' }}</span>
                     <div class="mt-2.5">
-                        <p-button variant="outlined" severity="danger" label="Eliminar" (onClick)="deleteProduct(item.id)"/>
+                        <p-button variant="outlined" severity="danger" label="Eliminar" (onClick)="deleteProduct(item)"/>
                     </div>
                 </div>
             </div>
         </ng-template>
     </p-dataview>
 
-    <div class="fixed-bottom px-2 py-4">
+    <div class="fixed-bottom bg-white px-2 py-4">
         <div class="px-2 py-4 flex justify-between">
             <span class="text-xl font-semibold text-surface-900">Total</span>
             <span class="text-xl font-semibold text-surface-900">S/ {{ total | number: '1.2-2' }}</span>
         </div>
-    
+
         <div class="px-2 w-full text-center space-x-4">
-            <p-button label="Limpiar" [hidden]="produtcs.length === 0" variant="outlined" severity="danger" (onClick)="cleanCart()" />
             <p-button label="Finalizar Compra" [disabled]="produtcs.length === 0" (onClick)="finalizePurchase()" />
         </div>
     </div>

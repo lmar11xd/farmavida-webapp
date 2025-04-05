@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { DrawerModule } from 'primeng/drawer';
@@ -8,6 +8,8 @@ import { Product } from '../../../core/models/product';
 import { ShoppingCartService } from './shopping-cart.setvice';
 import { ProductCatalogService } from '../../product-catalog/product-catalog.service';
 import { ProductService } from '../../products/product.service';
+import { Sale } from '../../../core/models/sale';
+import { SettingsService } from '../../../core/settings/settings.service';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -16,6 +18,8 @@ import { ProductService } from '../../products/product.service';
   styles: ''
 })
 export class ShoppingCartComponent implements OnInit {
+  @Output() onRemovedProduct = new EventEmitter<Product>();
+  @Output() onSuccessfulSale = new EventEmitter<Sale>();
   visible: boolean = false;
   produtcs: Product[] = []
   total: number = 0;
@@ -23,7 +27,8 @@ export class ShoppingCartComponent implements OnInit {
   constructor(
     private _shoppingCartService: ShoppingCartService,
     private _productCatalogService: ProductCatalogService,
-    private _productService: ProductService
+    private _productService: ProductService,
+    private _settings: SettingsService
   ) {}
 
   ngOnInit(): void {
@@ -41,8 +46,13 @@ export class ShoppingCartComponent implements OnInit {
     this.visible = false
   }
 
-  deleteProduct(id: string) {
-    this._shoppingCartService.deleteProduct(id)
+  deleteProduct(product: Product) {
+    if(product.id && product.quantity > 0) {
+      this._shoppingCartService.deleteProduct(product.id)
+
+      // Emitimos el producto eliminado
+      this.onRemovedProduct.emit(product);
+    }
   }
 
   cleanCart() {
@@ -53,8 +63,20 @@ export class ShoppingCartComponent implements OnInit {
     if (this.produtcs.length === 0) return;
 
     try {
+      const productsSold = this.produtcs;
+      const total = productsSold.reduce((acc, prod) => acc + prod.salePrice * prod.quantity, 0);
+
+      const currentDate = new Date();
+      const sale: Sale = {
+        products: productsSold,
+        total: total,
+        saleDate: currentDate,
+        createdAt: currentDate,
+        createdBy: this._settings.getUserInfo()?.username || 'admin',
+      };
+
       // Registrar la venta
-      await this._productCatalogService.registerSale(this.produtcs);
+      await this._productCatalogService.registerSale(sale);
 
       // Actualizar stock de cada producto en secuencia
       for (const product of this.produtcs) {
@@ -64,10 +86,10 @@ export class ShoppingCartComponent implements OnInit {
       // Limpiar carrito y cerrar modal
       this._shoppingCartService.clean();
       this.dismiss();
-      alert('Compra realizada con éxito');
+      this.onSuccessfulSale.emit(sale);
     } catch (error) {
       console.error('Error en la compra:', error);
-      alert('Ocurrió un error al procesar la compra. Intente nuevamente.');
-    } 
+      this._settings.showMessage('error', 'Error en la compra', 'Ocurrió un error al procesar la compra. Intente nuevamente.');
+    }
   }
 }

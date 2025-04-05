@@ -11,25 +11,19 @@ const PATH = 'products'
 })
 export class ProductCatalogService {
     private _collection: CollectionReference
-  
-    constructor(private _firestore: Firestore) {
+
+    constructor(
+      private _firestore: Firestore
+    ) {
       this._collection = collection(this._firestore, PATH)
     }
-  
+
     getProducts(): Observable<Product[]> {
       return collectionData(this._collection, { idField: 'id' }) as Observable<Product[]>;
     }
 
-    registerSale(productsSold: Product[]) {
-      const total = productsSold.reduce((acc, prod) => acc + prod.salePrice * prod.quantity, 0);
-  
-      const venta: Sale = {
-        products: productsSold,
-        total,
-        saleDate: new Date()
-      };
-  
-      return addDoc(collection(this._firestore, 'sales'), venta);
+    registerSale(sale: Sale) {
+      return addDoc(collection(this._firestore, 'sales'), sale);
     }
-  
+
   }
