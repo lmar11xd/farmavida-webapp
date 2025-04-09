@@ -63,6 +63,8 @@ export class ShoppingCartComponent implements OnInit {
     if (this.produtcs.length === 0) return;
 
     try {
+      this._settings.showSpinner();
+
       const productsSold = this.produtcs;
       const total = productsSold.reduce((acc, prod) => acc + prod.salePrice * prod.quantity, 0);
 
@@ -90,6 +92,8 @@ export class ShoppingCartComponent implements OnInit {
     } catch (error) {
       console.error('Error en la compra:', error);
       this._settings.showMessage('error', 'Error en la compra', 'Ocurrió un error al procesar la compra. Intente nuevamente.');
+    } finally {
+      this._settings.hideSpinner();
     }
   }
 }

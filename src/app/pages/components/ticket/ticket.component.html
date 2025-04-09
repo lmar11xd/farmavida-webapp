@@ -1,0 +1,51 @@
+<div class="d-none">
+  <div id="ticket" style="width: 80mm; margin: auto;">
+    <!-- Encabezado (se repetirá en cada página del PDF) -->
+    <div id="ticket-header" style="text-align: center; padding: 10px;">
+      <img src="assets/img/farmavida.png" alt="Logo" width="80" />
+      <h2 style="margin: 5px 0;">Mi Empresa SAC</h2>
+      <p style="margin: 0;">RUC: 12345678901</p>
+      <p style="margin: 0;">Av. Los Negocios 123, Lima</p>
+    </div>
+
+    <!-- Cuerpo (productos, totales, etc.) -->
+    <div id="ticket-body" style="padding: 10px;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+        <thead>
+          <tr>
+            <th style="border: 1px solid #000; padding: 4px;">Producto</th>
+            <th style="border: 1px solid #000; padding: 4px;">Cant.</th>
+            <th style="border: 1px solid #000; padding: 4px;">Precio</th>
+            <th style="border: 1px solid #000; padding: 4px;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of productos">
+            <td style="border: 1px solid #000; padding: 4px;">{{ item.nombre }}</td>
+            <td style="border: 1px solid #000; padding: 4px;">{{ item.cantidad }}</td>
+            <td style="border: 1px solid #000; padding: 4px;">S/ {{ item.precio | number: '1.2-2'}}</td>
+            <td style="border: 1px solid #000; padding: 4px;">S/ {{ item.total | number: '1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="margin-top: 10px; text-align: right;">
+        <p><strong>Total: S/ {{ total | number: '1.2-2' }}</strong></p>
+      </div>
+
+      <!-- Código QR -->
+      <div id="qr-code" style="text-align: center; margin-top: 20px;">
+        <qrcode
+          [qrdata]="qrData"
+          [width]="100"
+          [errorCorrectionLevel]="'M'">
+        </qrcode>
+        <p style="font-size: 10px;">Boleta: {{ qrData }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<button pButton label="Descargar Boleta" icon="pi pi-download" severity="secondary" (click)="generatePDF()"></button>
+
+

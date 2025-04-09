@@ -1,4 +1,17 @@
-<p-button label="Carrito de Compras" icon="pi pi-shopping-cart" (onClick)="show()" />
+<!--<p-button label="Carrito de Compras" icon="pi pi-shopping-cart" (onClick)="show()" />-->
+
+@if(produtcs.length > 0) {
+  <div class="fixed bottom-8 right-8 bg-transparent z-50 w-12 h-12 rounded-full flex items-center justify-center fab-button">
+    <p-button
+      icon="pi pi-shopping-cart"
+      [rounded]="true"
+      [styleClass]="'text-white w-full h-full flex items-center justify-center'"
+      (onClick)="show()"
+    >
+    </p-button>
+    <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">{{ produtcs.length }}</span>
+  </div>
+}
 
 <p-drawer class="text-xs" header="Carrito de Compras" [visible]="visible" position="right" (onHide)="dismiss()">
     <span class="text-xs md:text-base font-bold text-gray-700">Productos</span>

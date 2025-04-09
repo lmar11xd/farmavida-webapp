@@ -26,6 +26,10 @@ This will compile your project and store the build artifacts in the `dist/` dire
 ### PrimeNG: npm install primeng @primeng/themes
 ### TailwindCss: npm install tailwindcss @tailwindcss/postcss postcss --force
 ### Firebase: npm install -g firebase-tools (Instalar en ambiente de desarrollo)
+
+### Generar PDF: npm install jspdf html2canvas
+### Generar QR: npm install angularx-qrcode
+
 ```
 firebase login
 firebase logout
