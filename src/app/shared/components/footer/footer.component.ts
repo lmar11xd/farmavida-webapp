@@ -1,3 +1,4 @@
+import { environment } from './../../../../environments/environment';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styles: ``
 })
 export class FooterComponent {
-
+  environment: string = environment.name == "dev" ? " - dev" : "";
 }

@@ -5,7 +5,11 @@
     "prebuild": "node set-version.js",
     "ng": "ng",
     "start": "ng serve",
+    "dev": "ng serve --configuration development",
+    "prd": "ng serve --configuration production",
     "build": "ng build",
+    "build:dev": "ng build --configuration development",
+    "build:prd": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:farmavida": "node dist/farmavida/server/server.mjs"
