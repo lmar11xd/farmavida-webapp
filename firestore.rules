@@ -2,6 +2,13 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Regla para permitir solo lectura pública en la colección 'users'
+    match /users/{userId} {
+      allow read: if true; // Cualquiera puede leer
+      allow write: if true; // puede escribir si está autenticado
+    }
+
+    // Regla para todas las demás colecciones: acceso solo si está autenticado
     match /{document=**} {
       allow read, write: if request.auth != null;
     }

@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "app-with-firebase-db4cb"
-  }
+    "default": "app-with-firebase-db4cb",
+    "farmavida-dev": "app-with-firebase-db4cb",
+    "farmavida-webapp": "farmavida-webapp"
+  },
+  "targets": {},
+  "etags": {}
 }

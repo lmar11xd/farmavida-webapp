@@ -59,3 +59,15 @@ firebase init (Primera vez) > Hosting: Configure files for Firebase Hosting and 
 npm run build
 firebase deploy
 ```
+
+# Pasos para cambiar de cuenta Firebase
+```
+firebase logout
+firebase login
+
+firebase use --add
+firebase init
+dist/farmavida/browser
+npm run build || npm run build:prd
+firebase deploy
+```
