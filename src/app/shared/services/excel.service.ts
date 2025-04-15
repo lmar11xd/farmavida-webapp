@@ -66,14 +66,14 @@ export class ExcelService {
               const products: Product[] = []
               sheetData.slice(1).forEach(row => {
                 if(row[1] !== undefined && row[1] !== null
-                  && row[4] !== undefined && row[4] !== null
                   && row[9] !== undefined && row[9] !== null
                   && row[10] !== undefined && row[10] !== null
                 ) {
                   var expDate = null
+                  var costPrice = 0
 
-                  if(row[6] !== undefined || row[6] !== null) {
-                    expDate = convertExcelDateToEndOfMonth(row[6])
+                  if(row[4] !== undefined || row[4] !== null) {
+                    costPrice = parseFloat(row[4])
                   }
 
                   if(row[6] !== undefined || row[6] !== null) {
@@ -85,7 +85,7 @@ export class ExcelService {
                     name: row[1].toString().trim(),
                     description: row[2] || null,
                     laboratory: row[3],
-                    costPrice: row[4],
+                    costPrice: costPrice,
                     um: row[5] || null,
                     expirationDate: expDate,
                     lot: row[7] || null,

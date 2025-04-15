@@ -4,19 +4,19 @@
     <div class="my-4 p-4 rounded-2xl flex justify-between items-center">
         <h1 class="text-base md:text-lg font-winkysans font-bold text-gray-500">Ingreso de Productos</h1>
         <div class="flex items-center">
-            <p-fileUpload 
-                mode="basic" 
-                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" 
-                [maxFileSize]="1000000" 
-                label="Cargar" 
-                chooseLabel="Cargar" 
-                auto 
-                customUpload 
-                class="mr-2 inline-block"
-                (onSelect)="readExcelProducts($event)"
-                [chooseButtonProps]="{ severity: 'success' }" 
-            />
-            <p-button label="Exportar" icon="pi pi-download" severity="info" />
+          <p-button label="Formato" icon="pi pi-download" severity="info" class="mr-2" (onClick)="downloadFormat()"/>
+          <p-fileUpload
+              mode="basic"
+              accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+              [maxFileSize]="1000000"
+              label="Cargar"
+              chooseLabel="Cargar"
+              auto
+              customUpload
+              class="inline-block"
+              (onSelect)="readExcelProducts($event)"
+              [chooseButtonProps]="{ severity: 'success' }"
+          />
         </div>
     </div>
 

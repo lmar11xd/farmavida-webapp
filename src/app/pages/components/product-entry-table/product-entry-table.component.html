@@ -92,8 +92,8 @@
 
         <div class="flex justify-between items-center mb-4">
             <p class="text-gray-500 font-bold">Productos</p>
-            @if(selectedEntry?.status !== status.PROCESSED) {
-                <button pButton label="Procesar" icon="pi pi-sync" severity="info"></button>
+            @if(selectedEntry?.id !== undefined && selectedEntry?.id !== null && selectedEntry?.status !== status.PROCESSED) {
+              <button pButton label="Procesar" icon="pi pi-sync" severity="info" (click)="onProcessEntry(selectedEntry?.id!); dismissView($event);"></button>
             }
         </div>
 

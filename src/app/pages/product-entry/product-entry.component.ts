@@ -56,6 +56,13 @@ export default class ProductEntryComponent {
       });
   }
 
+  downloadFormat() {
+    let link = document.createElement("a");
+    link.download = "FORMATO_CARGA_PRODUCTOS";
+    link.href = "assets/formats/FORMATO_CARGA_PRODUCTOS.xlsx";
+    link.click();
+  }
+
   async readExcelProducts(event: any) {
     try {
       this._settings.showSpinner()
