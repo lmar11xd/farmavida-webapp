@@ -8,5 +8,5 @@ import { Component } from '@angular/core';
   styles: ``
 })
 export class FooterComponent {
-  environment: string = environment.name == "dev" ? " - dev" : "";
+  environment: string = !environment.production ? " - dev" : "";
 }
