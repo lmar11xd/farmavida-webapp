@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "prebuild": "node set-version.js",
+    "postinstall": "node setup-env.js",
     "ng": "ng",
     "start": "ng serve",
     "dev": "ng serve --configuration development",

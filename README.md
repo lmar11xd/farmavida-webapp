@@ -22,6 +22,14 @@ ng build
 
 This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
 
+# Archivos Ignorados
+```
+src/environments/environment.ts
+src/environments/environment.development.ts
+```
+
+Ya está configurado un script que crea los archivos automáticamente después de ejecutar `npm install`.
+
 # Librerías Base
 ### PrimeNG: npm install primeng @primeng/themes
 ### TailwindCss: npm install tailwindcss @tailwindcss/postcss postcss --force
