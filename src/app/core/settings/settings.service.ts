@@ -1,9 +1,10 @@
 import { Injectable } from "@angular/core";
 import { NgxSpinnerService } from 'ngx-spinner';
+import { MessageService } from 'primeng/api';
+import FingerprintJS from '@fingerprintjs/fingerprintjs';
 import { LOCAL_USER } from "../constants/constants";
 import { AuthService } from "../security/auth-service";
 import { User } from "../models/user";
-import { MessageService } from 'primeng/api';
 
 @Injectable({
     providedIn: 'root' // ✅ Esto hace que esté disponible en toda la app
@@ -42,6 +43,15 @@ export class SettingsService {
 
   async logout() {
     await this.authService.logout();
+  }
+
+  async getDeviceId() {
+    // Obtener identificador único del dispositivo
+    const fp = await FingerprintJS.load();
+    const result = await fp.get();
+    const deviceId = result.visitorId; // ID único del navegador
+
+    return deviceId;
   }
 
 }

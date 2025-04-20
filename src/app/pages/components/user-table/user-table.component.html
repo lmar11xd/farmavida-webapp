@@ -12,15 +12,16 @@
         [showCurrentPageReport]="true"
     >
         <ng-template #caption>
-            <div class="flex items-center justify-between">
-                <h5 class="m-0 text-green-900 font-medium">Lista de Usuarios</h5>
-                <p-iconfield>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+                <h5 class="m-0 text-green-900 font-medium text-sm md:text-base">Lista de Usuarios</h5>
+                <p-iconfield class="w-full">
                     <p-inputicon styleClass="pi pi-search" />
-                    <input 
-                        pInputText 
+                    <input
+                        pInputText
+                        class="w-full"
                         type="text"
                         (input)="onFilter($event)"
-                        placeholder="Buscar..." 
+                        placeholder="Buscar..."
                     />
                 </p-iconfield>
             </div>
@@ -44,7 +45,7 @@
                 <td>{{ item.role }}</td>
                 <td>
                     <p-button icon="pi pi-pencil" [routerLink]="['/user/edit']" [queryParams]="{ pkey: item.id}" class="mr-2" [rounded]="true" />
-                    @if(item.role == rolVendedor) {                        
+                    @if(item.role == rolVendedor) {
                         <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="deleteItem(item)" />
                     }
                 </td>

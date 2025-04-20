@@ -95,3 +95,7 @@ p-datepicker .p-datepicker {
 .d-none {
   display: none !important;
 }
+table .p-icon {
+  width: 0.8rem !important;
+  height: 0.8rem !important;
+}
