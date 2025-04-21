@@ -1,0 +1,54 @@
+<div class="w-full bg-white overflow-x-auto shadow-md sm:rounded-lg p-4">
+  <p-table
+      #dt
+      [value]="sales()"
+      [rows]="10"
+      [paginator]="true"
+      [globalFilterFields]="['code', 'saleDate', 'total', 'createdBy']"
+      [tableStyle]="{ 'min-width': '75rem' }"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} ventas"
+      [showCurrentPageReport]="true"
+  >
+      <ng-template #caption>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+              <h5 class="m-0 text-green-900 font-medium text-sm md:text-base">Lista de Ventas</h5>
+              <p-iconfield class="w-full">
+                  <p-inputicon styleClass="pi pi-search" />
+                  <input
+                      pInputText
+                      class="w-full"
+                      type="text"
+                      (input)="onFilter($event)"
+                      placeholder="Buscar..."
+                  />
+              </p-iconfield>
+          </div>
+      </ng-template>
+      <ng-template #header>
+          <tr>
+              <th pSortableColumn="code" style="min-width: 230px">Código de Venta<p-sortIcon field="code" /></th>
+              <th pSortableColumn="saleDate" [width]="150">Fecha de Venta <p-sortIcon field="saleDate" /></th>
+              <th pSortableColumn="total" [width]="150">Importe Total <p-sortIcon field="total" /></th>
+              <th pSortableColumn="createdBy" [width]="150">Vendedor<p-sortIcon field="createdBy" /></th>
+              <th [width]="120">Acciones</th>
+          </tr>
+      </ng-template>
+      <ng-template #body let-item>
+          <tr>
+              <td class="font-medium">{{ item.code }}</td>
+              <td>{{ getFormatDate(item.saleDate) }}</td>
+              <td>S/ {{ item.total | number: '1.2-2' }}</td>
+              <td>{{ item.createdBy }}</td>
+              <td style="display: flex;justify-content: space-between;gap:2px;">
+                <p-button icon="pi pi-eye" title="Ver Venta" severity="success" [rounded]="true" class="mr-2" (click)="onViewSale(item)" />
+                <p-button icon="pi pi-download" title="Descargar Boleta" severity="info" [rounded]="true" class="mr-2" (click)="onDownloadTicket(item)" />
+              </td>
+          </tr>
+      </ng-template>
+      <ng-template #summary>
+          <div class="flex items-center justify-between text-green-900 pt-2">Se encontraron {{ dt?.totalRecords }} ventas.</div>
+      </ng-template>
+  </p-table>
+</div>

@@ -37,7 +37,7 @@ import { Product } from '../../../core/models/product';
   templateUrl: './product-entry-table.component.html',
   styles: ``
 })
-export class ProductEntryTableComponent {
+export class ProductEntryTableComponent  {
   @ViewChild('dt') dt!: Table;
   entries = input.required<ProductEntry[]>()
   status = StatusEntryEnum

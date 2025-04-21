@@ -60,8 +60,6 @@ export const puntoVentaGuard: CanActivateFn = async (route, state) => {
   const result = await fp.get();
   const deviceId = result.visitorId; // ID único del navegador
 
-  console.log('ID del dispositivo:', deviceId);
-
   // Guardar el ID en localStorage
   localStorage.setItem(POINT_SALE_ID, deviceId);
 

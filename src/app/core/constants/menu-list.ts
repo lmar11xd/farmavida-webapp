@@ -20,15 +20,21 @@ export const menuList = [
         role: UserRolEnum.ADMINISTRADOR
     },
     {
+        title: 'Catálogo',
+        url: '/product-catalog',
+        icon: 'pi pi-list',
+        role: UserRolEnum.VENDEDOR
+    },
+    {
+      title: 'Ventas',
+      url: '/sale',
+      icon: 'pi pi-dollar',
+      role: null
+    },
+    {
         title: 'Usuarios',
         url: '/user',
         icon: 'pi pi-users',
         role: UserRolEnum.ADMINISTRADOR
     },
-    {
-        title: 'Catálogo',
-        url: '/product-catalog',
-        icon: 'pi pi-list',
-        role: UserRolEnum.VENDEDOR
-    }
 ]

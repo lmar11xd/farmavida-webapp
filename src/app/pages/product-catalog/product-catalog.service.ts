@@ -22,8 +22,4 @@ export class ProductCatalogService {
       return collectionData(this._collection, { idField: 'id' }) as Observable<Product[]>;
     }
 
-    registerSale(sale: Sale) {
-      return addDoc(collection(this._firestore, 'sales'), sale);
-    }
-
   }

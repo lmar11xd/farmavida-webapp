@@ -71,10 +71,10 @@ export default class ProductCreateComponent implements OnInit {
       this.isLoading.set(true)
       this._settings.showSpinner()
 
-      const { code, name, description, expirationDate, quantity, costPrice, salePrice, um, lot, laboratory, sanitaryReg } = this.form.value
+      const { name, description, expirationDate, quantity, costPrice, salePrice, um, lot, laboratory, sanitaryReg } = this.form.value
 
       const product: ProductCreate = ({
-        code: code || '',
+        code: '',
         name: name || '',
         description: description || '',
         expirationDate: Timestamp.fromDate(expirationDate) || null,

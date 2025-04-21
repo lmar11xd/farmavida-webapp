@@ -60,8 +60,8 @@ export class TicketComponent {
     await new Promise(resolve => setTimeout(resolve, 200));
 
     try {
-      const headerCanvas = await html2canvas(header, { scale: 2 });
-      const bodyCanvas = await html2canvas(body, { scale: 2 });
+      const headerCanvas = await html2canvas(header, { scale: 4 });
+      const bodyCanvas = await html2canvas(body, { scale: 4 });
 
       const headerImg = headerCanvas.toDataURL('image/png');
       const bodyImg = bodyCanvas.toDataURL('image/png');

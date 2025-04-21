@@ -34,13 +34,19 @@ export const routes: Routes = [
                 path: 'profile',
                 loadComponent: () => import('./pages/profile/profile.component'),
                 canActivate: [privateGuard],
-                data: { breadcrumb: 'Profile' }
+                data: { breadcrumb: 'Perfil' }
             },
             {
                 path: 'product-catalog',
                 loadComponent: () => import('./pages/product-catalog/product-catalog.component'),
                 canActivate: [vendedorGuard, puntoVentaGuard],
                 data: { breadcrumb: 'Catálogo de Productos' }
+            },
+            {
+                path: 'sale',
+                loadComponent: () => import('./pages/sales/sales.component'),
+                canActivate: [privateGuard],
+                data: { breadcrumb: 'Ventas' }
             },
             {
                 path: '',

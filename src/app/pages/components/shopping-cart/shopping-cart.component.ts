@@ -6,10 +6,11 @@ import { DataViewModule } from 'primeng/dataview';
 import { DividerModule } from 'primeng/divider';
 import { Product } from '../../../core/models/product';
 import { ShoppingCartService } from './shopping-cart.setvice';
-import { ProductCatalogService } from '../../product-catalog/product-catalog.service';
 import { ProductService } from '../../products/product.service';
 import { Sale } from '../../../core/models/sale';
 import { SettingsService } from '../../../core/settings/settings.service';
+import { generateCodeDate } from '../../../core/core-util';
+import { SaleService } from '../../sales/sales.service';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -26,7 +27,7 @@ export class ShoppingCartComponent implements OnInit {
 
   constructor(
     private _shoppingCartService: ShoppingCartService,
-    private _productCatalogService: ProductCatalogService,
+    private _saleService: SaleService,
     private _productService: ProductService,
     private _settings: SettingsService
   ) {}
@@ -70,6 +71,7 @@ export class ShoppingCartComponent implements OnInit {
 
       const currentDate = new Date();
       const sale: Sale = {
+        code: '',
         products: productsSold,
         total: total,
         saleDate: currentDate,
@@ -78,7 +80,7 @@ export class ShoppingCartComponent implements OnInit {
       };
 
       // Registrar la venta
-      await this._productCatalogService.registerSale(sale);
+      await this._saleService.create(sale);
 
       // Actualizar stock de cada producto en secuencia
       for (const product of this.produtcs) {

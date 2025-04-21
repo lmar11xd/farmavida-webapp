@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
@@ -20,7 +20,7 @@ import { TicketComponent } from "../components/ticket/ticket.component";
   templateUrl: './product-catalog.component.html',
   styles: ``
 })
-export default class ProductCatalogComponent {
+export default class ProductCatalogComponent implements OnInit {
   visibleSuccesfulSale: boolean = false;
   products: Product[] = [];
   saleCompleted: Sale | null = null;
