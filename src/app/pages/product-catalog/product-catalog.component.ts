@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { Timestamp } from '@angular/fire/firestore';
+import jsPDF from 'jspdf';
 import { CatalogTableComponent } from "../components/catalog-table/catalog-table.component";
 import { Product } from '../../core/models/product';
 import { ProductCatalogService } from './product-catalog.service';
@@ -12,15 +13,16 @@ import { LISTAR_CATALOGO } from '../../shared/breadcrumb/breadcrumb';
 import { ShoppingCartComponent } from "../components/shopping-cart/shopping-cart.component";
 import { Sale } from '../../core/models/sale';
 import { convertDateToFormat } from '../../core/core-util';
-import { TicketComponent } from "../components/ticket/ticket.component";
 
 @Component({
   selector: 'app-product-catalog',
-  imports: [CommonModule, Dialog, CatalogTableComponent, ButtonModule, ShoppingCartComponent, TicketComponent],
+  imports: [CommonModule, Dialog, CatalogTableComponent, ButtonModule, ShoppingCartComponent],
   templateUrl: './product-catalog.component.html',
   styles: ``
 })
 export default class ProductCatalogComponent implements OnInit {
+  @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
+
   visibleSuccesfulSale: boolean = false;
   products: Product[] = [];
   saleCompleted: Sale | null = null;
@@ -66,6 +68,7 @@ export default class ProductCatalogComponent implements OnInit {
   onSuccesfulSale(sale: Sale) {
     this.visibleSuccesfulSale = true;
     this.saleCompleted = sale;
+    //this.printTicket(this.saleCompleted?.code)
     console.log('Venta exitosa:', sale);
   }
 
@@ -74,48 +77,30 @@ export default class ProductCatalogComponent implements OnInit {
   }
 
   generateSaleTicket() {
-    console.log('Generando recibo de venta...');
     this.closeDialog()
-    this.printTicket()
+    if(!this.saleCompleted) return;
+    this.printTicket(this.saleCompleted.code)
   }
 
-  printTicket() {
-    const printContent = document.getElementById('ticket');
-    if (!printContent) return;
+  async printTicket(code: string) {
+    // Esperar un ciclo para que el DOM se actualice
+    await new Promise(resolve => setTimeout(resolve, 200));
 
-    const ventana = window.open('', '_blank');
-    if (ventana) {
-      // Crear el contenido HTML completo de forma segura
-      const doc = ventana.document;
+    const input = this.pdfContent.nativeElement;
 
-      // Crear head
-      const head = doc.createElement('head');
-      const title = doc.createElement('title');
-      title.innerText = 'Boleta de Venta';
-
-      const style = doc.createElement('style');
-      style.innerHTML = `
-        body { font-family: Arial, sans-serif; text-align: center; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid black; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-      `;
-
-      head.appendChild(title);
-      head.appendChild(style);
-      doc.head.replaceWith(head);
-
-      // Crear body
-      const body = doc.body;
-      body.innerHTML = printContent.innerHTML;
-
-      // Esperar a que se cargue el contenido antes de imprimir
-      ventana.onload = () => {
-        ventana.focus();
-        ventana.print();
-        ventana.close();
-      };
-    }
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    pdf.html(input, {
+      callback: function (pdf) {
+        pdf.save(`BOLETA_${code}.pdf`);
+      },
+      x: 5,
+      y: 5,
+      html2canvas: {
+        scale: 0.25,
+        useCORS: true,
+        backgroundColor: null,
+      },
+    })
   }
 
   getFormatDate(date: Timestamp | Date | null | undefined) {

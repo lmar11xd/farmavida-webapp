@@ -26,7 +26,8 @@ export class SaleService {
     let code = await this.generateSaleCode();
     code = PREFIX_SALE_TICKET + '-' + code.padStart(6, '0'); // Asegurarse de que el código tenga 6 dígitos
     const newSale = { ...sale, code };
-    return addDoc(this._collection, newSale);
+    await addDoc(this._collection, newSale)
+    return {sale: newSale, code};
   }
 
   async generateSaleCode(): Promise<string> {

@@ -9,7 +9,6 @@ import { ShoppingCartService } from './shopping-cart.setvice';
 import { ProductService } from '../../products/product.service';
 import { Sale } from '../../../core/models/sale';
 import { SettingsService } from '../../../core/settings/settings.service';
-import { generateCodeDate } from '../../../core/core-util';
 import { SaleService } from '../../sales/sales.service';
 
 @Component({
@@ -80,17 +79,19 @@ export class ShoppingCartComponent implements OnInit {
       };
 
       // Registrar la venta
-      await this._saleService.create(sale);
+      const data = await this._saleService.create(sale);
+      console.log('Venta registrada:', data);
 
       // Actualizar stock de cada producto en secuencia
       for (const product of this.produtcs) {
         await this._productService.updateStock(product.id!, product.quantity);
       }
 
+      this.onSuccessfulSale.emit(data.sale);
+
       // Limpiar carrito y cerrar modal
       this._shoppingCartService.clean();
       this.dismiss();
-      this.onSuccessfulSale.emit(sale);
     } catch (error) {
       console.error('Error en la compra:', error);
       this._settings.showMessage('error', 'Error en la compra', 'Ocurrió un error al procesar la compra. Intente nuevamente.');
