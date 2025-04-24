@@ -1,6 +1,6 @@
 import { PREFIX_SALE_TICKET } from './../../core/constants/constants';
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, orderBy, query, runTransaction } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, orderBy, query, runTransaction, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Sale } from '../../core/models/sale';
 
@@ -16,8 +16,13 @@ export class SaleService {
     this._collection = collection(this._firestore, PATH)
   }
 
-  getSales(): Observable<Sale[]> {
-    const orderedQuery = query(this._collection, orderBy('saleDate', 'desc'));
+  getSales(username: string): Observable<Sale[]> {
+    let orderedQuery;
+    if(username === 'ALL') {
+      orderedQuery = query(this._collection, orderBy('saleDate', 'desc'));
+    } else {
+      orderedQuery = query(this._collection, where('createdBy', '==', username), orderBy('saleDate', 'desc'));
+    }
 
     return collectionData(orderedQuery, { idField: 'id' }) as Observable<Sale[]>;
   }

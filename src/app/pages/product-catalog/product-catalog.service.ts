@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { CollectionReference, Firestore, collection, collectionData, addDoc } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 import { Product } from "../../core/models/product";
-import { Sale } from "../../core/models/sale";
 
 const PATH = 'products'
 

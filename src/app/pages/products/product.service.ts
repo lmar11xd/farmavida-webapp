@@ -77,6 +77,11 @@ export class ProductService {
     }
   }
 
+  async setStock(productId: string, stock: number) {
+    const productRef = doc(this._collection, productId);
+    await updateDoc(productRef, { quantity: stock });
+  }
+
   async generateProductCode(): Promise<string> {
     const secuenciaRef = doc(this._firestore, 'config/product');
 

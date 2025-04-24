@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, input, Output, ViewChild } from '@angular/core';
 import { QRCodeComponent } from 'angularx-qrcode';
 import jsPDF from 'jspdf';
 import { Sale } from '../../../core/models/sale';
@@ -17,6 +17,7 @@ export class TicketComponent {
   @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
   sale = input.required<Sale>()
   buttonShort = input.required<boolean>()
+  @Output() onGeneratedTicket = new EventEmitter<string>();
 
   ruc: string = '20512345678';
   qrData: string = 'RUC|CODIGO|FECHA|MONEDA|TOTAL';
@@ -30,7 +31,7 @@ export class TicketComponent {
     const dateStr = this.getFormatDatetime(this.sale().saleDate);
 
     this.qrData = `RUC:${this.ruc}|CODIGO:${code}|FECHA:${dateStr}|MONEDA:SOLES|TOTAL:${this.sale().total}`;
-    console.log(this.qrData);
+
     // Esperar un ciclo para que el DOM se actualice
     await new Promise(resolve => setTimeout(resolve, 200));
 
@@ -60,6 +61,7 @@ export class TicketComponent {
     } catch (error) {
       console.error('Error al generar el PDF:', error);
     } finally {
+      this.onGeneratedTicket.emit(this.sale().code);
     }
   }
 

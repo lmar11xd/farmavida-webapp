@@ -68,7 +68,6 @@ export default class ProductCatalogComponent implements OnInit {
   onSuccesfulSale(sale: Sale) {
     this.visibleSuccesfulSale = true;
     this.saleCompleted = sale;
-    //this.printTicket(this.saleCompleted?.code)
     console.log('Venta exitosa:', sale);
   }
 

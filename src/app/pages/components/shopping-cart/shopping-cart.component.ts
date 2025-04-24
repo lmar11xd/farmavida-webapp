@@ -80,11 +80,31 @@ export class ShoppingCartComponent implements OnInit {
 
       // Registrar la venta
       const data = await this._saleService.create(sale);
-      console.log('Venta registrada:', data);
 
-      // Actualizar stock de cada producto en secuencia
-      for (const product of this.produtcs) {
-        await this._productService.updateStock(product.id!, product.quantity);
+      // 1. Obtener stock actual antes de actualizar
+      const stockBackup: { id: string, stock: number }[] = [];
+      for (const product of productsSold) {
+        const current = await this._productService.getProduct(product.id!);
+        const currentProduct = current.data() as Product;
+        stockBackup.push({ id: product.id!, stock: currentProduct.quantity });
+      }
+
+      // 2. Intentar actualizar todos los productos
+      try {
+        await Promise.all(
+          productsSold.map(product =>
+            this._productService.updateStock(product.id!, product.quantity)
+          )
+        );
+      } catch (stockUpdateError) {
+        // 3. Revertir si algo falla
+        await Promise.all(
+          stockBackup.map(item =>
+            this._productService.setStock(item.id, item.stock)
+          )
+        );
+
+        throw new Error('Falló la actualización del stock. Se revirtieron los cambios.');
       }
 
       this.onSuccessfulSale.emit(data.sale);

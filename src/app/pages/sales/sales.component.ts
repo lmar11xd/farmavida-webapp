@@ -5,6 +5,7 @@ import { Sale } from '../../core/models/sale';
 import { BreadcrumbService } from '../../shared/services/breadcrumb.service';
 import { SettingsService } from '../../core/settings/settings.service';
 import { LISTAR_VENTAS } from '../../shared/breadcrumb/breadcrumb';
+import { UserRolEnum } from '../../core/enums/user-rol.enum';
 
 @Component({
   selector: 'app-sales',
@@ -32,7 +33,12 @@ export default class SalesComponent implements OnInit {
 
   initialize() {
     this._settings.showSpinner()
-    this._saleService.getSales()
+    const user = this._settings.getUserInfo()
+    let username = user?.username || ''
+    if(user?.role === UserRolEnum.ADMINISTRADOR) {
+      username = "ALL"
+    }
+    this._saleService.getSales(username)
       .subscribe({
         next: (data) => {
           this.sales = data;

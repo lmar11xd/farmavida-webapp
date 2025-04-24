@@ -23,7 +23,7 @@
           <p class="text-center">Venta realizada con &eacute;xito</p>
           <div class="flex justify-center gap-4">
             @if(saleCompleted) {
-              <app-ticket [sale]="saleCompleted" [buttonShort]="false" ></app-ticket>
+              <app-ticket [sale]="saleCompleted" [buttonShort]="false" (onGeneratedTicket)="closeDialog()"></app-ticket>
             }
           </div>
       </div>
