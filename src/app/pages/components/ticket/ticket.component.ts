@@ -1,106 +1,67 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, ElementRef, input, ViewChild } from '@angular/core';
 import { QRCodeComponent } from 'angularx-qrcode';
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { Sale } from '../../../core/models/sale';
 import { ButtonModule } from 'primeng/button';
+import { Timestamp } from '@angular/fire/firestore';
+import { convertDatetimeToString } from '../../../core/core-util';
 
 @Component({
   selector: 'app-ticket',
   imports: [CommonModule, ButtonModule, QRCodeComponent],
   templateUrl: './ticket.component.html',
-  styles: `table, th, td {
-    border: 1px solid black;
-  }
-  th {
-    background-color: #f2f2f2;
-  }`
+  styles: ``
 })
 export class TicketComponent {
+  @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
   sale = input.required<Sale>()
+  buttonShort = input.required<boolean>()
 
-  productos = [
-    { nombre: 'Producto A', cantidad: 2, precio: 10, total: 20 },
-    { nombre: 'Producto B', cantidad: 1, precio: 15, total: 15 },
-    { nombre: 'Producto A', cantidad: 2, precio: 10, total: 20 },
-    { nombre: 'Producto B', cantidad: 1, precio: 15, total: 15 },
-    { nombre: 'Producto A', cantidad: 2, precio: 10, total: 20 },
-    { nombre: 'Producto B', cantidad: 1, precio: 15, total: 15 },
-    { nombre: 'Producto A', cantidad: 2, precio: 10, total: 20 },
-    { nombre: 'Producto B', cantidad: 1, precio: 15, total: 15 },
-    { nombre: 'Producto A', cantidad: 2, precio: 10, total: 20 },
-    { nombre: 'Producto B', cantidad: 1, precio: 15, total: 15 },
-  ];
+  ruc: string = '20512345678';
+  qrData: string = 'RUC|CODIGO|FECHA|MONEDA|TOTAL';
 
-  qrData: string = '';
-
-  get total() {
-    return this.productos.reduce((sum, p) => sum + p.total, 0);
+  getFormatDatetime(date: Timestamp | Date | null | undefined) {
+    return convertDatetimeToString(date)
   }
 
   async generatePDF() {
-    const nombreArchivo: string = 'boleta_venta_001';
-    const boletaId = '001';
-    const ruc = '12345678901';
-    const total = this.total.toFixed(2);
-    const fecha = new Date().toISOString().split('T')[0];
-    this.qrData = `RUC:${ruc}|BOLETA:${boletaId}|FECHA:${fecha}|TOTAL:S/${total}`;
+    const code = this.sale().code;
+    const dateStr = this.getFormatDatetime(this.sale().saleDate);
 
-    const container = document.querySelector('.d-none');
-    const header = document.getElementById('ticket-header');
-    const body = document.getElementById('ticket-body');
-
-    if (!header || !body || !container) return;
-
-    // Mostrar temporalmente el contenido
-    container.classList.remove('d-none');
-
+    this.qrData = `RUC:${this.ruc}|CODIGO:${code}|FECHA:${dateStr}|MONEDA:SOLES|TOTAL:${this.sale().total}`;
+    console.log(this.qrData);
     // Esperar un ciclo para que el DOM se actualice
     await new Promise(resolve => setTimeout(resolve, 200));
 
     try {
-      const headerCanvas = await html2canvas(header, { scale: 4 });
-      const bodyCanvas = await html2canvas(body, { scale: 4 });
+      // Esperar un ciclo para que el DOM se actualice
+      await new Promise(resolve => setTimeout(resolve, 200));
 
-      const headerImg = headerCanvas.toDataURL('image/png');
-      const bodyImg = bodyCanvas.toDataURL('image/png');
-
-      const headerHeightPx = headerCanvas.height;
-      const headerWidthPx = headerCanvas.width;
+      const input = this.pdfContent.nativeElement;
 
       const pdf = new jsPDF('p', 'mm', 'a4');
-      const pageWidth = pdf.internal.pageSize.getWidth();
-      const pageHeight = pdf.internal.pageSize.getHeight();
-
-      const headerHeightMm = (headerHeightPx * pageWidth) / headerWidthPx;
-      const usablePageHeight = pageHeight - headerHeightMm;
-
-      const bodyProps = pdf.getImageProperties(bodyImg);
-      const bodyHeightMm = (bodyProps.height * pageWidth) / bodyProps.width;
-
-      let heightLeft = bodyHeightMm;
-      let position = headerHeightMm;
-
-      while (heightLeft > 0) {
-        pdf.addImage(headerImg, 'PNG', 0, 0, pageWidth, headerHeightMm);
-        pdf.addImage(bodyImg, 'PNG', 0, position, pageWidth, bodyHeightMm);
-
-        heightLeft -= usablePageHeight;
-
-        if (heightLeft > 0) {
-          pdf.addPage();
-          position = headerHeightMm;
-        }
-      }
-
-      pdf.save(`${nombreArchivo}.pdf`);
+      pdf.setFont('Helvetica')
+      pdf.html(input, {
+        callback: function (pdf) {
+          pdf.save(`BOLETA_${code}.pdf`);
+        },
+        x: 5,
+        y: 5,
+        html2canvas: {
+          scale: 0.25,
+          useCORS: true,
+          logging: true,
+          allowTaint: true,
+          backgroundColor: null,
+          letterRendering: true
+        },
+      })
     } catch (error) {
       console.error('Error al generar el PDF:', error);
     } finally {
-      // Ocultar nuevamente el contenido
-      container.classList.add('d-none');
     }
   }
 
 }
+

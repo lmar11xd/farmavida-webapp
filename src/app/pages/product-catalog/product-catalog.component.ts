@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { Timestamp } from '@angular/fire/firestore';
-import jsPDF from 'jspdf';
 import { CatalogTableComponent } from "../components/catalog-table/catalog-table.component";
 import { Product } from '../../core/models/product';
 import { ProductCatalogService } from './product-catalog.service';
@@ -13,10 +12,11 @@ import { LISTAR_CATALOGO } from '../../shared/breadcrumb/breadcrumb';
 import { ShoppingCartComponent } from "../components/shopping-cart/shopping-cart.component";
 import { Sale } from '../../core/models/sale';
 import { convertDateToFormat } from '../../core/core-util';
+import { TicketComponent } from "../components/ticket/ticket.component";
 
 @Component({
   selector: 'app-product-catalog',
-  imports: [CommonModule, Dialog, CatalogTableComponent, ButtonModule, ShoppingCartComponent],
+  imports: [CommonModule, Dialog, CatalogTableComponent, ButtonModule, ShoppingCartComponent, TicketComponent],
   templateUrl: './product-catalog.component.html',
   styles: ``
 })
@@ -74,33 +74,6 @@ export default class ProductCatalogComponent implements OnInit {
 
   closeDialog() {
     this.visibleSuccesfulSale = false;
-  }
-
-  generateSaleTicket() {
-    this.closeDialog()
-    if(!this.saleCompleted) return;
-    this.printTicket(this.saleCompleted.code)
-  }
-
-  async printTicket(code: string) {
-    // Esperar un ciclo para que el DOM se actualice
-    await new Promise(resolve => setTimeout(resolve, 200));
-
-    const input = this.pdfContent.nativeElement;
-
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    pdf.html(input, {
-      callback: function (pdf) {
-        pdf.save(`BOLETA_${code}.pdf`);
-      },
-      x: 5,
-      y: 5,
-      html2canvas: {
-        scale: 0.25,
-        useCORS: true,
-        backgroundColor: null,
-      },
-    })
   }
 
   getFormatDate(date: Timestamp | Date | null | undefined) {

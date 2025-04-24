@@ -48,6 +48,26 @@ export function convertDateToFormat(date: Timestamp | Date | null | undefined, f
         .replace('yyyy', year);
 }
 
+export function convertDatetimeToString(date: Timestamp | Date | null | undefined): string {
+  if(date == undefined || date == null) return ''
+
+  if(date instanceof Timestamp) {
+    date = (date as Timestamp).toDate()
+  }
+
+  const pad = (n: number) => n.toString().padStart(2, '0');
+
+  const day = pad(date.getDate());
+  const month = pad(date.getMonth() + 1); // Los meses empiezan desde 0
+  const year = date.getFullYear();
+
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  const seconds = pad(date.getSeconds());
+
+  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+}
+
 export function getSeverityExpiration(expirationDate: Timestamp | Date | null | undefined): "success" | "secondary" | "info" | "warn" | "danger" | "contrast" | undefined {
   if(expirationDate == undefined || expirationDate == null) return undefined;
 

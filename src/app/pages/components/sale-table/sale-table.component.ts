@@ -7,9 +7,9 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { Table, TableModule } from 'primeng/table';
 import { Timestamp } from '@angular/fire/firestore';
-import jsPDF from 'jspdf';
 import { Sale } from '../../../core/models/sale';
 import { convertDateToFormat } from '../../../core/core-util';
+import { TicketComponent } from "../ticket/ticket.component";
 
 @Component({
   selector: 'app-sale-table',
@@ -20,8 +20,9 @@ import { convertDateToFormat } from '../../../core/core-util';
     FormsModule,
     InputTextModule,
     IconFieldModule,
-    InputIconModule
-  ],
+    InputIconModule,
+    TicketComponent
+],
   templateUrl: './sale-table.component.html',
   styles: ``
 })
@@ -46,31 +47,4 @@ export class SaleTableComponent {
     console.log(sale)
   }
 
-  onDownloadTicket(sale: Sale) {
-    this.selectedSale = sale
-    this.printTicket(sale.code)
-  }
-
-  async printTicket(code: string) {
-    // Esperar un ciclo para que el DOM se actualice
-    await new Promise(resolve => setTimeout(resolve, 200));
-
-    const input = this.pdfContent.nativeElement;
-
-    const pdf = new jsPDF('p', 'mm', 'a4');
-    pdf.html(input, {
-      callback: function (pdf) {
-        pdf.save(`BOLETA_${code}.pdf`);
-      },
-      x: 5,
-      y: 5,
-      html2canvas: {
-        scale: 0.25,
-        useCORS: true,
-        logging: true,
-        allowTaint: true,
-        backgroundColor: null,
-      },
-    })
-  }
 }

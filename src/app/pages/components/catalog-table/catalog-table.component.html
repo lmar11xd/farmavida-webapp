@@ -29,7 +29,6 @@
         </ng-template>
         <ng-template #header>
             <tr>
-                <th [width]="80"><p-tableHeaderCheckbox /></th>
                 <th pSortableColumn="code" [width]="120">C&oacute;digo <p-sortIcon field="code" /></th>
                 <th pSortableColumn="name" style="min-width: 230px">Nombre <p-sortIcon field="name" /></th>
                 <th pSortableColumn="quantity" [width]="120">Stock <p-sortIcon field="quantity" /></th>
@@ -39,7 +38,6 @@
         </ng-template>
         <ng-template #body let-product>
             <tr>
-                <td><p-tableCheckbox [value]="product" /></td>
                 <td>{{ product.code }}</td>
                 <td class="font-medium">{{ product.name }}</td>
                 <td>{{ product.quantity }}</td>
