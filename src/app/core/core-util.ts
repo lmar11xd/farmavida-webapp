@@ -103,3 +103,49 @@ export function generateCodeDate(): string {
 
   return `${PREFIX_SALE_TICKET}-${año}${mes}${dia}${hora}${minutos}${segundos}${milisegundos}`;
 }
+
+export function generateRandomColors(quantity: number, opacity: number): string[] {
+  const colors: string[] = [];
+
+  for (let i = 0; i < quantity; i++) {
+    const r = Math.floor(Math.random() * 256);  // 0 a 255
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    colors.push(`rgba(${r}, ${g}, ${b}, ${opacity})`);
+  }
+
+  return colors;
+}
+
+export function changeColorsOpacity(colors: string[], opacity: number): string[] {
+  return colors.map((color: string) => {
+    const rgba = color.replace('rgba', 'rgb').replace(/,\s*\d+(\.\d+)?\)/, `, ${opacity})`); // Cambia la opacidad
+    return rgba;
+  });
+}
+
+export function getArrayDaysOfMonth(date: Date) {
+  const days: { [day: string]: number } = {};
+  const now = date;
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0 = enero, 11 = diciembre
+
+  // Obtener el último día del mes actual
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  // Inicializar el objeto con cada día del mes
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dayStr = day.toString().padStart(2, '0'); // '01', '02', ...
+    days[dayStr] = 0;
+  }
+
+  return days
+}
+
+export function getNameOfMonth(date: Date) {
+  const monthNames = [
+    'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+  ];
+  return monthNames[date.getMonth()];
+}

@@ -66,7 +66,7 @@ export const puntoVentaGuard: CanActivateFn = async (route, state) => {
   // Buscar en Firestore si el dispositivo está registrado
   const docRef = doc(firestore, 'points-sale', deviceId);
   const docSnap = await getDoc(docRef);
-
+  console.log('ID del dispositivo:', deviceId);
   if (docSnap.exists()) {
     console.log('El dispositivo está registrado:', docSnap.data());
     return true; // Permitir acceso
