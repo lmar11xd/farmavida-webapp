@@ -32,12 +32,9 @@ export class TicketComponent {
 
     this.qrData = `RUC:${this.ruc}|CODIGO:${code}|FECHA:${dateStr}|MONEDA:SOLES|TOTAL:${this.sale().total}`;
 
-    // Esperar un ciclo para que el DOM se actualice
-    await new Promise(resolve => setTimeout(resolve, 200));
-
     try {
       // Esperar un ciclo para que el DOM se actualice
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 400));
 
       const input = this.pdfContent.nativeElement;
 

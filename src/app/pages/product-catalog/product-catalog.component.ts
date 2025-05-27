@@ -13,10 +13,11 @@ import { ShoppingCartComponent } from "../components/shopping-cart/shopping-cart
 import { Sale } from '../../core/models/sale';
 import { convertDateToFormat } from '../../core/core-util';
 import { TicketComponent } from "../components/ticket/ticket.component";
+import { VoucherComponent } from "../components/voucher/voucher.component";
 
 @Component({
   selector: 'app-product-catalog',
-  imports: [CommonModule, Dialog, CatalogTableComponent, ButtonModule, ShoppingCartComponent, TicketComponent],
+  imports: [CommonModule, Dialog, CatalogTableComponent, ButtonModule, ShoppingCartComponent, TicketComponent, VoucherComponent],
   templateUrl: './product-catalog.component.html',
   styles: ``
 })

@@ -99,3 +99,27 @@ table .p-icon {
   width: 0.8rem !important;
   height: 0.8rem !important;
 }
+
+/*IMPRESION VOUCHER*/
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #thermal-ticket, #thermal-ticket * {
+    visibility: visible;
+  }
+
+  #thermal-ticket {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm;
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

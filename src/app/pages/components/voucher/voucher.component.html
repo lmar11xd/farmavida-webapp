@@ -1,0 +1,13 @@
+<div style="visibility: hidden; position: absolute; top: -9999px;">
+  <div id="thermal-text-ticket">
+    <pre *ngFor="let line of getThermalTicketLines()">{{ line }}</pre>
+  </div>
+</div>
+
+<p-button
+  icon="pi pi-print"
+  label="Imprimir en Térmica"
+  severity="success"
+  class="ml-2"
+  (click)="printThermal58mm()"
+/>

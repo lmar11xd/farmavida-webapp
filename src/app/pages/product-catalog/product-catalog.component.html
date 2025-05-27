@@ -24,6 +24,7 @@
           <div class="flex justify-center gap-4">
             @if(saleCompleted) {
               <app-ticket [sale]="saleCompleted" [buttonShort]="false" (onGeneratedTicket)="closeDialog()"></app-ticket>
+              <app-voucher [sale]="saleCompleted"></app-voucher>
             }
           </div>
       </div>
