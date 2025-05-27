@@ -64,7 +64,12 @@ firebase deploy
 ```
 firebase logout
 firebase login
+```
 
+## Editar .firebaserc
+default: farmida-dev/farmavida-prd
+
+```
 firebase use --add
 firebase init
 dist/farmavida/browser
