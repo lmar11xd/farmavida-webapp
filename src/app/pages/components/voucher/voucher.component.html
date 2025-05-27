@@ -4,10 +4,8 @@
   </div>
 </div>
 
-<p-button
-  icon="pi pi-print"
-  label="Imprimir en Térmica"
-  severity="success"
-  class="ml-2"
-  (click)="printThermal58mm()"
-/>
+@if(buttonShort()) {
+  <p-button icon="pi pi-print" title="Imprimir Voucher" severity="info" [rounded]="true" class="mr-2" (click)="printThermal58mm()" />
+} @else {
+  <p-button icon="pi pi-print" label="Imprimir Voucher" severity="secondary" (click)="printThermal58mm()" />
+}

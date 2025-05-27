@@ -12,12 +12,11 @@ import { LISTAR_CATALOGO } from '../../shared/breadcrumb/breadcrumb';
 import { ShoppingCartComponent } from "../components/shopping-cart/shopping-cart.component";
 import { Sale } from '../../core/models/sale';
 import { convertDateToFormat } from '../../core/core-util';
-import { TicketComponent } from "../components/ticket/ticket.component";
 import { VoucherComponent } from "../components/voucher/voucher.component";
 
 @Component({
   selector: 'app-product-catalog',
-  imports: [CommonModule, Dialog, CatalogTableComponent, ButtonModule, ShoppingCartComponent, TicketComponent, VoucherComponent],
+  imports: [CommonModule, Dialog, CatalogTableComponent, ButtonModule, ShoppingCartComponent, VoucherComponent],
   templateUrl: './product-catalog.component.html',
   styles: ``
 })

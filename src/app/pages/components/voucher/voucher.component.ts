@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, EventEmitter, input, Output } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Sale } from '../../../core/models/sale';
 import { Timestamp } from '@angular/fire/firestore';
@@ -13,6 +13,9 @@ import { convertDatetimeToString } from '../../../core/core-util';
 })
 export class VoucherComponent {
   sale = input.required<Sale>()
+  buttonShort = input.required<boolean>()
+  @Output() onGeneratedVoucher = new EventEmitter<string>();
+
   ruc: string = '20512345678';
   qrData: string = 'RUC|CODIGO|FECHA|MONEDA|TOTAL';
 
@@ -33,12 +36,12 @@ export class VoucherComponent {
     const sale = this.sale();
 
     // Encabezado
-    lines.push('        FARMAVIDA');
-    lines.push('     RUC: 20512345678');
+    lines.push('          FARMAVIDA');
+    lines.push('       RUC: 20512345678');
     lines.push(' Av. Los Negocios 123, Lima');
     lines.push('-------------------------------');
-    lines.push('     BOLETA DE VENTA');
-    lines.push(`     N°: ${sale.code}`);
+    lines.push('     COMPROBANTE DE PAGO');
+    lines.push(`          ${sale.code}`);
     lines.push('-------------------------------');
 
     // Fecha, cliente, vendedor
@@ -53,11 +56,23 @@ export class VoucherComponent {
     lines.push('-------------------------------');
 
     for (const p of sale.products) {
-      const name = p.name.substring(0, 10).padEnd(10);
+      const name = (p.name ?? '');
       const qty = p.quantity.toString().padStart(4);
       const pu = p.salePrice.toFixed(2).padStart(6);
       const imp = (p.salePrice * p.quantity).toFixed(2).padStart(7);
-      lines.push(`${name}${qty}${pu}${imp}`);
+
+      // Dividir el nombre en bloques de 15 caracteres
+      const nameChunks: string[] = name.match(/.{1,15}/g) ?? [];
+
+      // Primera línea: primera parte del nombre + datos
+      lines.push(
+        nameChunks[0].padEnd(10) + qty + pu + imp
+      );
+
+      // Líneas siguientes: solo el resto del nombre
+      for (let i = 1; i < nameChunks.length; i++) {
+        lines.push(nameChunks[i]);
+      }
     }
 
     lines.push('-------------------------------');
@@ -73,7 +88,7 @@ export class VoucherComponent {
 
     // Mensaje final
     lines.push('');
-    lines.push('  GRACIAS POR SU COMPRA');
+    lines.push('     GRACIAS POR SU COMPRA');
     lines.push('');
     lines.push('');
 
@@ -132,11 +147,12 @@ export class VoucherComponent {
         printWindow.focus();
         printWindow.print();
         printWindow.close();
+        this.onGeneratedVoucher.emit(this.sale().code);
       };
     }
   }
 
-  printThermal58mm() {
+  printThermal58mmDeprecated() {
     const content = document.getElementById('thermal-text-ticket')?.innerHTML;
     const printWindow = window.open('', '', 'width=300,height=600');
 
@@ -166,6 +182,55 @@ export class VoucherComponent {
         </html>
       `);
       printWindow.document.close();
+      this.onGeneratedVoucher.emit(this.sale().code);
+    }
+  }
+
+  printThermal58mm() {
+    const content = document.getElementById('thermal-text-ticket')?.innerHTML;
+    const printWindow = window.open('', '', 'width=300,height=600');
+
+    if (printWindow && content) {
+      const doc = printWindow.document;
+
+      // Crear el <html> y <head> manualmente
+      const html = doc.documentElement;
+      const head = doc.head || doc.createElement('head');
+      const body = doc.body || doc.createElement('body');
+
+      // Crear e insertar el <style>
+      const style = doc.createElement('style');
+      style.textContent = `
+        @media print {
+          body {
+            margin: 0;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 10px;
+            width: 58mm;
+          }
+          pre {
+            white-space: pre;
+            word-wrap: break-word;
+          }
+        }
+      `;
+      head.appendChild(style);
+      doc.head.replaceWith(head);
+
+      // Crear e insertar el contenido
+      const contentDiv = doc.createElement('div');
+      contentDiv.innerHTML = content;
+      body.appendChild(contentDiv);
+      doc.body.replaceWith(body);
+
+      // Esperar a que el DOM esté listo y luego imprimir
+      printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+        this.onGeneratedVoucher.emit(this.sale().code);
+      };
     }
   }
 }
