@@ -1,7 +1,7 @@
 <div class="w-full bg-white overflow-x-auto shadow-md sm:rounded-lg p-4">
   <p-table
       #dt
-      [value]="sales()"
+      [value]="sales"
       [rows]="10"
       [paginator]="true"
       [globalFilterFields]="['code', 'saleDate', 'total', 'createdBy']"
@@ -28,8 +28,8 @@
       </ng-template>
       <ng-template #header>
           <tr>
-              <th pSortableColumn="code" style="min-width: 230px">Código de Venta<p-sortIcon field="code" /></th>
-              <th pSortableColumn="saleDate" [width]="150">Fecha de Venta <p-sortIcon field="saleDate" /></th>
+              <th pSortableColumn="code" [width]="180">Código de Venta<p-sortIcon field="code" /></th>
+              <th pSortableColumn="saleDate">Fecha de Venta <p-sortIcon field="saleDate" /></th>
               <th pSortableColumn="total" [width]="150">Importe Total <p-sortIcon field="total" /></th>
               <th pSortableColumn="createdBy" [width]="150">Vendedor<p-sortIcon field="createdBy" /></th>
               <th [width]="120">Acciones</th>
@@ -43,7 +43,7 @@
               <td>{{ item.createdBy }}</td>
               <td style="display: flex;justify-content: space-between;gap:2px;">
                 <p-button icon="pi pi-eye" title="Ver Venta" severity="success" [rounded]="true" class="mr-2" (click)="onViewSale(item)" />
-                <app-ticket [sale]="item" [buttonShort]="true" ></app-ticket>
+                <app-voucher [sale]="item" [buttonShort]="true"></app-voucher>
               </td>
           </tr>
       </ng-template>
@@ -51,4 +51,74 @@
           <div class="flex items-center justify-between text-green-900 pt-2">Se encontraron {{ dt?.totalRecords }} ventas.</div>
       </ng-template>
   </p-table>
+
+  <!--View Dialog-->
+  <p-dialog
+    [header]="'Detalles de Venta - ' + selectedSale?.code"
+    [modal]="true"
+    [(visible)]="visibleView"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    (onHide)="dismissView($event)"
+  >
+    <p class="mb-8"></p>
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div class="sm:col-span-3">
+            <div class="flex items-center gap-4 mb-4">
+                <label class="font-semibold w-32">C&oacute;digo:</label>
+                <label>{{selectedSale?.code}}</label>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+                <label class="font-semibold w-32">Fecha de Venta:</label>
+                <label>{{getFormatDate(selectedSale?.saleDate)}}</label>
+            </div>
+        </div>
+        <div class="sm:col-span-3">
+            <div class="flex items-center gap-4 mb-4">
+                <label class="font-semibold w-32">Importe Total:</label>
+                <label>S/ {{selectedSale?.total | number: '1.2-2'}}</label>
+            </div>
+            <div class="flex items-center gap-4 mb-4">
+                <label class="font-semibold w-32">Vendedor:</label>
+                <label>{{selectedSale?.createdBy}}</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex justify-between items-center mb-4">
+      <p class="text-gray-500 font-bold">Productos</p>
+    </div>
+
+    <div class="view-table">
+      <div class="overflow-x-auto">
+        <p-table
+          #dtdetails
+          [value]="selectedSale?.products ?? []"
+          [tableStyle]="{ 'min-width': '75rem' } "
+          [rowHover]="true"
+        >
+          <ng-template #header>
+              <tr>
+                  <th>N°</th>
+                  <th style="width:60px">C&oacute;digo</th>
+                  <th style="min-width:200px">Nombre</th>
+                  <th>Cantidad</th>
+                  <th>Precio</th>
+              </tr>
+          </ng-template>
+          <ng-template #body let-product let-index="rowIndex">
+              <tr>
+                  <td>{{ index + 1 }}</td>
+                  <td>{{ product.code }}</td>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.quantity }}</td>
+                  <td>S/ {{ product.salePrice | number: '1.2-2' }}</td>
+              </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </p-dialog>
+  <!--End View Dialog-->
 </div>

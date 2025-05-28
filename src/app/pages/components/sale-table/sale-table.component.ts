@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,8 +8,11 @@ import { InputIconModule } from 'primeng/inputicon';
 import { Table, TableModule } from 'primeng/table';
 import { Timestamp } from '@angular/fire/firestore';
 import { Sale } from '../../../core/models/sale';
-import { convertDateToFormat } from '../../../core/core-util';
-import { TicketComponent } from "../ticket/ticket.component";
+import { convertDatetimeToString, convertDateToFormat } from '../../../core/core-util';
+import { VoucherComponent } from "../voucher/voucher.component";
+import { SettingsService } from '../../../core/settings/settings.service';
+import { SaleService } from '../../sales/sales.service';
+import { Dialog } from 'primeng/dialog';
 
 @Component({
   selector: 'app-sale-table',
@@ -21,7 +24,8 @@ import { TicketComponent } from "../ticket/ticket.component";
     InputTextModule,
     IconFieldModule,
     InputIconModule,
-    TicketComponent
+    VoucherComponent,
+    Dialog
 ],
   templateUrl: './sale-table.component.html',
   styles: ``
@@ -30,8 +34,14 @@ export class SaleTableComponent {
   @ViewChild('dt') dt!: Table;
   @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
 
-  sales = input.required<Sale[]>()
+  @Input() sales: Sale[] = [];
   selectedSale: Sale | null = null;
+  visibleView: boolean = false
+
+  constructor(
+    private _settings: SettingsService
+  ) {}
+
 
   onFilter(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -39,12 +49,17 @@ export class SaleTableComponent {
   }
 
   getFormatDate(date: Timestamp | Date | null | undefined) {
-    return convertDateToFormat(date, 'dd/MM/yyyy')
+    return convertDatetimeToString(date)
   }
 
   onViewSale(sale: Sale) {
-    this.selectedSale = sale
-    console.log(sale)
+    this.selectedSale = sale;
+    this.visibleView = true;
+  }
+
+  dismissView(event: any) {
+    this.visibleView = false
+    this.selectedSale = null
   }
 
 }

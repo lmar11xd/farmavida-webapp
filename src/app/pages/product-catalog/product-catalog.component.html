@@ -23,7 +23,6 @@
           <p class="text-center">Venta realizada con &eacute;xito</p>
           <div class="flex justify-center gap-4">
             @if(saleCompleted) {
-              <!--<app-ticket [sale]="saleCompleted" [buttonShort]="false" (onGeneratedTicket)="closeDialog()"></app-ticket>-->
               <app-voucher [sale]="saleCompleted" [buttonShort]="false" (onGeneratedVoucher)="closeDialog()"></app-voucher>
               <p-button icon="pi pi-times" label="Salir" severity="secondary" (click)="closeDialog()" />
             }

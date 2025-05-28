@@ -1,10 +1,10 @@
 <div style="visibility: hidden; position: absolute; top: -9999px;">
-  <div id="thermal-text-ticket">
-    <pre *ngFor="let line of getThermalTicketLines()">{{ line }}</pre>
+  <div [id]="thermalTextTicketId">
+    <pre *ngFor="let line of thermalLines">{{ line }}</pre>
   </div>
 </div>
 
-@if(buttonShort()) {
+@if(buttonShort) {
   <p-button icon="pi pi-print" title="Imprimir Voucher" severity="info" [rounded]="true" class="mr-2" (click)="printThermal58mm()" />
 } @else {
   <p-button icon="pi pi-print" label="Imprimir Voucher" severity="secondary" (click)="printThermal58mm()" />

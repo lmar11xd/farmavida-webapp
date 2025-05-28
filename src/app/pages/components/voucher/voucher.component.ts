@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { Sale } from '../../../core/models/sale';
 import { Timestamp } from '@angular/fire/firestore';
@@ -11,13 +11,24 @@ import { convertDatetimeToString } from '../../../core/core-util';
   templateUrl: './voucher.component.html',
   styles: ``
 })
-export class VoucherComponent {
-  sale = input.required<Sale>()
-  buttonShort = input.required<boolean>()
+export class VoucherComponent implements OnChanges {
+  @Input() sale!: Sale;
+  @Input() buttonShort: boolean = false;
+
   @Output() onGeneratedVoucher = new EventEmitter<string>();
 
+  thermalTextTicketId = 'thermal-text-ticket';
   ruc: string = '20512345678';
   qrData: string = 'RUC|CODIGO|FECHA|MONEDA|TOTAL';
+
+  thermalLines: string[] = [];
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.sale) {
+      this.thermalTextTicketId = 'thermal-text-ticket-' + this.sale.code;
+      this.thermalLines = this.getThermalTicketLines();
+    }
+  }
 
   getFormatDatetime(date: Timestamp | Date | null | undefined) {
     return convertDatetimeToString(date)
@@ -33,66 +44,117 @@ export class VoucherComponent {
 
   getThermalTicketLines(): string[] {
     const lines: string[] = [];
-    const sale = this.sale();
 
-    // Encabezado
-    lines.push('          FARMAVIDA');
-    lines.push('       RUC: 20512345678');
-    lines.push(' Av. Los Negocios 123, Lima');
-    lines.push('-------------------------------');
-    lines.push('     COMPROBANTE DE PAGO');
-    lines.push(`          ${sale.code}`);
-    lines.push('-------------------------------');
+    if(this.sale) {
+      const sale = this.sale;
 
-    // Fecha, cliente, vendedor
-    lines.push(`FECHA: ${this.getFormatDatetime(sale.saleDate)}`);
-    //lines.push(`CLIENTE: ${sale.createdBy || '---'}`);
-    lines.push(`VENDEDOR: ${sale.createdBy}`);
-    lines.push('MONEDA: SOLES');
-    lines.push('-------------------------------');
+      // Encabezado
+      lines.push('          FARMAVIDA');
+      lines.push('       RUC: 20512345678');
+      lines.push(' Av. Los Negocios 123, Lima');
+      lines.push('-------------------------------');
+      lines.push('     COMPROBANTE DE PAGO');
+      lines.push(`          ${sale.code}`);
+      lines.push('-------------------------------');
 
-    // Detalle de productos
-    lines.push('PRODUCTO    CANT  P.U.   IMPORTE');
-    lines.push('-------------------------------');
+      // Fecha, cliente, vendedor
+      lines.push(`FECHA: ${this.getFormatDatetime(sale.saleDate)}`);
+      //lines.push(`CLIENTE: ${sale.createdBy || '---'}`);
+      lines.push(`VENDEDOR: ${sale.createdBy}`);
+      lines.push('MONEDA: SOLES');
+      lines.push('-------------------------------');
 
-    for (const p of sale.products) {
-      const name = (p.name ?? '');
-      const qty = p.quantity.toString().padStart(4);
-      const pu = p.salePrice.toFixed(2).padStart(6);
-      const imp = (p.salePrice * p.quantity).toFixed(2).padStart(7);
+      // Detalle de productos
+      lines.push('PRODUCTO    CANT  P.U.   IMPORTE');
+      lines.push('-------------------------------');
 
-      // Dividir el nombre en bloques de 15 caracteres
-      const nameChunks: string[] = name.match(/.{1,15}/g) ?? [];
+      for (const p of sale.products) {
+        const name = (p.name ?? '');
+        const qty = p.quantity.toString().padStart(4);
+        const pu = p.salePrice.toFixed(2).padStart(6);
+        const imp = (p.salePrice * p.quantity).toFixed(2).padStart(7);
 
-      // Primera línea: primera parte del nombre + datos
-      lines.push(
-        nameChunks[0].padEnd(10) + qty + pu + imp
-      );
+        // Dividir el nombre en bloques de 15 caracteres
+        const nameChunks: string[] = name.match(/.{1,15}/g) ?? [];
 
-      // Líneas siguientes: solo el resto del nombre
-      for (let i = 1; i < nameChunks.length; i++) {
-        lines.push(nameChunks[i]);
+        // Primera línea: primera parte del nombre + datos
+        lines.push(
+          nameChunks[0].padEnd(10) + qty + pu + imp
+        );
+
+        // Líneas siguientes: solo el resto del nombre
+        for (let i = 1; i < nameChunks.length; i++) {
+          lines.push(nameChunks[i]);
+        }
       }
+
+      lines.push('-------------------------------');
+      lines.push(`TOTAL:             S/ ${sale.total.toFixed(2)}`);
+      lines.push('-------------------------------');
+
+      // Código QR en texto
+      /*const qr = `RUC:${this.ruc}|CODIGO:${sale.code}|FECHA:${this.getFormatDatetime(sale.saleDate)}|MONEDA:SOLES|TOTAL:${sale.total}`;
+      lines.push('QR:');
+      lines.push(qr.substring(0, 32));
+      if (qr.length > 32) lines.push(qr.substring(32, 64));
+      if (qr.length > 64) lines.push(qr.substring(64, 96));*/
+
+      // Mensaje final
+      lines.push('');
+      lines.push('     GRACIAS POR SU COMPRA');
+      lines.push('');
+      lines.push('');
     }
 
-    lines.push('-------------------------------');
-    lines.push(`TOTAL:             S/ ${sale.total.toFixed(2)}`);
-    lines.push('-------------------------------');
-
-    // Código QR en texto
-    /*const qr = `RUC:${this.ruc}|CODIGO:${sale.code}|FECHA:${this.getFormatDatetime(sale.saleDate)}|MONEDA:SOLES|TOTAL:${sale.total}`;
-    lines.push('QR:');
-    lines.push(qr.substring(0, 32));
-    if (qr.length > 32) lines.push(qr.substring(32, 64));
-    if (qr.length > 64) lines.push(qr.substring(64, 96));*/
-
-    // Mensaje final
-    lines.push('');
-    lines.push('     GRACIAS POR SU COMPRA');
-    lines.push('');
-    lines.push('');
-
     return lines;
+  }
+
+  printThermal58mm() {
+    const content = document.getElementById(this.thermalTextTicketId)?.innerHTML;
+    const printWindow = window.open('', '', 'width=300,height=600');
+
+    if (printWindow && content) {
+      const doc = printWindow.document;
+
+      // Crear el <html> y <head> manualmente
+      const html = doc.documentElement;
+      const head = doc.head || doc.createElement('head');
+      const body = doc.body || doc.createElement('body');
+
+      // Crear e insertar el <style>
+      const style = doc.createElement('style');
+      style.textContent = `
+        @media print {
+          body {
+            margin: 0;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 10px;
+            width: 58mm;
+          }
+          pre {
+            white-space: pre;
+            word-wrap: break-word;
+          }
+        }
+      `;
+      head.appendChild(style);
+      doc.head.replaceWith(head);
+
+      // Crear e insertar el contenido
+      const contentDiv = doc.createElement('div');
+      contentDiv.innerHTML = content;
+      body.appendChild(contentDiv);
+      doc.body.replaceWith(body);
+
+      // Esperar a que el DOM esté listo y luego imprimir
+      printWindow.onload = () => {
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+        this.onGeneratedVoucher.emit("Comprobante generado");
+      };
+    }
   }
 
   printThermal() {
@@ -147,7 +209,7 @@ export class VoucherComponent {
         printWindow.focus();
         printWindow.print();
         printWindow.close();
-        this.onGeneratedVoucher.emit(this.sale().code);
+        this.onGeneratedVoucher.emit("Comprobante generado");
       };
     }
   }
@@ -182,55 +244,7 @@ export class VoucherComponent {
         </html>
       `);
       printWindow.document.close();
-      this.onGeneratedVoucher.emit(this.sale().code);
-    }
-  }
-
-  printThermal58mm() {
-    const content = document.getElementById('thermal-text-ticket')?.innerHTML;
-    const printWindow = window.open('', '', 'width=300,height=600');
-
-    if (printWindow && content) {
-      const doc = printWindow.document;
-
-      // Crear el <html> y <head> manualmente
-      const html = doc.documentElement;
-      const head = doc.head || doc.createElement('head');
-      const body = doc.body || doc.createElement('body');
-
-      // Crear e insertar el <style>
-      const style = doc.createElement('style');
-      style.textContent = `
-        @media print {
-          body {
-            margin: 0;
-            padding: 10px;
-            font-family: monospace;
-            font-size: 10px;
-            width: 58mm;
-          }
-          pre {
-            white-space: pre;
-            word-wrap: break-word;
-          }
-        }
-      `;
-      head.appendChild(style);
-      doc.head.replaceWith(head);
-
-      // Crear e insertar el contenido
-      const contentDiv = doc.createElement('div');
-      contentDiv.innerHTML = content;
-      body.appendChild(contentDiv);
-      doc.body.replaceWith(body);
-
-      // Esperar a que el DOM esté listo y luego imprimir
-      printWindow.onload = () => {
-        printWindow.focus();
-        printWindow.print();
-        printWindow.close();
-        this.onGeneratedVoucher.emit(this.sale().code);
-      };
+      this.onGeneratedVoucher.emit("Comprobante generado");
     }
   }
 }

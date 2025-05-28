@@ -5,6 +5,7 @@ export const LOCAL_ROLE_VENDEDOR = 'local_role_vendedor'
 export const POINT_SALE_ID = 'point_sale_id'
 
 export const INITIAL_PRODUCT_CODE = 10000000;
+export const PREFIX_SALE_VOUCHER = 'CPFV';//Comprobante de Pago de FarmaVida
 export const PREFIX_SALE_TICKET = 'BVSF';
 
 /* Mensajes */

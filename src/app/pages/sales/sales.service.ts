@@ -1,8 +1,8 @@
-import { PREFIX_SALE_TICKET } from './../../core/constants/constants';
 import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, orderBy, query, runTransaction, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Sale } from '../../core/models/sale';
+import { PREFIX_SALE_VOUCHER } from './../../core/constants/constants';
 
 const PATH = 'sales'
 
@@ -29,7 +29,7 @@ export class SaleService {
 
   async create(sale: Sale) {
     let code = await this.generateSaleCode();
-    code = PREFIX_SALE_TICKET + '-' + code.padStart(6, '0'); // Asegurarse de que el código tenga 6 dígitos
+    code = PREFIX_SALE_VOUCHER + '-' + code.padStart(6, '0'); // Asegurarse de que el código tenga 6 dígitos
     const newSale = { ...sale, code };
     await addDoc(this._collection, newSale)
     return {sale: newSale, code};
