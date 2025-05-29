@@ -23,22 +23,33 @@ export class DashboardService {
     return startOfMonth(now);
   }
 
-  getSalesFrom(date: Date) {
-    const collectionRef = collection(this._firestore, 'sales');
-    const q = query(collectionRef, where('saleDate', '>=', Timestamp.fromDate(date)));
+  getSalesFrom(date: Date, username: string) {
+  const collectionRef = collection(this._firestore, 'sales');
+  const dateTimestamp = Timestamp.fromDate(date);
+
+  if (username === 'ALL') {
+    return getDocs(query(collectionRef, where('saleDate', '>=', dateTimestamp)));
+  } else {
+    const q = query(
+      collectionRef,
+      where('saleDate', '>=', dateTimestamp),
+      where('createdBy', '==', username)
+    );
+
     return getDocs(q);
   }
+}
 
-  async getSalesStats(): Promise<{
+  async getSalesStats(username: string): Promise<{
     day: { count: number; total: number },
     week: { count: number; total: number },
     month: { count: number; total: number }
   }> {
     console.log('Get Stats');
     const [daySnap, weekSnap, monthSnap] = await Promise.all([
-      this.getSalesFrom(this.getStartOfToday()),
-      this.getSalesFrom(this.getStartOfWeek()),
-      this.getSalesFrom(this.getStartOfMonth()),
+      this.getSalesFrom(this.getStartOfToday(), username),
+      this.getSalesFrom(this.getStartOfWeek(), username),
+      this.getSalesFrom(this.getStartOfMonth(), username),
     ]);
 
     const calcStats = (snap: any) => {
@@ -57,10 +68,10 @@ export class DashboardService {
     };
   }
 
-  async getDailySalesOfCurrentMonth(): Promise<ChartData[]> {
+  async getDailySalesOfCurrentMonth(username: string): Promise<ChartData[]> {
     console.log('Get Daily Sales of Current Month');
     const date = this.getStartOfMonth()
-    const snap = await this.getSalesFrom(date);
+    const snap = await this.getSalesFrom(date, username);
 
     const salesByDay = getArrayDaysOfMonth(date);
     const countSalesByDay = getArrayDaysOfMonth(date);
@@ -101,7 +112,7 @@ export class DashboardService {
     return [chartDataSales, chartDataCountSales];
   }
 
-  async getMonthlySalesOfLastSixMonths(): Promise<ChartData[]> {
+  async getMonthlySalesOfLastSixMonths(username: string): Promise<ChartData[]> {
     const today = new Date();
     const chartLabels: string[] = [];
     const chartTotals: number[] = [];
@@ -113,11 +124,22 @@ export class DashboardService {
       const end = endOfMonth(monthDate);
 
       const collectionRef = collection(this._firestore, 'sales');
-      const q = query(
-        collectionRef,
-        where('saleDate', '>=', Timestamp.fromDate(start)),
-        where('saleDate', '<=', Timestamp.fromDate(end))
-      );
+
+      var q;
+      if (username === 'ALL') {
+        q = query(
+          collectionRef,
+          where('saleDate', '>=', Timestamp.fromDate(start)),
+          where('saleDate', '<=', Timestamp.fromDate(end))
+        );
+      } else {
+        q = query(
+          collectionRef,
+          where('saleDate', '>=', Timestamp.fromDate(start)),
+          where('saleDate', '<=', Timestamp.fromDate(end)),
+          where('createdBy', '==', username)
+        );
+      }
 
       const snap = await getDocs(q);
 

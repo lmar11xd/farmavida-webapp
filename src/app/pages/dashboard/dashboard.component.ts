@@ -8,6 +8,7 @@ import { User } from '../../core/models/user';
 import { DashboardService } from './dashboard.service';
 import { changeColorsOpacity, generateRandomColors } from '../../core/core-util';
 import { Chart } from '../../shared/models/chart';
+import { UserRolEnum } from '../../core/enums/user-rol.enum';
 
 @Component({
   selector: 'app-dashboard',
@@ -45,27 +46,30 @@ export default class DashboardComponent implements OnInit {
     private _breadcrumService: BreadcrumbService,
     private _settings: SettingsService,
     private _dashboardService: DashboardService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.initializeBreadcrumb()
-    this.userInfo =this._settings.getUserInfo()
-    this.getSalesStats()
-    this.getDailySalesOfCurrentMonth()
-    this.getMonthlySalesOfLastSixMonths()
 
-    /*this.initPastelChart()
-    this.initChart()
-    this.initMultiChart()*/
+    this.userInfo = this._settings.getUserInfo()
+    let username = this.userInfo?.username || ''
+    if(this.userInfo?.role === UserRolEnum.ADMINISTRADOR) {
+      username = "ALL"
+    }
+
+    this.getSalesStats(username)
+    this.getDailySalesOfCurrentMonth(username)
+    this.getMonthlySalesOfLastSixMonths(username)
   }
 
   initializeBreadcrumb() {
     this._breadcrumService.addBreadcrumbs([]);
   }
 
-  getSalesStats() {
+  getSalesStats(username: string) {
     this._settings.showSpinner()
-    this._dashboardService.getSalesStats()
+    this._dashboardService.getSalesStats(username)
     .then((stats) => {
       this.saleStats = stats;
       this._settings.hideSpinner()
@@ -75,9 +79,9 @@ export default class DashboardComponent implements OnInit {
     });
   }
 
-  getDailySalesOfCurrentMonth() {
+  getDailySalesOfCurrentMonth(username: string) {
     this._settings.showSpinner()
-    this._dashboardService.getDailySalesOfCurrentMonth()
+    this._dashboardService.getDailySalesOfCurrentMonth(username)
     .then((chartData) => {
       this.initDailySalesChart(chartData[0])
       this.initDailyCountSalesChart(chartData[1])
@@ -88,9 +92,9 @@ export default class DashboardComponent implements OnInit {
     });
   }
 
-  getMonthlySalesOfLastSixMonths() {
+  getMonthlySalesOfLastSixMonths(username: string) {
     this._settings.showSpinner()
-    this._dashboardService.getMonthlySalesOfLastSixMonths()
+    this._dashboardService.getMonthlySalesOfLastSixMonths(username)
     .then((chartData) => {
       this.initMonthlySalesOfLastSixMonthsChart(chartData[0])
       this.initMonthlyCountSalesOfLastSixMonthsChart(chartData[1])
@@ -296,162 +300,6 @@ export default class DashboardComponent implements OnInit {
           },
         },
       },
-    };
-  }
-
-  initPastelChart() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-
-    this.pastelData = {
-      labels: ['A', 'B', 'C'],
-      datasets: [
-        {
-          data: [540, 325, 702],
-          backgroundColor: [documentStyle.getPropertyValue('--p-cyan-500'), documentStyle.getPropertyValue('--p-orange-500'), documentStyle.getPropertyValue('--p-gray-500')],
-          hoverBackgroundColor: [documentStyle.getPropertyValue('--p-cyan-400'), documentStyle.getPropertyValue('--p-orange-400'), documentStyle.getPropertyValue('--p-gray-400')]
-        }
-      ]
-    };
-
-    this.pastelOptions = {
-      plugins: {
-        legend: {
-          labels: {
-            usePointStyle: true,
-            color: textColor
-          }
-        }
-      }
-    };
-  }
-
-  initChart() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--p-text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-    const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
-
-    this.data = {
-        labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-        datasets: [
-          {
-            label: 'My First dataset',
-            backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-            borderColor: documentStyle.getPropertyValue('--p-cyan-500'),
-            data: [65, 59, 80, 81, 56, 55, 40, 65, 59, 80, 81, 56, 55, 40]
-          },
-          {
-            label: 'My Second dataset',
-            backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
-            borderColor: documentStyle.getPropertyValue('--p-gray-500'),
-            data: [28, 48, 40, 19, 86, 27, 90, 28, 48, 40, 19, 86, 27, 90]
-          }
-        ]
-    };
-
-    this.options = {
-      maintainAspectRatio: false,
-      aspectRatio: 0.8,
-      plugins: {
-        legend: {
-          labels: {
-            color: textColor
-          }
-        }
-      },
-      scales: {
-        x: {
-          ticks: {
-            color: textColorSecondary,
-            font: {
-              weight: 500
-            }
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false
-          }
-        },
-        y: {
-          ticks: {
-            color: textColorSecondary
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false
-          }
-        }
-      }
-    };
-  }
-
-  initMultiChart() {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--p-text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--p-text-muted-color');
-    const surfaceBorder = documentStyle.getPropertyValue('--p-content-border-color');
-
-    this.multiData = {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [
-        {
-          type: 'bar',
-          label: 'Dataset 1',
-          backgroundColor: documentStyle.getPropertyValue('--p-cyan-500'),
-          data: [50, 25, 12, 48, 90, 76, 42]
-        },
-        {
-          type: 'bar',
-          label: 'Dataset 2',
-          backgroundColor: documentStyle.getPropertyValue('--p-gray-500'),
-          data: [21, 84, 24, 75, 37, 65, 34]
-        },
-        {
-          type: 'bar',
-          label: 'Dataset 3',
-          backgroundColor: documentStyle.getPropertyValue('--p-orange-500'),
-          data: [41, 52, 24, 74, 23, 21, 32]
-        }
-      ]
-    };
-
-    this.multiOptions = {
-      maintainAspectRatio: false,
-      aspectRatio: 0.8,
-      plugins: {
-        tooltip: {
-          mode: 'index',
-          intersect: false
-        },
-        legend: {
-          labels: {
-            color: textColor
-          }
-        }
-      },
-      scales: {
-        x: {
-          stacked: true,
-          ticks: {
-            color: textColorSecondary
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false
-          }
-        },
-        y: {
-          stacked: true,
-          ticks: {
-            color: textColorSecondary
-          },
-          grid: {
-            color: surfaceBorder,
-            drawBorder: false
-          }
-        }
-      }
     };
   }
 }
