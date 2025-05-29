@@ -9,17 +9,17 @@ const PATH = 'products'
   providedIn: 'root'
 })
 export class ProductCatalogService {
-    private _collection: CollectionReference
+  private _collection: CollectionReference
 
-    constructor(
-      private _firestore: Firestore
-    ) {
-      this._collection = collection(this._firestore, PATH)
-    }
-
-    getProducts(): Observable<Product[]> {
-      const q = query(this._collection, where('quantity', '>', 0), orderBy('name', 'asc'));
-      return collectionData(q, { idField: 'id' }) as Observable<Product[]>;
-    }
-
+  constructor(
+    private _firestore: Firestore
+  ) {
+    this._collection = collection(this._firestore, PATH)
   }
+
+  getProducts(): Observable<Product[]> {
+    const q = query(this._collection, where('quantity', '>', 0), orderBy('name', 'asc'));
+    return collectionData(q, { idField: 'id' }) as Observable<Product[]>;
+  }
+
+}

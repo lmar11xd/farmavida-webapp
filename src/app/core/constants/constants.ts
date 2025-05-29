@@ -8,6 +8,8 @@ export const INITIAL_PRODUCT_CODE = 10000000;
 export const PREFIX_SALE_VOUCHER = 'CPFV';//Comprobante de Pago de FarmaVida
 export const PREFIX_SALE_TICKET = 'BVSF';
 
+export const USER_SUPERADMIN = 'superadmin';
+
 /* Mensajes */
 export const MSG_INVALID_CREDENTIALS = 'Nombre de usuario y/o contraseña incorrectos'
 export const MSG_ENTRY_EXISTS = 'El nombre de archivo ya existe, por favor cambie el nombre del archivo.'
