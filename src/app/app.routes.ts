@@ -57,7 +57,7 @@ export const routes: Routes = [
     },
     {
         path: 'auth',
-        loadChildren: () => import('./auth/features/auth-shell/auth-rounting'),
+        loadChildren: () => import('./auth/features/auth-shell/auth-routing'),
         canActivateChild: [publicGuard]
     },
     {
