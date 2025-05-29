@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -33,7 +33,6 @@ import { Product } from '../../../core/models/product';
 })
 export default class ProductEditComponent implements OnInit {
   form: FormGroup = new FormGroup({})
-  isLoading = signal(false)
   id: string | null = null
 
   constructor(
@@ -102,16 +101,17 @@ export default class ProductEditComponent implements OnInit {
 
     try {
       if(this.id != null) {
-        this.isLoading.set(true)
         this._settings.showSpinner()
 
         const { code, name, description, expirationDate, quantity, costPrice, salePrice, um, lot, laboratory, sanitaryReg } = this.form.getRawValue()
+
+        const expirationDateValue = expirationDate ? Timestamp.fromDate(expirationDate) : null;
 
         const product: ProductCreate = ({
           code: code || '',
           name: name || '',
           description: description || '',
-          expirationDate: Timestamp.fromDate(expirationDate) || null,
+          expirationDate: expirationDateValue,
           quantity: quantity || 0,
           costPrice: costPrice || 0,
           salePrice: salePrice || 0,
@@ -128,9 +128,9 @@ export default class ProductEditComponent implements OnInit {
         this._router.navigateByUrl('/product/list')
       }
     } catch (error) {
+      console.error('Error al rditar producto:', error);
       this._settings.showMessage('error', 'Error', 'Error al actualizar producto')
     } finally {
-      this.isLoading.set(false)
       this._settings.hideSpinner()
     }
   }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp, getDocs, orderBy } from '@angular/fire/firestore';
+import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp, getDocs, orderBy, deleteDoc } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
 import { Product } from '../../core/models/product';
 import { INITIAL_PRODUCT_CODE } from '../../core/constants/constants';
@@ -112,6 +112,11 @@ export class ProductService {
     }
 
     return dataSnapshot.docs[0]; // Retornar el primer documento encontrado
+  }
+
+  delete(id: string): Promise<void> {
+    const docRef = doc(this._collection, id);
+    return deleteDoc(docRef);
   }
 
 }

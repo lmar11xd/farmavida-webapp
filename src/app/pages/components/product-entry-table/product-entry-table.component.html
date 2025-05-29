@@ -47,7 +47,7 @@
                     <p-button icon="pi pi-eye" title="Ver Detalles" severity="success" [rounded]="true" class="mr-2" (click)="onViewEntry(item.id)" />
                     @if(item.status !== status.PROCESSED) {
                         <p-button icon="pi pi-sync" title="Procesar" severity="info" [rounded]="true" class="mr-2" (click)="onProcessEntry(item.id)" />
-                        <p-button icon="pi pi-trash" title="Eliminar" severity="danger" [rounded]="true" (click)="onDeleteEntry(item)" />
+                        <p-button icon="pi pi-trash" title="Eliminar" severity="danger" [rounded]="true" (click)="onDeleteEntry(item.id, item.fileName)" />
                     }
                 </td>
             </tr>

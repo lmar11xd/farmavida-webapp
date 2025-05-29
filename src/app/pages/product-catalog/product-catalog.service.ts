@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CollectionReference, Firestore, collection, collectionData, addDoc } from "@angular/fire/firestore";
+import { CollectionReference, Firestore, collection, collectionData, addDoc, query, where, orderBy } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 import { Product } from "../../core/models/product";
 
@@ -18,7 +18,8 @@ export class ProductCatalogService {
     }
 
     getProducts(): Observable<Product[]> {
-      return collectionData(this._collection, { idField: 'id' }) as Observable<Product[]>;
+      const q = query(this._collection, where('quantity', '>', 0), orderBy('name', 'asc'));
+      return collectionData(q, { idField: 'id' }) as Observable<Product[]>;
     }
 
   }

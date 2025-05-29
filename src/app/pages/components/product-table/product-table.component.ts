@@ -9,10 +9,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { Product } from '../../../core/models/product';
 import { Timestamp } from '@angular/fire/firestore';
 import { convertDateToFormat, getSeverityExpiration } from '../../../core/core-util';
+import { SettingsService } from '../../../core/settings/settings.service';
+import { ProductService } from '../../products/product.service';
 
 @Component({
   selector: 'app-product-table',
@@ -40,8 +42,9 @@ export class ProductTableComponent {
   productDialog: boolean = false;
 
   constructor(
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService
+    private _settings: SettingsService,
+    private _confirmationService: ConfirmationService,
+    private _productService: ProductService
   ) {}
 
   onFilter(event: Event) {
@@ -50,26 +53,54 @@ export class ProductTableComponent {
   }
 
   getExpirationFormat(expirationDate: Timestamp | Date | null | undefined) {
+    if(expirationDate == null) {
+      return 'No aplica';
+    }
+
     return convertDateToFormat(expirationDate, 'dd/MM/yyyy')
   }
 
   getSeverityExpiration(expirationDate: Date) {
+    if(expirationDate == null) {
+      return 'secondary';
+    }
+
     return getSeverityExpiration(expirationDate)
   }
 
-  deleteProduct(product: Product) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete ' + product.name + '?',
-      header: 'Confirm',
+  onDeleteProduct(product: Product) {
+    this._confirmationService.confirm({
+      message: '¿Deseas eliminar el producto "' + product.name + '"?',
+      header: 'Eliminar Producto',
       icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'No',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+          label: 'Si, Eliminar',
+          severity: 'danger'
+      },
       accept: () => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Product Deleted',
-          life: 3000
-        });
+        this.deleteProduct(product.id || '000');
+      },
+      reject: () => {
+        console.log("Cancelar eliminar producto")
       }
     });
+  }
+
+  deleteProduct(id: string) {
+    try {
+      this._settings.showSpinner()
+      this._productService.delete(id)
+      this._settings.showMessage('success', 'Éxito', 'Producto eliminado correctamente');
+    } catch (error) {
+      console.error('Error al eliminar el producto:', error);
+      this._settings.showMessage('error', 'Error', 'No se pudo eliminar el producto, intente más tarde');
+    } finally {
+      this._settings.hideSpinner()
+    }
   }
 }

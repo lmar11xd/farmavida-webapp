@@ -47,7 +47,7 @@
                 <td>S/ {{ product.salePrice | number: '1.2-2' }}</td>
                 <td style="display: flex;justify-content: space-between;gap:8px;">
                     <p-button icon="pi pi-pencil" [routerLink]="['/product/edit']" [queryParams]="{ pkey: product.id}" [rounded]="true" />
-                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="deleteProduct(product)" />
+                    <p-button icon="pi pi-trash" severity="danger" [rounded]="true" (click)="onDeleteProduct(product)" />
                 </td>
             </tr>
         </ng-template>

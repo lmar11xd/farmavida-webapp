@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { ProductEntry } from "../../core/models/product-entry";
-import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDoc, getDocs, orderBy, query, Timestamp, updateDoc, where } from "@angular/fire/firestore";
+import { addDoc, collection, collectionData, CollectionReference, deleteDoc, doc, Firestore, getDoc, getDocs, orderBy, query, Timestamp, updateDoc, where } from "@angular/fire/firestore";
 import { map, Observable } from "rxjs";
 import { MSG_ENTRY_EXISTS } from '../../core/constants/constants';
 
@@ -54,5 +54,10 @@ export class ProductEntryService {
     const entrySnapshot = await getDocs(q);
 
     return entrySnapshot;
+  }
+
+  delete(id: string): Promise<void> {
+    const docRef = doc(this._collection, id);
+    return deleteDoc(docRef);
   }
 }

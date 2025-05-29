@@ -84,8 +84,9 @@ export class ProductEntryTableComponent  {
     }
   }
 
-  onDeleteEntry(entry: ProductEntry) {
-
+  onDeleteEntry(id: string, name: string) {
+    console.log('Eliminar ingreso de productos', id)
+    this.showDialogDeleteEntry(id, name)
   }
 
   dismissView(event: any) {
@@ -111,6 +112,29 @@ export class ProductEntryTableComponent  {
       },
       reject: () => {
         console.log("Cancelar procesar ingreso de productos")
+      }
+    });
+  }
+
+  showDialogDeleteEntry(idEntry: string, nameEntry: string) {
+    this._confirmationService.confirm({
+      message: '¿Deseas eliminar "' + nameEntry + '"?',
+      header: 'Eliminar Ingreso',
+      icon: 'pi pi-exclamation-triangle',
+      rejectButtonProps: {
+        label: 'No',
+        severity: 'secondary',
+        outlined: true,
+      },
+      acceptButtonProps: {
+          label: 'Si, Eliminar',
+          severity: 'danger'
+      },
+      accept: () => {
+        this.deleteEntry(idEntry)
+      },
+      reject: () => {
+        console.log("Cancelar eliminar ingreso de productos")
       }
     });
   }
@@ -195,6 +219,19 @@ export class ProductEntryTableComponent  {
     } catch (error) {
       console.error('Error al procesar ingreso de productos:', error);
       this._settings.showMessage('error', 'Error', 'Ocurrió un error al procesar el ingreso de productos');
+    } finally {
+      this._settings.hideSpinner()
+    }
+  }
+
+  async deleteEntry(id: string) {
+    try {
+      this._settings.showSpinner()
+      await this._entryService.delete(id)
+      this._settings.showMessage('success', 'Éxito', 'Ingreso de productos eliminado correctamente');
+    } catch (error) {
+      console.error('Error al eliminar ingreso de productos:', error);
+      this._settings.showMessage('error', 'Error', 'Ocurrió un error al eliminar el ingreso de productos');
     } finally {
       this._settings.hideSpinner()
     }

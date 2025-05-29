@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -28,7 +28,6 @@ import { CREAR_PRODUCTO, LISTAR_PRODUCTO } from '../../../shared/breadcrumb/brea
 })
 export default class ProductCreateComponent implements OnInit {
   form: FormGroup = new FormGroup({});
-  isLoading = signal(false)
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -68,16 +67,17 @@ export default class ProductCreateComponent implements OnInit {
     if(this.form.invalid) return
 
     try {
-      this.isLoading.set(true)
       this._settings.showSpinner()
 
       const { name, description, expirationDate, quantity, costPrice, salePrice, um, lot, laboratory, sanitaryReg } = this.form.value
+
+      const expirationDateValue = expirationDate ? Timestamp.fromDate(expirationDate) : null;
 
       const product: ProductCreate = ({
         code: '',
         name: name || '',
         description: description || '',
-        expirationDate: Timestamp.fromDate(expirationDate) || null,
+        expirationDate: expirationDateValue,
         quantity: quantity || 0,
         costPrice: costPrice || 0,
         salePrice: salePrice || 0,
@@ -96,7 +96,6 @@ export default class ProductCreateComponent implements OnInit {
       console.error(error)
       this._settings.showMessage('error', 'Error', 'Error al crear producto');
     } finally {
-      this.isLoading.set(false)
       this._settings.hideSpinner()
     }
   }
