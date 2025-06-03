@@ -1,0 +1,56 @@
+<div class="w-full bg-white overflow-x-auto shadow-md sm:rounded-lg p-4">
+  <p-table
+    #dt
+    [value]="items()"
+    [rows]="10"
+    [paginator]="true"
+    [globalFilterFields]="['openingDate', 'closingDate', 'sales', 'finalAmount', 'isOpen', 'createdBy']"
+    [tableStyle]="{ 'min-width': '75rem' }"
+    [rowHover]="true"
+    dataKey="id"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} cajas"
+    [showCurrentPageReport]="true"
+  >
+    <ng-template #caption>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+        <h5 class="m-0 text-green-900 font-medium text-sm md:text-base">Lista de Cajas</h5>
+        <p-iconfield class="w-full">
+          <p-inputicon styleClass="pi pi-search" />
+          <input
+            pInputText
+            class="w-full"
+            type="text"
+            (input)="onFilter($event)"
+            placeholder="Buscar..."
+          />
+        </p-iconfield>
+      </div>
+    </ng-template>
+    <ng-template #header>
+      <tr>
+        <th pSortableColumn="openingDate" [width]="180">Fecha de Apertura<p-sortIcon field="openingDate" /></th>
+        <th pSortableColumn="closingDate" [width]="180">Fecha de Cierre<p-sortIcon field="closingDate" /></th>
+        <th pSortableColumn="sales" [width]="150">Ventas<p-sortIcon field="sales" /></th>
+        <th pSortableColumn="finalAmount" [width]="150">Total <p-sortIcon field="finalAmount" /></th>
+        <th pSortableColumn="isOpen" [width]="150">Estado<p-sortIcon field="isOpen" /></th>
+        <th pSortableColumn="createdBy" [width]="150">Vendedor<p-sortIcon field="createdBy" /></th>
+        <th [width]="120">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template #body let-item>
+      <tr>
+        <td>{{ getFormatDate(item.openingDate) }}</td>
+        <td>{{ getFormatDate(item.closingDate) }}</td>
+        <td>{{ item.sales }}</td>
+        <td>S/ {{ item.finalAmount | number: '1.2-2' }}</td>
+        <td><p-tag [value]="getStatus(item.isOpen)" [severity]="getSeverityStatus(item.isOpen)" /></td>
+        <td>{{ item.createdBy }}</td>
+        <td></td>
+      </tr>
+    </ng-template>
+    <ng-template #summary>
+      <div class="flex items-center justify-between text-green-900 pt-2">Se encontraron {{ dt?.totalRecords }} cajas.</div>
+    </ng-template>
+  </p-table>
+</div>
+

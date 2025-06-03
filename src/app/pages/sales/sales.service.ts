@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, orderBy, query, runTransaction, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDocs, orderBy, query, runTransaction, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Sale } from '../../core/models/sale';
 import { PREFIX_SALE_VOUCHER } from './../../core/constants/constants';
+import { get } from 'http';
 
 const PATH = 'sales'
 
@@ -53,5 +54,14 @@ export class SaleService {
 
       return newCode.toString();
     });
+  }
+
+  getSalesByBoxId(boxId: string) {
+    const q = query(
+      this._collection,
+      where('boxId', '==', boxId)
+    );
+
+    return getDocs(q)
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,10 +8,8 @@ import { InputIconModule } from 'primeng/inputicon';
 import { Table, TableModule } from 'primeng/table';
 import { Timestamp } from '@angular/fire/firestore';
 import { Sale } from '../../../core/models/sale';
-import { convertDatetimeToString, convertDateToFormat } from '../../../core/core-util';
+import { convertDatetimeToString } from '../../../core/core-util';
 import { VoucherComponent } from "../voucher/voucher.component";
-import { SettingsService } from '../../../core/settings/settings.service';
-import { SaleService } from '../../sales/sales.service';
 import { Dialog } from 'primeng/dialog';
 
 @Component({
@@ -38,10 +36,7 @@ export class SaleTableComponent {
   selectedSale: Sale | null = null;
   visibleView: boolean = false
 
-  constructor(
-    private _settings: SettingsService
-  ) {}
-
+  constructor() {}
 
   onFilter(event: Event) {
     const input = event.target as HTMLInputElement;

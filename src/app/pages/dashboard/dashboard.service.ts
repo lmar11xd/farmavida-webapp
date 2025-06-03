@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
 import { collection, Firestore, query, Timestamp, where } from '@angular/fire/firestore';
-import { getDocs } from '@firebase/firestore';
+import { CollectionReference, getDocs } from '@firebase/firestore';
 import { startOfDay, startOfWeek, startOfMonth, subMonths, endOfMonth } from 'date-fns';
 import { Sale } from '../../core/models/sale';
 import { getArrayDaysOfMonth, getNameOfMonth } from '../../core/core-util';
 import { ChartData } from '../../shared/models/chart-data';
 
+const PATH = 'sales';
+
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  constructor(private _firestore: Firestore) {}
+  private _collection: CollectionReference
+
+  constructor(private _firestore: Firestore) {
+    this._collection = collection(this._firestore, PATH)
+  }
 
   private getStartOfToday(): Date {
     return startOfDay(new Date());
@@ -24,21 +30,20 @@ export class DashboardService {
   }
 
   getSalesFrom(date: Date, username: string) {
-  const collectionRef = collection(this._firestore, 'sales');
-  const dateTimestamp = Timestamp.fromDate(date);
+    const dateTimestamp = Timestamp.fromDate(date);
 
-  if (username === 'ALL') {
-    return getDocs(query(collectionRef, where('saleDate', '>=', dateTimestamp)));
-  } else {
-    const q = query(
-      collectionRef,
-      where('saleDate', '>=', dateTimestamp),
-      where('createdBy', '==', username)
-    );
+    if (username === 'ALL') {
+      return getDocs(query(this._collection, where('saleDate', '>=', dateTimestamp)));
+    } else {
+      const q = query(
+        this._collection,
+        where('saleDate', '>=', dateTimestamp),
+        where('createdBy', '==', username)
+      );
 
-    return getDocs(q);
+      return getDocs(q);
+    }
   }
-}
 
   async getSalesStats(username: string): Promise<{
     day: { count: number; total: number },
@@ -123,18 +128,16 @@ export class DashboardService {
       const start = startOfMonth(monthDate);
       const end = endOfMonth(monthDate);
 
-      const collectionRef = collection(this._firestore, 'sales');
-
       var q;
       if (username === 'ALL') {
         q = query(
-          collectionRef,
+          this._collection,
           where('saleDate', '>=', Timestamp.fromDate(start)),
           where('saleDate', '<=', Timestamp.fromDate(end))
         );
       } else {
         q = query(
-          collectionRef,
+          this._collection,
           where('saleDate', '>=', Timestamp.fromDate(start)),
           where('saleDate', '<=', Timestamp.fromDate(end)),
           where('createdBy', '==', username)

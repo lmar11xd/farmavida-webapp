@@ -38,6 +38,10 @@ export const LISTAR_VENTAS: MenuItem[] = [
   {label:'Ventas', url: '/sale/list', target: ''}
 ];
 
+export const LISTAR_CAJAS: MenuItem[] = [
+  {label:'Cajas', url: '/sales-box/list', target: ''}
+];
+
 BREADCRUMB['/product/list'] = LISTAR_PRODUCTO;
 BREADCRUMB['/product/create'] = CREAR_PRODUCTO;
 BREADCRUMB['/product/edit'] = EDITAR_PRODUCTO;
@@ -47,3 +51,4 @@ BREADCRUMB['/user/edit'] = EDITAR_USUARIO;
 BREADCRUMB['/product-catalog/list'] = LISTAR_CATALOGO;
 BREADCRUMB['/product-entry/list'] = LISTAR_INGRESO_PRODUCTO;
 BREADCRUMB['/sale/list'] = LISTAR_VENTAS;
+BREADCRUMB['/sales-box/list'] = LISTAR_CAJAS;

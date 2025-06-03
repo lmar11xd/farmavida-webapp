@@ -1,0 +1,15 @@
+<section class="mx-auto w-full px-4">
+
+  <div class="my-4 p-4 rounded-2xl flex justify-between items-center">
+      <h1 class="text-base md:text-lg font-winkysans font-bold text-gray-500">Caja de Ventas</h1>
+      <div class="flex items-center">
+        @if(!currentBox) {
+          <p-button label="Abrir Caja" icon="pi pi-box" (onClick)="onOpenBox()"/>
+        } @else {
+          <p-button label="Cerrar Caja" icon="pi pi-box" severity="secondary" (onClick)="onCloseBox()" />
+        }
+      </div>
+  </div>
+
+  <app-box-table [items]="boxes"></app-box-table>
+</section>

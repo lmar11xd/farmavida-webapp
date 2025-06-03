@@ -11,7 +11,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { ConfirmationService } from 'primeng/api';
 import { Product } from '../../../core/models/product';
-import { ShoppingCartService } from '../shopping-cart/shopping-cart.setvice';
+import { ShoppingCartService } from '../shopping-cart/shopping-cart.service';
 
 @Component({
   selector: 'app-catalog-table',

@@ -42,10 +42,11 @@ export class AuthService {
     const userDoc = querySnapshot.docs[0];
     const user = userDoc.data() as User;
     const userId = userDoc.id;
+    user.id = userId;
 
     return user.authentication
       ? this.loginDefault(user, userLogin.password)
-      : this.loginAndRegister(user, userLogin.password, userId);
+      : this.loginAndRegister(user, userLogin.password);
   }
 
   async logout() {
@@ -82,7 +83,7 @@ export class AuthService {
     }
   }
 
-  private async loginAndRegister(user: User, password: string, userId: string) {
+  private async loginAndRegister(user: User, password: string) {
     try {
       const decryptedPassword = CryptoJS.AES.decrypt(
         user.password,
@@ -99,7 +100,7 @@ export class AuthService {
         decryptedPassword
       );
 
-      const userRef = doc(this._fireStore, `users/${userId}`);
+      const userRef = doc(this._fireStore, `users/${user.id}`);
       const updatedUser = { ...user, authentication: true };
 
       await setDoc(userRef, updatedUser, { merge: true });

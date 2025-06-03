@@ -34,8 +34,8 @@ export class SettingsService {
     const data = localStorage.getItem(LOCAL_USER);
 
     if(data != null) {
-        const user = JSON.parse(data) as User
-        return user;
+      const user = JSON.parse(data) as User
+      return user;
     }
 
     return null;
