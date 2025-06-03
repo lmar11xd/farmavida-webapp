@@ -1,40 +1,42 @@
 <aside [class.-translate-x-80]="!visible()"
   class="bg-gradient-to-br from-yellow-400 to-yellow-200 fixed inset-0 z-50 my-4 ml-4 h-[calc(100vh-32px)] w-72 rounded-xl transition-transform duration-300 xl:translate-x-0 flex flex-col" aria-label="Sidebar">
-  <div class="relative border-b border-white/20 p-8">
-    <div class="xl:hidden"><i class="pi pi-times absolute top-0 right-0 p-4" style="font-size: 1rem; color: var(--color-green-700)" (click)="hidden()"></i></div>
-    <app-logo />
-    <h4 class="text-gray-600 w-full font-bold text-center text-xs uppercase m-0">{{userInfo?.role}}</h4>
-  </div>
-  <div class="m-4 flex-grow">
-    <ul class="mb-4 flex flex-col gap-1 text-gray-600">
-      <ng-container *ngFor="let item of menuList; let i = index">
-        <li *ngIf="item.role == null || item.role == userInfo?.role">
-          <a [routerLink]="item.url">
-            <button routerLinkActive="bg-gradient-to-tr from-green-800 to-green-600 text-white shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/40"
-              class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg active:opacity-[0.85] w-full flex items-center gap-4 px-4 capitalize" type="button">
-              <i [class]="item.icon"></i>
-              <p class="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">{{item.title}}</p>
-            </button>
-          </a>
+  <div class="flex-grow overflow-auto">
+    <div class="relative border-b border-white/20 p-4 xl:p-8">
+      <div class="xl:hidden"><i class="pi pi-times absolute top-0 right-0 p-4" style="font-size: 1rem; color: var(--color-green-700)" (click)="hidden()"></i></div>
+      <app-logo />
+      <h4 class="text-gray-600 w-full font-bold text-center text-[10px] xl:text-xs uppercase m-0">{{userInfo?.role}}</h4>
+    </div>
+    <div class="m-4 flex-grow">
+      <ul class="mb-4 flex flex-col gap-1 text-gray-600">
+        <ng-container *ngFor="let item of menuList; let i = index">
+          <li *ngIf="item.role == null || item.role == userInfo?.role">
+            <a [routerLink]="item.url">
+              <button routerLinkActive="bg-gradient-to-tr from-green-800 to-green-600 text-white shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/40"
+                class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs rounded-lg active:opacity-[0.85] w-full flex items-center gap-4 p-2 xl:p-4 capitalize" type="button">
+                <i [class]="item.icon"></i>
+                <p class="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize text-[10px] xl:text-base">{{item.title}}</p>
+              </button>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+      <ul class="mb-4 flex flex-col gap-1">
+        <li class="mx-3.5 mt-4 mb-2">
+          <p class="block antialiased font-sans text-xs xl:text-sm leading-normal text-green-800 font-black uppercase opacity-75">Sesión</p>
         </li>
-      </ng-container>
-    </ul>
-    <ul class="mb-4 flex flex-col gap-1">
-      <li class="mx-3.5 mt-4 mb-2">
-        <p class="block antialiased font-sans text-sm leading-normal text-green-800 font-black uppercase opacity-75">Sesión</p>
-      </li>
-      <li>
-        <button (click)="logout()" class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-red-500 hover:bg-red-700/10 active:bg-red-700/30 w-full flex items-center gap-4 px-4 capitalize" type="button">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="w-5 h-5 text-inherit">
-            <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm10.72 4.72a.75.75 0 011.06 0l3 3a.75.75 0 010 1.06l-3 3a.75.75 0 11-1.06-1.06l1.72-1.72H9a.75.75 0 010-1.5h10.94l-1.72-1.72a.75.75 0 010-1.06z" clip-rule="evenodd"></path>
-          </svg>
-          <p class="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">Cerrar Sesión</p>
-        </button>
-      </li>
-    </ul>
+        <li>
+          <button (click)="logout()" class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs rounded-lg text-red-500 hover:bg-red-700/10 active:bg-red-700/30 w-full flex items-center gap-4 p-2 xl:p-4 capitalize" type="button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="w-5 h-5 text-inherit">
+              <path fill-rule="evenodd" d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm10.72 4.72a.75.75 0 011.06 0l3 3a.75.75 0 010 1.06l-3 3a.75.75 0 11-1.06-1.06l1.72-1.72H9a.75.75 0 010-1.5h10.94l-1.72-1.72a.75.75 0 010-1.06z" clip-rule="evenodd"></path>
+            </svg>
+            <p class="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize text-[10px] xl:text-base">Cerrar Sesión</p>
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
-  <div class="mt-auto p-4">
-    <h4 class="text-gray-600 w-full font-bold text-center text-xs m-0">{{userInfo?.username}}</h4>
-    <p class="text-center text-xs text-gray-500">{{deviceId}}</p>
+  <div class="p-4">
+    <h4 class="text-gray-600 w-full font-bold text-center text-[10px] xl:text-xs m-0">{{userInfo?.username}}</h4>
+    <p class="text-center text-[10px] xl:text-xs text-gray-500">{{deviceId}}</p>
   </div>
 </aside>
