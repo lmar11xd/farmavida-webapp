@@ -1,6 +1,6 @@
 <!--<p-button label="Carrito de Compras" icon="pi pi-shopping-cart" (onClick)="show()" />-->
 
-@if(produtcs.length > 0) {
+@if(products.length > 0) {
   <div class="fixed bottom-8 right-8 bg-transparent z-50 w-12 h-12 rounded-full flex items-center justify-center fab-button">
     <p-button
       icon="pi pi-shopping-cart"
@@ -9,14 +9,14 @@
       (onClick)="show()"
     >
     </p-button>
-    <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">{{ produtcs.length }}</span>
+    <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">{{ products.length }}</span>
   </div>
 }
 
 <p-drawer class="text-xs" header="Carrito de Compras" [visible]="visible" position="right" (onHide)="dismiss()">
     <span class="text-xs md:text-base font-bold text-gray-700">Productos</span>
     <p-divider />
-    <p-dataview #dv [value]="produtcs" emptyMessage="Sin productos">
+    <p-dataview #dv [value]="products" emptyMessage="Sin productos">
         <ng-template #list let-items>
             <div class="border-b border-b-gray-200 col-span-12 pt-2 pb-4 px-2 grid grid-cols-6" *ngFor="let item of items; let first = first">
                 <div class="col-span-4 text-left">
@@ -41,7 +41,7 @@
         </div>
 
         <div class="px-2 w-full text-center space-x-4">
-            <p-button label="Finalizar Compra" [disabled]="produtcs.length === 0" (onClick)="finalizePurchase()" />
+            <p-button label="Finalizar Compra" [disabled]="products.length === 0" (onClick)="finalizePurchase()" />
         </div>
     </div>
 </p-drawer>

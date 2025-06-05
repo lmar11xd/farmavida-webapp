@@ -1,15 +1,112 @@
 <section class="mx-auto w-full px-4">
 
   <div class="my-4 p-4 rounded-2xl flex justify-between items-center">
-      <h1 class="text-base md:text-lg font-winkysans font-bold text-gray-500">Caja de Ventas</h1>
-      <div class="flex items-center">
-        @if(!currentBox) {
-          <p-button label="Abrir Caja" icon="pi pi-box" (onClick)="onOpenBox()"/>
-        } @else {
-          <p-button label="Cerrar Caja" icon="pi pi-box" severity="secondary" (onClick)="onCloseBox()" />
-        }
-      </div>
+    <h1 class="text-base md:text-lg font-winkysans font-bold text-gray-500">Caja de Ventas</h1>
+    <div class="flex items-center">
+      @if(!currentBox) {
+        <p-button label="Abrir Caja" icon="pi pi-box" (onClick)="showViewBox()"/>
+      } @else {
+        <p-button label="Ver Caja" icon="pi pi-box" severity="secondary" (onClick)="showOpenBox()" />
+      }
+    </div>
   </div>
 
   <app-box-table [items]="boxes"></app-box-table>
+
+  <!--View Dialog-->
+  <p-dialog
+    [header]="currentBox? 'Resumen de Caja' : 'Abrir Caja'"
+    [modal]="true"
+    [(visible)]="visibleView"
+    [breakpoints]="{ '1199px': '50vw', '849px': '75vw', '575px': '90vw' }"
+    [style]="{ width: '50vw' }"
+    [draggable]="false"
+    (onHide)="dismissViewBox()"
+  >
+    <div class="grid grid-cols-1 sm:grid-cols-6 gap-x-6 gap-y-8">
+      @if(!currentBox) {
+        <div class="col-span-6 sm:col-span-3">
+          <label for="initialAmount" class="block text-sm/6 font-medium text-gray-900">Monto Inicial (S/)</label>
+          <div class="mt-2">
+            <input
+              type="number"
+              name="initialAmount"
+              id="initialAmount"
+              required
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              placeholder="S/ 0.00"
+              [(ngModel)]="initialAmount"
+            >
+          </div>
+        </div>
+      } @else {
+        <div class="col-span-6 sm:col-span-3">
+          <label class="block text-sm/6 font-medium text-gray-900">Fecha de Apertura</label>
+          <div class="mt-2">
+            <label class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">{{getFormatDate(currentBox.openingDate)}}</label>
+          </div>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label class="block text-sm/6 font-medium text-gray-900">Fecha de Cierre</label>
+          <div class="mt-2">
+            <label class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">{{getFormatDate(currentBox.closingDate)}}</label>
+          </div>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label class="block text-sm/6 font-medium text-gray-900">Monto Inicial</label>
+          <div class="mt-2">
+            <label class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">S/ {{currentBox.initialAmount | number: '1.2-2'}}</label>
+          </div>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label class="block text-sm/6 font-medium text-gray-900">Monto Sistema</label>
+          <div class="mt-2">
+            <label class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">S/ {{currentBox.systemAmount | number: '1.2-2'}}</label>
+          </div>
+        </div>
+
+        <div class="col-span-6">
+          <label for="cashAmount" class="block text-sm/6 font-medium text-gray-900">Monto Contado (S/)</label>
+          <div class="mt-2">
+            <input
+              type="number"
+              name="cashAmount"
+              id="cashAmount"
+              required
+              class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              placeholder="S/ 0.00"
+              [(ngModel)]="cashAmount"
+            >
+          </div>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label class="block text-sm/6 font-medium text-gray-900"># Ventas</label>
+          <div class="mt-2">
+            <label class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">{{currentBox.sales}}</label>
+          </div>
+        </div>
+
+        <div class="col-span-6 sm:col-span-3">
+          <label class="block text-sm/6 font-medium text-gray-900">Vendedor</label>
+          <div class="mt-2">
+            <label class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">{{currentBox.createdBy}}</label>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="flex justify-end items-center mt-8">
+      @if(!currentBox) {
+        <button pButton label="Guardar" icon="pi pi-save" severity="primary" class="mr-2" (click)="onOpenBox()"></button>
+      } @else {
+        <button pButton label="Cerrar Caja" icon="pi pi-box" severity="danger" class="mr-2" (click)="onCloseBox()"></button>
+      }
+      <button pButton label="Cancelar" icon="pi pi-times" severity="secondary" (click)="dismissViewBox()"></button>
+    </div>
+  </p-dialog>
+  <!--End View Dialog-->
 </section>

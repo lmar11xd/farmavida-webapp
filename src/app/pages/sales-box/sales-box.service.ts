@@ -1,7 +1,7 @@
-import { Box } from './../../core/models/box';
 import { Injectable } from '@angular/core';
 import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDoc, getDocs, limit, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
+import { Box } from './../../core/models/box';
 
 const PATH = 'sales-box';
 
@@ -22,7 +22,7 @@ export class SalesBoxService {
     return updateDoc(boxRef, { ...box });
   }
 
-  getOpenBox(sellerId: string) {
+  async getOpenBox(sellerId: string) {
     const q = query(
       this._collection,
       where('sellerId', '==', sellerId),
@@ -30,7 +30,8 @@ export class SalesBoxService {
       limit(1)
     );
 
-    return getDocs(q);
+    const snapshot = await getDocs(q);
+    return snapshot.empty ? null : snapshot.docs[0];
   }
 
   getBoxes(sellerId: string) {

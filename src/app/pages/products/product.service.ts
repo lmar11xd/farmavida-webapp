@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp, getDocs, orderBy, deleteDoc } from '@angular/fire/firestore';
+import { CollectionReference, Firestore, collection, addDoc, collectionData, doc, getDoc, updateDoc, query, where, increment, runTransaction, Timestamp, getDocs, orderBy, deleteDoc, DocumentReference } from '@angular/fire/firestore';
 import { map, Observable } from 'rxjs';
 import { Product } from '../../core/models/product';
 import { INITIAL_PRODUCT_CODE } from '../../core/constants/constants';
@@ -117,6 +117,10 @@ export class ProductService {
   delete(id: string): Promise<void> {
     const docRef = doc(this._collection, id);
     return deleteDoc(docRef);
+  }
+
+  getProductRef(productId: string): DocumentReference<Product> {
+    return doc(this._collection, productId) as DocumentReference<Product>;
   }
 
 }

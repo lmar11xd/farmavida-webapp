@@ -5,10 +5,12 @@ export interface Box {
   sellerId: string;
   openingDate: Date | Timestamp;
   closingDate?: Date | Timestamp | null;
-  sales: number;
-  initialAmount: number;
-  finalAmount?: number | null;
   isOpen: boolean;
+  initialAmount: number;
+  systemAmount?: number | null;
+  cashAmount?: number | null;
+  difference?: number | null;
+  sales?: number;
   createdAt?: Date | Timestamp | null,
   updatedAt?: Date | Timestamp | null,
   createdBy?: string,

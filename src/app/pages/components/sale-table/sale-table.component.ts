@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -15,6 +15,7 @@ import { Dialog } from 'primeng/dialog';
 @Component({
   selector: 'app-sale-table',
   imports: [
+    ReactiveFormsModule,
     TableModule,
     ButtonModule,
     CommonModule,
@@ -29,7 +30,6 @@ import { Dialog } from 'primeng/dialog';
   styles: ``
 })
 export class SaleTableComponent {
-  @ViewChild('dt') dt!: Table;
   @ViewChild('pdfContent', { static: false }) pdfContent!: ElementRef;
 
   @Input() sales: Sale[] = [];
@@ -38,9 +38,9 @@ export class SaleTableComponent {
 
   constructor() {}
 
-  onFilter(event: Event) {
+  onFilter(event: Event, dt: Table) {
     const input = event.target as HTMLInputElement;
-    this.dt.filter(input.value, 'global', 'contains');
+    dt.filter(input.value, 'global', 'contains');
   }
 
   getFormatDate(date: Timestamp | Date | null | undefined) {
@@ -52,7 +52,7 @@ export class SaleTableComponent {
     this.visibleView = true;
   }
 
-  dismissView(event: any) {
+  dismissView() {
     this.visibleView = false
     this.selectedSale = null
   }

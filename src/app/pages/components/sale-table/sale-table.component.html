@@ -20,7 +20,7 @@
                       pInputText
                       class="w-full"
                       type="text"
-                      (input)="onFilter($event)"
+                      (input)="onFilter($event, dt)"
                       placeholder="Buscar..."
                   />
               </p-iconfield>
@@ -60,7 +60,7 @@
     [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }"
     [style]="{ width: '50vw' }"
     [draggable]="false"
-    (onHide)="dismissView($event)"
+    (onHide)="dismissView()"
   >
     <p class="mb-8"></p>
     <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">

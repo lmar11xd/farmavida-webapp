@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDocs, orderBy, query, runTransaction, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, doc, DocumentReference, Firestore, getDoc, getDocs, orderBy, query, runTransaction, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Sale } from '../../core/models/sale';
-import { PREFIX_SALE_VOUCHER } from './../../core/constants/constants';
-import { get } from 'http';
+import { PREFIX_SALE } from './../../core/constants/constants';
 
 const PATH = 'sales'
 
@@ -30,7 +29,6 @@ export class SaleService {
 
   async create(sale: Sale) {
     let code = await this.generateSaleCode();
-    code = PREFIX_SALE_VOUCHER + '-' + code.padStart(6, '0'); // Asegurarse de que el código tenga 6 dígitos
     const newSale = { ...sale, code };
     await addDoc(this._collection, newSale)
     return {sale: newSale, code};
@@ -52,7 +50,8 @@ export class SaleService {
       // Actualizar el código en Firestore
       transaction.set(secuenciaRef, { code: newCode });
 
-      return newCode.toString();
+      const newCodeString = PREFIX_SALE + '-' + newCode.toString().padStart(6, '0'); // Asegurarse de que el código tenga 6 dígitos
+      return newCodeString;
     });
   }
 
@@ -63,5 +62,14 @@ export class SaleService {
     );
 
     return getDocs(q)
+  }
+
+  getNewSaleRef(): DocumentReference<Sale> {
+    return doc(this._collection) as DocumentReference<Sale>; // genera una ref vacía con ID automático
+  }
+
+  async getByRef(ref: DocumentReference<Sale>): Promise<Sale> {
+    const snap = await getDoc(ref);
+    return snap.data() as Sale;
   }
 }
