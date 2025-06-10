@@ -55,13 +55,14 @@ export class SaleService {
     });
   }
 
-  getSalesByBoxId(boxId: string) {
+  async getSalesByBoxId(boxId: string) {
     const q = query(
       this._collection,
       where('boxId', '==', boxId)
     );
 
-    return getDocs(q)
+    const data = await getDocs(q);
+    return data.docs.map(doc => doc.data() as Sale);
   }
 
   getNewSaleRef(): DocumentReference<Sale> {

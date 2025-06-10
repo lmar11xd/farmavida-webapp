@@ -2,6 +2,7 @@ import { Timestamp } from 'firebase/firestore';
 
 export interface Box {
   id?: string;
+  code: string;
   sellerId: string;
   openingDate: Date | Timestamp;
   closingDate?: Date | Timestamp | null;

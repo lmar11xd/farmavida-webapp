@@ -4,7 +4,7 @@
     [value]="items()"
     [rows]="10"
     [paginator]="true"
-    [globalFilterFields]="['openingDate', 'closingDate', 'initialAmount', 'systemAmount', 'cashAmount', 'difference', 'sales', 'isOpen', 'createdBy']"
+    [globalFilterFields]="['code', 'openingDate', 'closingDate', 'initialAmount', 'systemAmount', 'cashAmount', 'difference', 'sales', 'isOpen', 'createdBy']"
     [tableStyle]="{ 'min-width': '75rem' }"
     [rowHover]="true"
     dataKey="id"
@@ -28,13 +28,13 @@
     </ng-template>
     <ng-template #header>
       <tr>
-        <th pSortableColumn="openingDate" [width]="180">Fecha Apertura<p-sortIcon field="openingDate" /></th>
-        <th pSortableColumn="closingDate" [width]="180">Fecha Cierre<p-sortIcon field="closingDate" /></th>
-        <th pSortableColumn="initialAmount" [width]="150">Monto Inicial<p-sortIcon field="initialAmount" /></th>
-        <th pSortableColumn="systemAmount" [width]="150">Monto Sistema<p-sortIcon field="systemAmount" /></th>
-        <th pSortableColumn="cashAmount" [width]="150">Monto Contado<p-sortIcon field="cashAmount" /></th>
+        <th pSortableColumn="code" [width]="120">C&oacute;digo<p-sortIcon field="code" /></th>
+        <th pSortableColumn="openingDate">Fecha Apertura<p-sortIcon field="openingDate" /></th>
+        <th pSortableColumn="closingDate">Fecha Cierre<p-sortIcon field="closingDate" /></th>
+        <th pSortableColumn="initialAmount" [width]="150">M. Inicial<p-sortIcon field="initialAmount" /></th>
+        <th pSortableColumn="systemAmount" [width]="150">M. Sistema<p-sortIcon field="systemAmount" /></th>
+        <th pSortableColumn="cashAmount" [width]="150">M. Contado<p-sortIcon field="cashAmount" /></th>
         <th pSortableColumn="difference" [width]="150">Diferencia<p-sortIcon field="difference" /></th>
-        <th pSortableColumn="sales" [width]="150">Ventas<p-sortIcon field="sales" /></th>
         <th pSortableColumn="isOpen" [width]="150">Estado<p-sortIcon field="isOpen" /></th>
         <th pSortableColumn="createdBy" [width]="150">Vendedor<p-sortIcon field="createdBy" /></th>
         <th [width]="120">Acciones</th>
@@ -42,16 +42,19 @@
     </ng-template>
     <ng-template #body let-item>
       <tr>
+        <td>{{ item.code }}</td>
         <td>{{ getFormatDate(item.openingDate) }}</td>
         <td>{{ getFormatDate(item.closingDate) }}</td>
         <td>S/ {{ item.initialAmount | number: '1.2-2' }}</td>
         <td>S/ {{ item.systemAmount | number: '1.2-2' }}</td>
         <td>S/ {{ item.cashAmount | number: '1.2-2' }}</td>
         <td>S/ {{ item.difference | number: '1.2-2' }}</td>
-        <td>{{ item.sales }}</td>
         <td><p-tag [value]="getStatus(item.isOpen)" [severity]="getSeverityStatus(item.isOpen)" /></td>
         <td>{{ item.createdBy }}</td>
-        <td></td>
+        <td style="display: flex;justify-content: space-between;gap:8px;">
+            <p-button icon="pi pi-eye" severity="info" [routerLink]="['/sale-box/edit']" [queryParams]="{ pkey: item.id}" [rounded]="true" />
+            <p-button icon="pi pi-download" severity="success" [rounded]="true" (click)="onGenerateReport(item)" />
+        </td>
       </tr>
     </ng-template>
     <ng-template #summary>

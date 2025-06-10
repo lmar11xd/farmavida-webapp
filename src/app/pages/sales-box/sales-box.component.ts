@@ -58,7 +58,8 @@ export default class SalesBoxComponent {
   async initialize() {
     this._settings.showSpinner()
 
-    this._salesBoxService.getBoxes(this.userId).subscribe({
+    // Obtener la cajas cerradas del usuario
+    this._salesBoxService.getBoxes(this.userId, false).subscribe({
       next: (data) => {
         this.boxes = data;
         this._settings.hideSpinner();
@@ -136,6 +137,17 @@ export default class SalesBoxComponent {
     this.visibleView = false
   }
 
+  getDifference(): number {
+    if (this.currentBox) {
+      let systemAmount = 0;
+      if (this.currentBox.systemAmount) {
+        systemAmount = this.currentBox.systemAmount;
+      }
+      return this.cashAmount - systemAmount;
+    }
+    return 0;
+  }
+
   async onOpenBox() {
     if(this.initialAmount <= 0) {
       this._settings.showMessage('warn', 'Monto inicial inválido', 'El monto inicial debe ser mayor a cero.');
@@ -156,6 +168,7 @@ export default class SalesBoxComponent {
 
     const date = new Date();
     const newBox: Box = {
+      code: '',
       sellerId: this.userId,
       openingDate: date,
       closingDate: null,
@@ -183,7 +196,7 @@ export default class SalesBoxComponent {
       });
   }
 
-  onCloseBox() {
+  async onCloseBox() {
     if(!this.currentBox) {
       console.error('No hay caja abierta para cerrar');
       return;
@@ -194,16 +207,22 @@ export default class SalesBoxComponent {
       return;
     }
 
-    const boxId = this.currentBox?.id || '';
+    this._settings.showSpinner();
 
+    const boxId = this.currentBox?.id || '';
+    const { total, count } = await this.getTotalSales(boxId);
+
+    const currentDate = new Date();
+    const difference = this.cashAmount - total;
     const box: Partial<Box> = {
-      closingDate: this.currentBox.closingDate,
-      systemAmount: this.currentBox.systemAmount,
+      closingDate: currentDate,
+      systemAmount: total,
       cashAmount: this.cashAmount,
-      sales: this.currentBox.sales,
-      isOpen: this.currentBox.isOpen,
-      updatedAt: this.currentBox.updatedAt,
-      updatedBy: this.currentBox.createdBy,
+      difference: difference,
+      sales: count,
+      isOpen: false,
+      updatedAt: currentDate,
+      updatedBy: this.username,
     };
 
     // Mostrar resumen de la caja antes de cerrar en un modal
@@ -216,7 +235,6 @@ export default class SalesBoxComponent {
       salesCount: box.sales,
     });
 
-    this._settings.showSpinner();
     this._salesBoxService.closeBox(boxId, box)
       .then(() => {
         this._settings.hideSpinner();
@@ -235,8 +253,7 @@ export default class SalesBoxComponent {
     let totalAmount = 0;
     let countSales = 0;
 
-    salesSnapshot.forEach(doc => {
-      const sale = doc.data() as Sale;
+    salesSnapshot.forEach(sale => {
       totalAmount += sale.total || 0; // Sumar el total de cada venta
       countSales++; // Contar las ventas
     });

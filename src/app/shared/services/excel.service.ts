@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import * as XLSX from 'xlsx';
 import { Product } from "../../core/models/product";
-import { convertExcelDate, convertExcelDateToEndOfMonth } from "../../core/core-util";
+import { convertExcelDateToEndOfMonth } from "../../core/core-util";
 import { StatusEntryEnum } from '../../core/enums/status-entry.enum';
 
 const PRODUCTCOLUMNS = [

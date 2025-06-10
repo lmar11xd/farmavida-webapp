@@ -19,13 +19,13 @@
     [modal]="true"
     [(visible)]="visibleView"
     [breakpoints]="{ '1199px': '50vw', '849px': '75vw', '575px': '90vw' }"
-    [style]="{ width: '50vw' }"
+    [style]="{ width: currentBox? '50vw': '30vw' }"
     [draggable]="false"
     (onHide)="dismissViewBox()"
   >
     <div class="grid grid-cols-1 sm:grid-cols-6 gap-x-6 gap-y-8">
       @if(!currentBox) {
-        <div class="col-span-6 sm:col-span-3">
+        <div class="col-span-6">
           <label for="initialAmount" class="block text-sm/6 font-medium text-gray-900">Monto Inicial (S/)</label>
           <div class="mt-2">
             <input
@@ -40,6 +40,13 @@
           </div>
         </div>
       } @else {
+        <div class="col-span-6">
+          <label class="block text-sm/6 font-medium text-gray-900">C&oacute;digo</label>
+          <div class="mt-2">
+            <label class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">{{currentBox.code}}</label>
+          </div>
+        </div>
+
         <div class="col-span-6 sm:col-span-3">
           <label class="block text-sm/6 font-medium text-gray-900">Fecha de Apertura</label>
           <div class="mt-2">
@@ -68,7 +75,7 @@
           </div>
         </div>
 
-        <div class="col-span-6">
+        <div class="col-span-6 sm:col-span-3">
           <label for="cashAmount" class="block text-sm/6 font-medium text-gray-900">Monto Contado (S/)</label>
           <div class="mt-2">
             <input
@@ -84,11 +91,18 @@
         </div>
 
         <div class="col-span-6 sm:col-span-3">
+          <label class="block text-sm/6 font-medium text-gray-900">Diferencia</label>
+          <div class="mt-2">
+            <label class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">S/ {{getDifference() | number: '1.2-2'}}</label>
+          </div>
+        </div>
+
+        <!-- <div class="col-span-6 sm:col-span-3">
           <label class="block text-sm/6 font-medium text-gray-900"># Ventas</label>
           <div class="mt-2">
             <label class="block w-full rounded-md bg-gray-200 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">{{currentBox.sales}}</label>
           </div>
-        </div>
+        </div> -->
 
         <div class="col-span-6 sm:col-span-3">
           <label class="block text-sm/6 font-medium text-gray-900">Vendedor</label>

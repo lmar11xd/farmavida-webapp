@@ -90,6 +90,16 @@ export function getSeverityExpiration(expirationDate: Timestamp | Date | null | 
   return undefined;
 }
 
+export function toDate(date: Timestamp | Date | null | undefined) {
+  if (date == undefined || date == null) return null;
+
+  if(date instanceof Timestamp) {
+    date = (date as Timestamp).toDate()
+  }
+
+  return date;
+}
+
 export function generateCodeDate(): string {
   const ahora = new Date();
 

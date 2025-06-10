@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDoc, getDocs, limit, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
+import { addDoc, collection, collectionData, CollectionReference, doc, Firestore, getDoc, getDocs, limit, orderBy, query, runTransaction, updateDoc, where } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { Box } from './../../core/models/box';
+import { PREFIX_SALE_BOX } from '../../core/constants/constants';
 
 const PATH = 'sales-box';
 
@@ -13,8 +14,31 @@ export class SalesBoxService {
     this._collection = collection(this._firestore, PATH)
   }
 
-  openBox(box: Box) {
-    return addDoc(this._collection, box);
+  async generateSaleCode(): Promise<string> {
+    const secuenciaRef = doc(this._firestore, 'config/box');
+
+    return await runTransaction(this._firestore, async (transaction) => {
+      const secuenciaDoc = await transaction.get(secuenciaRef);
+
+      let newCode = 0; // Valor inicial si el documento no existe
+
+      if (secuenciaDoc.exists()) {
+        const data = secuenciaDoc.data();
+        newCode = (data['code'] || 0) + 1;
+      }
+
+      // Actualizar el código en Firestore
+      transaction.set(secuenciaRef, { code: newCode });
+
+      const newCodeString = PREFIX_SALE_BOX + '-' + newCode.toString().padStart(6, '0'); // Asegurarse de que el código tenga 6 dígitos
+      return newCodeString;
+    });
+  }
+
+  async openBox(box: Box) {
+    let code = await this.generateSaleCode();
+    const newBox = { ...box, code };
+    return await addDoc(this._collection, newBox);
   }
 
   closeBox(id: string, box: Partial<Box>) {
@@ -34,10 +58,11 @@ export class SalesBoxService {
     return snapshot.empty ? null : snapshot.docs[0];
   }
 
-  getBoxes(sellerId: string) {
+  getBoxes(sellerId: string, isOpen: boolean) {
     const q = query(
       this._collection,
       where('sellerId', '==', sellerId),
+      where('isOpen', '==', isOpen),
       orderBy('openingDate', 'desc')
     );
 
