@@ -16,15 +16,24 @@ export class SaleService {
     this._collection = collection(this._firestore, PATH)
   }
 
-  getSales(username: string): Observable<Sale[]> {
-    let orderedQuery;
-    if(username === 'ALL') {
-      orderedQuery = query(this._collection, orderBy('saleDate', 'desc'));
-    } else {
-      orderedQuery = query(this._collection, where('createdBy', '==', username), orderBy('saleDate', 'desc'));
+  getSales(username: string, startDate: Date, endDate: Date): Observable<Sale[]> {
+    // Ajustar hora para incluir todo el día
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 999);
+
+    let filters = [
+      where('saleDate', '>=', startDate),
+      where('saleDate', '<=', endDate),
+      orderBy('saleDate', 'desc')
+    ];
+
+    if (username !== 'ALL') {
+      filters.unshift(where('createdBy', '==', username));
     }
 
-    return collectionData(orderedQuery, { idField: 'id' }) as Observable<Sale[]>;
+    const filteredQuery = query(this._collection, ...filters);
+
+    return collectionData(filteredQuery, { idField: 'id' }) as Observable<Sale[]>;
   }
 
   async create(sale: Sale) {

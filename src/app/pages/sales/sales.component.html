@@ -1,9 +1,42 @@
 <section class="mx-auto w-full px-4">
 
-  <div class="my-4 p-4 rounded-2xl flex justify-between items-center">
-      <h1 class="text-base md:text-lg font-winkysans font-bold text-gray-500">Ventas</h1>
-      <div class="flex items-center">
-      </div>
+  <div class="mt-4 p-4 rounded-2xl flex justify-between items-center">
+    <h1 class="text-base md:text-lg font-winkysans font-bold text-gray-500">Ventas</h1>
+    <div class="flex items-center gap-2">
+    </div>
+  </div>
+
+  <div class="mb-4 p-4 rounded-2xl flex justify-between items-center">
+    <div class="flex items-center gap-2">
+      <p-datepicker
+        [(ngModel)]="startDate"
+        dateFormat="dd/mm/yy"
+        variant="filled"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        placeholder="dd/mm/yyyy"
+        inputId="icondisplay">
+      </p-datepicker>
+
+      <p-datepicker
+        [(ngModel)]="endDate"
+        dateFormat="dd/mm/yy"
+        variant="filled"
+        [iconDisplay]="'input'"
+        [showIcon]="true"
+        placeholder="dd/mm/yyyy"
+        inputId="icondisplay">
+      </p-datepicker>
+
+      <button
+        pButton
+        type="submit"
+        class="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+        (click)="loadSales()"
+        >
+          Filtrar
+        </button>
+    </div>
   </div>
 
   <app-sale-table [sales]="sales"></app-sale-table>
